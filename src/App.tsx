@@ -24,6 +24,7 @@ import {
   demoData,
   formatDate,
   formatTime,
+  isPlannerEmpty,
   localDate,
   mondayOf,
   removeEntity,
@@ -221,15 +222,21 @@ export default function App() {
                       <button className="primary-button" onClick={() => openCreate('class')}>
                         <Plus size={17} /> Add a class
                       </button>
-                      <button
-                        className="text-button"
-                        onClick={() => {
-                          if (window.confirm('Add example classes and schoolwork to explore Homebase?'))
-                            commit(demoData())
-                        }}
-                      >
-                        Explore with sample data <ChevronRight size={16} />
-                      </button>
+                      {isPlannerEmpty(data) && (
+                        <button
+                          className="text-button"
+                          onClick={() => {
+                            if (!isPlannerEmpty(dataRef.current)) return
+                            if (
+                              window.confirm('Add example classes and schoolwork to explore Homebase?') &&
+                              isPlannerEmpty(dataRef.current)
+                            )
+                              commit(demoData())
+                          }}
+                        >
+                          Explore with sample data <ChevronRight size={16} />
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="welcome-art" aria-hidden="true">
