@@ -4,7 +4,7 @@ Homebase is a local academic planner for classes, assignments, assessments, and 
 
 ## Run
 
-Requires Node.js 20 or newer.
+Use Node.js 24.19.0, the version verified against the committed dependency lockfile and used in CI.
 
 ```sh
 npm install
@@ -23,6 +23,8 @@ npm run typecheck
 npm run build
 npm run format:check
 ```
+
+GitHub Actions runs these checks on every pull request and push to `main` using a clean Ubuntu runner. The `CI` workflow installs locked dependencies with `npm ci` on Node.js 24.19.0; a failing check fails its `verify` job.
 
 ## Structure
 
