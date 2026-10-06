@@ -3,6 +3,7 @@ import {
   addDays,
   demoData,
   emptyData,
+  isPlannerEmpty,
   localDate,
   mondayOf,
   removeEntity,
@@ -41,4 +42,19 @@ describe('academic data', () => {
   it('starts with no sample data', () => {
     expect(emptyData()).toMatchObject({ classes: [], assignments: [], assessments: [], commitments: [] })
   })
+})
+
+describe('sample-data eligibility', () => {
+  it('allows sample data only for a completely empty planner', () => {
+    expect(isPlannerEmpty(emptyData())).toBe(true)
+  })
+
+  it.each(['classes', 'assignments', 'assessments', 'commitments'] as const)(
+    'prevents sample data when only %s exist',
+    (collection) => {
+      const sample = demoData('2026-10-04')
+      const data = { ...emptyData(), [collection]: sample[collection].slice(0, 1) }
+      expect(isPlannerEmpty(data)).toBe(false)
+    },
+  )
 })
