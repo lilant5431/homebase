@@ -36,7 +36,10 @@ export default function EditorModal({
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const fields = new FormData(event.currentTarget)
-    const get = (key: string) => String(fields.get(key) || '').trim()
+    const get = (key: string) => {
+      const value = fields.get(key)
+      return typeof value === 'string' ? value.trim() : ''
+    }
     const now = new Date().toISOString(),
       id = item?.id || newId()
     const title = get('title')

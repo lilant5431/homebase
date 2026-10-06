@@ -20,11 +20,14 @@ Use **Explore with sample data** on the empty dashboard to try an example plan. 
 ```sh
 npm test
 npm run typecheck
+npm run lint
 npm run build
 npm run format:check
 ```
 
-GitHub Actions runs these checks on every pull request and push to `main` using a clean Ubuntu runner. The `CI` workflow installs locked dependencies with `npm ci` on Node.js 24.19.0; a failing check fails its `verify` job.
+GitHub Actions runs these checks on every pull request and push to `main` using a clean Ubuntu runner. The `CI` workflow installs locked dependencies with `npm ci` on Node.js 24.19.0; a failing check fails its `verify` job. `npm run lint` runs Oxlint with type-aware TypeScript analysis, React Hooks checks, and focused-test protection; errors and warnings both fail verification. Type checking and Prettier remain separate gates.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the Definition of Done, regression-first bug policy, and architectural-decision threshold.
 
 ## Structure
 
