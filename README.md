@@ -37,6 +37,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the Definition of Done, regression-fi
 - `src/scheduling.ts`: pure available-time calculations from explicit planning windows and commitments.
 - `src/priority.ts`: deterministic assignment scoring and ranking against an explicit reference.
 - `src/placement.ts`: pure assignment placement into supplied available-time blocks.
+- `src/regeneration.ts`: exact locked intent, workload/time reservation, and deterministic regeneration.
+- `src/scheduleInputs.ts`: shared placement/regeneration input validation and calendar-minute conversion.
 - `src/storage.ts`: versioned browser persistence.
 - `src/App.tsx`: navigation and manual planning screens.
 - `src/AcademicUI.tsx`: reusable academic list and card components.
@@ -73,4 +75,16 @@ Missing and zero estimates consume no time and are reported as `missingEstimate`
 
 Dates and times follow the priority engine's calendar-minute conventions. Active estimates must be nonnegative safe integers because output uses whole-minute HH:mm precision; invalid estimates, duplicate active assignment IDs, malformed availability dates/times, nonpositive intervals, mismatched duration metadata, and overlapping availability throw `RangeError`. Availability is validated before reference clipping, even with no active work. Adjacent blocks are valid and retain their supplied boundaries. Overnight intervals and `24:00` are unsupported.
 
-This priority-first, earliest-fit greedy heuristic is not globally optimal: higher-scoring long work can consume time needed by lower-ranked work with an earlier deadline. Conflicts remain visible in unplaced output. Schedule UI, persistence, manual overrides, locking, and regeneration are not implemented.
+This priority-first, earliest-fit greedy heuristic is not globally optimal: higher-scoring long work can consume time needed by lower-ranked work with an earlier deadline. Conflicts remain visible in unplaced output. The placement module has no UI or persistence integration; lock handling is supplied separately by regeneration.
+
+## Locked schedule regeneration (Phase 2.4)
+
+`regenerateAssignmentSchedule(assignments, availableTimeBlocks, lockedBlocks, reference)` returns either `{ status: 'ok', scheduledBlocks, unplacedAssignments }` or `{ status: 'conflict', conflicts }`. Locks have a nonempty unique opaque `blockId` plus assignment ID, date, start/end time, and matching duration. They represent active future intent, not historical completion. Successful blocks have explicit `source: 'locked'` or `source: 'generated'`; every valid lock is preserved exactly.
+
+Regeneration reserves locked time and workload, clones partially locked assignments with their remaining estimates, and calls Phase 2.3 for all remaining work. Fully locked assignments are excluded from placement, so they do not produce `zeroEstimate`. Remaining estimates also determine regenerated priority. Adjacent availability can jointly contain a lock; real gaps remain blocked. Original availability boundaries are preserved for generated splits.
+
+Malformed structure throws `RangeError` under the shared placement input contract, including duplicate/empty block IDs. Assignment IDs must be unique for lock resolution, including completed entries. Structurally valid locks conflict when their assignment is missing/completed, has missing/zero estimates, starts before the reference, falls outside effective availability, overlaps another lock, extends past a future deadline, or exceeds total estimated workload. All applicable conflicts are reported; any conflict prevents the entire regenerated schedule from being returned. Future deadlines use Phase 2.2 interpretation (missing time = `23:59`); due-now/overdue work has no future deadline cap.
+
+Success sorts by date, start, assignment ID, source, then locked block ID. Conflicts sort by reason, assignment ID, block ID, then conflicting block ID, all in ascending code-unit order. Each overlap pair appears once, smaller block ID first; excess-work block ID lists are sorted. No inputs are mutated and no clock is read. With no locks, output exactly matches Phase 2.3 with generated-source tags.
+
+The existing greedy limitation remains. No scheduling UI, persistence, drag-and-drop, progress/completion tracking, force overrides, or sync is provided. See [ADR 0001](docs/adr/0001-locked-schedule-regeneration.md) for the intent/conflict decision and alternatives.
