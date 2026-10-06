@@ -7,8 +7,9 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
+    "lint": "oxlint --type-aware --deny-warnings --report-unused-disable-directives src vite.config.ts",
     "test": "vitest run",
-    "format:check": "prettier --check src vite.config.ts index.html"
+    "format:check": "prettier --check src vite.config.ts index.html .oxlintrc.json"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +30,8 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
     "jsdom": "^30.1.1",
+    "oxlint": "1.87.0",
+    "oxlint-tsgolint": "7.0.2003",
     "playwright": "^1.63.0",
     "prettier": "^3.9.9",
     "typescript": "^7.0.2",
