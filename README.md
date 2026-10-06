@@ -21,15 +21,25 @@ Use **Explore with sample data** on the empty dashboard to try an example plan. 
 npm test
 npm run typecheck
 npm run build
+npm run format:check
 ```
 
 ## Structure
 
 - `src/domain.ts`: academic entities, dates, and data operations.
+- `src/scheduling.ts`: pure available-time calculations from explicit planning windows and commitments.
 - `src/storage.ts`: versioned browser persistence.
 - `src/App.tsx`: navigation and manual planning screens.
 - `src/AcademicUI.tsx`: reusable academic list and card components.
 - `src/EditorModal.tsx`: validated create and edit forms.
 - `src/config.ts`: product identity.
 
-Phase 1 is intentionally local and manual. It has no accounts, scheduling engine, external connectors, or device synchronization.
+The application remains local and manual, with no accounts, external connectors, or device synchronization.
+
+## Available-time engine (Phase 2.1)
+
+`calculateAvailableTime(planningWindows, commitments)` returns chronological blocks with `date`, `startTime`, `endTime`, and `durationMinutes`. Windows and commitments use local `YYYY-MM-DD` dates and same-day `HH:mm` times. Overlapping or adjacent windows are treated as a union; merged commitments are subtracted from that union. Inputs are never modified.
+
+Dates are assumed valid. Times must be between `00:00` and `23:59`, with end after start; invalid time intervals throw `RangeError`. Duration measures local clock minutes, without timezone or daylight-saving adjustments. Overnight intervals are not supported.
+
+Planning windows must be supplied by the caller. This module does not infer or persist planning hours and is not connected to the UI or assignment placement.
