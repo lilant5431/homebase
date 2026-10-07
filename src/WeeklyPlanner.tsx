@@ -4,22 +4,18 @@ import { addDays, classFor, formatDate, formatTime, mondayOf, type AcademicData 
 import { PageHeader } from './AcademicUI'
 import type { Modal } from './EditorModal'
 import type { StoredPlanningWindow } from './scheduleData'
-import type { RegenerationConflict } from './regeneration'
+import type { RegeneratedScheduleBlock } from './regeneration'
+import LockedSessionModal from './LockedSessionModal'
+import {
+  conflictMessages,
+  conflictLockIds,
+  conflictKey,
+  conflictAllowsAssignmentEdit,
+} from './plannerMessages'
 import type { UnplacedAssignment } from './placement'
 import type { useAcademicPlanner } from './useAcademicPlanner'
 import PlanningWindowModal from './PlanningWindowModal'
 
-const conflictMessages: Record<RegenerationConflict['reason'], string> = {
-  assignmentMissing: 'A locked session belongs to an assignment that was deleted.',
-  assignmentCompleted: 'A locked session belongs to a completed assignment.',
-  missingEstimate: 'A locked assignment needs a work estimate.',
-  zeroEstimate: 'A locked assignment has a 0-minute estimate.',
-  beforeReference: 'A locked session starts before the plan reference and extends past it.',
-  outsideAvailability: 'A locked session is outside available study time or overlaps a commitment.',
-  afterDeadline: 'A locked session ends after its assignment deadline.',
-  overlapsLockedBlock: 'Two locked study sessions overlap.',
-  lockedTimeExceedsEstimate: 'Locked study time exceeds the assignment estimate.',
-}
 const loadMessages = {
   invalid: "Homebase couldn't read your saved scheduling data. It has been left unchanged.",
   unsupportedVersion:
@@ -58,8 +54,22 @@ export default function WeeklyPlanner({
   onCreateCommitment: () => void
 }) {
   const [editor, setEditor] = useState<{ date: string; item?: StoredPlanningWindow } | null>(null)
-  const { scheduleLoad, plan, reference, saveError } = planner
+  const [lockEditor, setLockEditor] = useState<RegeneratedScheduleBlock | null>(null)
+  const { scheduleLoad, plan, reference, saveError, lockError } = planner
   const ready = scheduleLoad.status === 'empty' || scheduleLoad.status === 'ok'
+  const locks = ready ? scheduleLoad.data.lockedBlocks : []
+  function openLockEditor(block: RegeneratedScheduleBlock) {
+    if (!ready || plan?.status !== 'ok') return
+    planner.clearLockError()
+    setLockEditor(block)
+  }
+  function unlock(blockId: string): boolean {
+    return (
+      window.confirm(
+        'Unlock this session? Its work returns to automatic scheduling and may be recommended at the same time again. This does not complete or delete the assignment.',
+      ) && planner.unlockLockedBlock(blockId)
+    )
+  }
   const windows = ready ? scheduleLoad.data.planningWindows : []
   const days = Array.from({ length: 7 }, (_, index) => addDays(weekStart, index))
   const visibleWindows = windows.filter((window) => days.includes(window.date))
@@ -117,6 +127,11 @@ export default function WeeklyPlanner({
       {saveError && !editor && (
         <div className="planner-notice" role="alert">
           {saveError}
+        </div>
+      )}
+      {lockError && (!lockEditor || plan?.status !== 'ok') && (
+        <div className="planner-notice" role="alert">
+          {lockError.message}
         </div>
       )}
       <section className="panel availability-panel" aria-labelledby="availability-title">
@@ -181,21 +196,66 @@ export default function WeeklyPlanner({
         <section className="planner-notice" role="alert">
           <h2>Schedule needs attention</h2>
           <p>
-            Locked study intent cannot be honored. No study schedule has been generated. Lock customization
-            will be available in a later update.
+            Locked study intent cannot be honored. No study schedule has been generated. Unlock the affected
+            sessions below or edit related academic data. Resolve conflicts before customizing sessions.
           </p>
           <ul>
-            {plan.conflicts.map((conflict, index) => (
-              <li key={index}>
-                {data.assignments.find((item) => item.id === conflict.assignmentId)?.title ??
-                  'Saved assignment'}
-                : {conflictMessages[conflict.reason]}
-                {'lockedMinutes' in conflict
-                  ? ` ${conflict.lockedMinutes} locked minutes versus ${conflict.estimatedMinutes} estimated.`
-                  : ''}
-              </li>
-            ))}
+            {plan.conflicts.map((conflict) => {
+              const assignment = data.assignments.find((item) => item.id === conflict.assignmentId)
+              return (
+                <li key={conflictKey(conflict)}>
+                  {assignment?.title ?? 'Saved assignment'}: {conflictMessages[conflict.reason]}
+                  {'lockedMinutes' in conflict
+                    ? ` ${conflict.lockedMinutes} locked minutes versus ${conflict.estimatedMinutes} estimated.`
+                    : ''}
+                </li>
+              )
+            })}
           </ul>
+          <div className="conflict-repair-actions">
+            {Array.from(
+              new Set(
+                plan.conflicts.filter(conflictAllowsAssignmentEdit).map((conflict) => conflict.assignmentId),
+              ),
+            )
+              .sort()
+              .map((assignmentId) => {
+                const assignment = data.assignments.find((item) => item.id === assignmentId)
+                return assignment ? (
+                  <button
+                    key={assignmentId}
+                    className="text-button conflict-action"
+                    onClick={() => onEdit({ entity: 'assignment', item: assignment })}
+                  >
+                    Edit assignment: {assignment.title}
+                  </button>
+                ) : null
+              })}
+            {Array.from(new Set(plan.conflicts.flatMap(conflictLockIds)))
+              .sort()
+              .map((blockId) => {
+                const block = locks.find((item) => item.blockId === blockId)
+                if (!block) return null
+                const title =
+                  data.assignments.find((item) => item.id === block.assignmentId)?.title ?? 'Saved assignment'
+                return (
+                  <div className="conflict-session" key={blockId}>
+                    <span>
+                      {title} · {formatDate(block.date)} · {formatTime(block.startTime)}–
+                      {formatTime(block.endTime)}
+                    </span>
+                    <button
+                      className="outline-button"
+                      data-testid={`unlock-${blockId}`}
+                      aria-label={`Unlock session: ${title}, ${formatDate(block.date)}, ${block.startTime}–${block.endTime}`}
+                      onClick={() => unlock(blockId)}
+                    >
+                      Unlock session
+                    </button>
+                  </div>
+                )
+              })}
+          </div>
         </section>
       )}
       {plan?.status === 'ok' && plan.unplacedAssignments.length > 0 && (
@@ -281,22 +341,52 @@ export default function WeeklyPlanner({
                   if (!assignment) return null
                   const course = classFor(data, assignment.classId)
                   return (
-                    <button
-                      key={`${block.assignmentId}-${block.date}-${block.startTime}-${block.endTime}-${block.source}`}
+                    <div
+                      key={
+                        block.source === 'locked'
+                          ? block.blockId
+                          : `${block.assignmentId}-${block.date}-${block.startTime}-${block.endTime}`
+                      }
                       className={`week-event study-event ${block.source === 'locked' ? 'locked-study' : ''}`}
                       style={{ borderLeftColor: course?.color }}
-                      aria-label={`${block.source === 'locked' ? 'Locked study' : 'Study'}: ${assignment.title}, ${formatTime(block.startTime)}–${formatTime(block.endTime)}`}
-                      onClick={() => onEdit({ entity: 'assignment', item: assignment })}
                     >
-                      <span className="event-type">
-                        {block.source === 'locked' ? 'LOCKED STUDY' : 'STUDY'} · {formatTime(block.startTime)}
-                        –{formatTime(block.endTime)}
-                      </span>
-                      <strong>{assignment.title}</strong>
-                      <small>
-                        {course?.name || 'Class removed'} · {block.durationMinutes} min
+                      <button
+                        className="study-details"
+                        aria-label={`${block.source === 'locked' ? 'Locked study' : 'Study'}: ${assignment.title}, ${formatTime(block.startTime)}–${formatTime(block.endTime)}`}
+                        onClick={() => onEdit({ entity: 'assignment', item: assignment })}
+                      >
+                        <span className="event-type">
+                          {block.source === 'locked' ? 'LOCKED STUDY' : 'STUDY'} ·{' '}
+                          {formatTime(block.startTime)}–{formatTime(block.endTime)}
+                        </span>
+                        <strong>{assignment.title}</strong>
+                        <small>
+                          {course?.name || 'Class removed'} · {block.durationMinutes} min
+                        </small>
+                      </button>
+                      <small className="session-source">
+                        {block.source === 'locked' ? 'Manual' : 'Recommended'}
                       </small>
-                    </button>
+                      <div className="session-actions">
+                        <button
+                          className="text-button"
+                          aria-label={`${block.source === 'locked' ? 'Edit locked study' : 'Customize study'}: ${assignment.title}, ${block.startTime}–${block.endTime}`}
+                          onClick={() => openLockEditor(block)}
+                        >
+                          {block.source === 'locked' ? 'Edit' : 'Customize'}
+                        </button>
+                        {block.source === 'locked' && (
+                          <button
+                            className="text-button"
+                            data-testid={`unlock-${block.blockId}`}
+                            aria-label={`Unlock session: ${assignment.title}, ${formatDate(block.date)}, ${block.startTime}–${block.endTime}`}
+                            onClick={() => unlock(block.blockId)}
+                          >
+                            Unlock
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   )
                 })}
                 {!assignments.length && !assessments.length && !commitments.length && !sessions.length && (
@@ -317,6 +407,33 @@ export default function WeeklyPlanner({
           work.
         </p>
       )}
+      {lockEditor &&
+        ready &&
+        plan?.status === 'ok' &&
+        (() => {
+          const assignment = data.assignments.find((item) => item.id === lockEditor.assignmentId)
+          if (!assignment) return null
+          return (
+            <LockedSessionModal
+              key={
+                lockEditor.source === 'locked'
+                  ? lockEditor.blockId
+                  : `${lockEditor.assignmentId}-${lockEditor.date}-${lockEditor.startTime}`
+              }
+              block={lockEditor}
+              assignment={assignment}
+              className={classFor(data, assignment.classId)?.name || 'Class removed'}
+              error={lockError}
+              onSave={planner.changeLockedBlock}
+              onUnlock={unlock}
+              onClose={() => setLockEditor(null)}
+              onEditAssignment={() => {
+                setLockEditor(null)
+                onEdit({ entity: 'assignment', item: assignment })
+              }}
+            />
+          )
+        })()}
       {editor && (
         <PlanningWindowModal
           key={editor.item?.id ?? editor.date}

@@ -103,7 +103,7 @@ No scheduling UI/orchestration, recurring windows, generated schedule persistenc
 
 ## Weekly Planner (Phase 2.5B)
 
-In **Weekly View**, add date-specific **Study availability** for each day. Edit keeps its ID; confirmed deletion removes only that window. Multiple, adjacent, and overlapping records remain separate source data. Fixed commitments reduce effective study time. Generated **STUDY** cards show assignment, class, times, and duration; existing **LOCKED STUDY** sessions are read-only. Select a session or unscheduled assignment to open its assignment editor.
+In **Weekly View**, add date-specific **Study availability** for each day. Edit keeps its ID; confirmed deletion removes only that window. Multiple, adjacent, and overlapping records remain separate source data. Fixed commitments reduce effective study time. Generated **STUDY** cards show assignment, class, times, and duration; manual **LOCKED STUDY** sessions are visibly distinct. Select a session or unscheduled assignment to open its assignment editor.
 
 `src/planner.ts` exposes `AcademicPlanResult`, `buildAcademicPlan(academic, schedule, reference)`, and `referenceFromDate(date)`. It composes availability and regeneration engines without React, storage, input mutation, or current-clock reads. Locks ending at/before reference remain stored but expire from future reservation, earning no completion credit. Crossing locks remain conflicts; future locks retain Phase 2.4 semantics.
 
@@ -111,4 +111,14 @@ The app captures a local date/minute reference once at startup (outside StrictMo
 
 Schedule initialization never writes. Invalid/unsupported/unavailable schedule loads show a warning and disable availability editing; academic screens still work. Availability saves occur before state adoption; failed saves retain old availability and reference. Structural planner failures affect only the scheduling surface. Generated output, references, expired-lock lists, and errors are never stored. Academic and schedule schemas/keys are unchanged.
 
-`WeeklyPlanner.tsx`, `PlanningWindowModal.tsx`, and `useAcademicPlanner.ts` separate presentation/forms from UI state and persistence. No lock customization, drag-and-drop, recurrence, historical completion inference, backup download, import/restore, or sync yet. The existing priority-first greedy placement is not globally optimal. See [ADR 0003](docs/adr/0003-planner-orchestration-and-reference.md).
+`WeeklyPlanner.tsx`, `PlanningWindowModal.tsx`, and `useAcademicPlanner.ts` separate presentation/forms from UI state and persistence. No drag-and-drop, recurrence, historical completion inference, backup download, import/restore, or sync yet. The existing priority-first greedy placement is not globally optimal. See [ADR 0003](docs/adr/0003-planner-orchestration-and-reference.md).
+
+## Manual study sessions and conflict repair (Phase 2.5C)
+
+Choose **Customize** on a recommended session to change its date/start/end and **Lock session**. Healthy locked sessions offer **Edit** and **Unlock**, with assignment editing still accessible. Duration is derived from the interval; edits keep identity. Unlock removes only the manual constraint and returns the assignment's work to automatic scheduling, which may recommend the same slot again. It does not complete work or delete an assignment.
+
+Every creation/edit uses full-plan preflight against availability, commitments, deadlines, and locked workload. A rejected candidate saves nothing. A successful change saves source intent before adopting the plan, using exactly the same captured reference for preflight and adoption. Failed browser writes keep the previous sessions/reference and the editor available for retry. Invalid or unavailable saved scheduling data cannot be overwritten through these actions.
+
+**Schedule needs attention** provides one unlock action per implicated persisted session and access to the existing assignment editor for relevant causes. Remove sessions one at a time even when other conflicts remain. Creating/editing locks is unavailable until the plan is healthy; arbitrary conflicted edits are deliberately deferred.
+
+`src/lockChanges.ts` exposes pure `createLockedBlock`, `replaceOrAddLockedBlock`, `removeLockedBlock`, and `preflightLockedBlockChange`; the hook owns secure identity, caller-clock capture, and writes. Only planning windows and locked intent persist in unchanged v1 stores. Generated blocks and reference/conflict state remain derived. Elapsed locks stay stored without completion credit; there is no past-session cleanup interface, progress tracking, force override, recurrence, drag-and-drop, or sync. Priority-first greedy scheduling is unchanged. See [ADR 0004](docs/adr/0004-manual-lock-changes-and-conflict-repair.md).

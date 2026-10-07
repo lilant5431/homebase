@@ -335,7 +335,7 @@ describe('derived session, unscheduled and lock presentation', () => {
     launch(academic, scheduleFixture())
     expect(screen.getByText('90 minutes could not be scheduled before the deadline.')).toBeTruthy()
   })
-  it('valid locked sessions are visibly read-only and distinct from generated ones', () => {
+  it('valid locked sessions are distinct from generated ones and expose manual controls', () => {
     const schedule = scheduleFixture()
     schedule.lockedBlocks.push(oneLock())
     launch(academicFixture(), schedule)
@@ -343,7 +343,9 @@ describe('derived session, unscheduled and lock presentation', () => {
     expect(
       studyCards().filter((card) => card.getAttribute('aria-label')?.startsWith('Locked study:')),
     ).toHaveLength(1)
-    expect(screen.queryByRole('button', { name: /^(Lock|Unlock|Move|Resize) session/ })).toBeNull()
+    expect(screen.getByRole('button', { name: /Edit locked study:/ })).toBeTruthy()
+    expect(screen.getByRole('button', { name: /Unlock session: Cell homework/ })).toBeTruthy()
+    expect(screen.queryByRole('button', { name: /^(Move|Resize) session/ })).toBeNull()
   })
   it('crossing locks show attention state atomically without generated sessions', () => {
     const schedule = scheduleFixture()
