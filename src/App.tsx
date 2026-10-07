@@ -3,7 +3,6 @@ import {
   BookOpen,
   CalendarDays,
   Check,
-  ChevronLeft,
   ChevronRight,
   ClipboardList,
   Clock3,
@@ -37,6 +36,9 @@ import {
   type Entity,
 } from './domain'
 import { loadData, saveData } from './storage'
+import WeeklyPlanner from './WeeklyPlanner'
+import { useAcademicPlanner } from './useAcademicPlanner'
+import type { PriorityReference } from './priority'
 import {
   Stat,
   PageHeader,
@@ -58,9 +60,10 @@ const nav: { key: View; label: string; icon: typeof LayoutDashboard }[] = [
   { key: 'classes', label: 'Classes', icon: BookOpen },
 ]
 
-export default function App() {
+export default function App({ initialReference }: { initialReference?: PriorityReference } = {}) {
   const [data, setData] = useState<AcademicData>(loadData)
   const dataRef = useRef(data)
+  const planner = useAcademicPlanner(data, initialReference)
   const [view, setView] = useState<View>('overview')
   const [modal, setModal] = useState<Modal | null>(null)
   const [weekStart, setWeekStart] = useState(() => mondayOf(localDate()))
@@ -104,7 +107,9 @@ export default function App() {
   const sectionTitle = nav.find((item) => item.key === view)?.label || 'Overview'
   function commit(next: AcademicData) {
     dataRef.current = next
-    setStorageError(!saveData(next))
+    const saved = saveData(next)
+    setStorageError(!saved)
+    if (saved) planner.refreshPlan()
     setData(next)
   }
   function update(entity: Entity, item: ClassItem | Assignment | Assessment | Commitment) {
@@ -389,109 +394,15 @@ export default function App() {
             </>
           )}
           {view === 'week' && (
-            <>
-              <PageHeader
-                eyebrow="YOUR TIME AT A GLANCE"
-                title="Weekly view"
-                subtitle="Deadlines, assessments, and fixed plans across your week."
-                action="Add commitment"
-                onAction={() => openCreate('commitment')}
-              />
-              <div className="week-toolbar">
-                <div>
-                  <strong>
-                    {formatDate(weekStart, { month: 'long', day: 'numeric' })} –{' '}
-                    {formatDate(addDays(weekStart, 6), { month: 'long', day: 'numeric', year: 'numeric' })}
-                  </strong>
-                  <span>Monday to Sunday</span>
-                </div>
-                <div className="week-controls">
-                  <button className="outline-button" onClick={() => setWeekStart(mondayOf(today))}>
-                    Today
-                  </button>
-                  <button
-                    className="icon-button bordered"
-                    aria-label="Previous week"
-                    onClick={() => setWeekStart(addDays(weekStart, -7))}
-                  >
-                    <ChevronLeft size={18} />
-                  </button>
-                  <button
-                    className="icon-button bordered"
-                    aria-label="Next week"
-                    onClick={() => setWeekStart(addDays(weekStart, 7))}
-                  >
-                    <ChevronRight size={18} />
-                  </button>
-                </div>
-              </div>
-              <div className="week-grid">
-                {Array.from({ length: 7 }, (_, index) => {
-                  const day = addDays(weekStart, index)
-                  const assignments = data.assignments.filter((item) => item.dueDate === day)
-                  const assessments = data.assessments.filter((item) => item.date === day)
-                  const commitments = data.commitments
-                    .filter((item) => item.date === day)
-                    .sort((a, b) => a.startTime.localeCompare(b.startTime))
-                  return (
-                    <div className={`day-column ${day === today ? 'is-today' : ''}`} key={day}>
-                      <div className="day-header">
-                        <span>{formatDate(day, { weekday: 'short' })}</span>
-                        <strong>{formatDate(day, { day: 'numeric' })}</strong>
-                      </div>
-                      <div className="day-events">
-                        {assignments.map((item) => (
-                          <button
-                            key={item.id}
-                            className={`week-event assignment-event ${item.completed ? 'event-done' : ''}`}
-                            onClick={() => setModal({ entity: 'assignment', item })}
-                          >
-                            <span className="event-type">
-                              ASSIGNMENT{item.dueTime ? ` · ${formatTime(item.dueTime)}` : ''}
-                            </span>
-                            <strong>{item.title}</strong>
-                            <small>{classFor(data, item.classId)?.name || 'Class removed'}</small>
-                          </button>
-                        ))}
-                        {assessments.map((item) => (
-                          <button
-                            key={item.id}
-                            className="week-event assessment-event"
-                            onClick={() => setModal({ entity: 'assessment', item })}
-                          >
-                            <span className="event-type">
-                              {item.kind.toUpperCase()}
-                              {item.time ? ` · ${formatTime(item.time)}` : ''}
-                            </span>
-                            <strong>{item.title}</strong>
-                            <small>{classFor(data, item.classId)?.name || 'Class removed'}</small>
-                          </button>
-                        ))}
-                        {commitments.map((item) => (
-                          <button
-                            key={item.id}
-                            className="week-event commitment-event"
-                            onClick={() => setModal({ entity: 'commitment', item })}
-                          >
-                            <span className="event-type">
-                              {formatTime(item.startTime)} – {formatTime(item.endTime)}
-                            </span>
-                            <strong>{item.title}</strong>
-                            <small>Commitment</small>
-                          </button>
-                        ))}
-                        {!assignments.length && !assessments.length && !commitments.length && (
-                          <div className="day-empty">Nothing planned</div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-              <p className="week-note">
-                Items appear on their due or event date. Study time is not scheduled in Phase 1.
-              </p>
-            </>
+            <WeeklyPlanner
+              data={data}
+              today={today}
+              weekStart={weekStart}
+              onWeekChange={setWeekStart}
+              planner={planner}
+              onEdit={setModal}
+              onCreateCommitment={() => openCreate('commitment')}
+            />
           )}
           {view === 'assignments' && (
             <>

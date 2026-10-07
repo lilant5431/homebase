@@ -100,3 +100,15 @@ Persist only source records and user intent. Available time, priority scores, ge
 `src/backup.ts` exports `createBackupPayload(academic, schedule, exportedAt)` and `serializeBackup(...)` (formatted deterministic JSON). The independent envelope is `{ backupVersion: 1, exportedAt, academic, schedule }`. The caller supplies the timestamp; core logic reads no current clock or storage. Copies include every supported source field and do not alias mutable inputs. Academic input follows the existing `AcademicData` contract; this is not a new academic validation or restore path.
 
 No scheduling UI/orchestration, recurring windows, generated schedule persistence, backup download UI, import/restore, academic migration, or sync is included. See [ADR 0002](docs/adr/0002-scheduling-persistence-boundary.md).
+
+## Weekly Planner (Phase 2.5B)
+
+In **Weekly View**, add date-specific **Study availability** for each day. Edit keeps its ID; confirmed deletion removes only that window. Multiple, adjacent, and overlapping records remain separate source data. Fixed commitments reduce effective study time. Generated **STUDY** cards show assignment, class, times, and duration; existing **LOCKED STUDY** sessions are read-only. Select a session or unscheduled assignment to open its assignment editor.
+
+`src/planner.ts` exposes `AcademicPlanResult`, `buildAcademicPlan(academic, schedule, reference)`, and `referenceFromDate(date)`. It composes availability and regeneration engines without React, storage, input mutation, or current-clock reads. Locks ending at/before reference remain stored but expire from future reservation, earning no completion credit. Crossing locks remain conflicts; future locks retain Phase 2.4 semantics.
+
+The app captures a local date/minute reference once at startup (outside StrictMode rendering), then refreshes it after successful academic/availability saves or **Refresh plan**. Rendering and week navigation never advance it; there is no timer. The calendar filters sessions to the visible week, while the planner considers all stored dates. **Unscheduled work** and **Schedule needs attention** summarize the whole plan and never imply missing work was scheduled.
+
+Schedule initialization never writes. Invalid/unsupported/unavailable schedule loads show a warning and disable availability editing; academic screens still work. Availability saves occur before state adoption; failed saves retain old availability and reference. Structural planner failures affect only the scheduling surface. Generated output, references, expired-lock lists, and errors are never stored. Academic and schedule schemas/keys are unchanged.
+
+`WeeklyPlanner.tsx`, `PlanningWindowModal.tsx`, and `useAcademicPlanner.ts` separate presentation/forms from UI state and persistence. No lock customization, drag-and-drop, recurrence, historical completion inference, backup download, import/restore, or sync yet. The existing priority-first greedy placement is not globally optimal. See [ADR 0003](docs/adr/0003-planner-orchestration-and-reference.md).
