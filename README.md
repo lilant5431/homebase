@@ -13,6 +13,8 @@ npm run dev
 
 Open the URL shown by Vite. Data is stored in this browser's local storage. It persists across reloads in the same browser profile, but is not synchronized or backed up. Avoid clearing site data if you want to keep your plan.
 
+For mobile Safari LAN development, use Vite's Network URL without experimental feature flags. Entity IDs use native `crypto.randomUUID()` when available, or secure UUID-v4 generation with `crypto.getRandomValues()` on LAN HTTP. A browser without secure randomness is unsupported.
+
 Use **Explore with sample data** on the empty dashboard to try an example plan. Sample data is never loaded automatically.
 
 ## Checks

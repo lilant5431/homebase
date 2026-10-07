@@ -78,7 +78,23 @@ export const dueLabel = (date: string, today = localDate()) =>
         : formatDate(date)
 export const classFor = (data: AcademicData, classId: string) =>
   data.classes.find((item) => item.id === classId)
-export const newId = () => crypto.randomUUID()
+export function newId(): string {
+  const secureRandom = globalThis.crypto
+  if (typeof secureRandom?.randomUUID === 'function') {
+    return secureRandom.randomUUID()
+  }
+  if (typeof secureRandom?.getRandomValues !== 'function') {
+    throw new Error('Secure random ID generation is unavailable in this browser.')
+  }
+
+  const bytes = new Uint8Array(16)
+  secureRandom.getRandomValues(bytes)
+  // UUID v4 version and RFC variant; all remaining bits retain secure entropy.
+  bytes[6] = (bytes[6] & 0x0f) | 0x40
+  bytes[8] = (bytes[8] & 0x3f) | 0x80
+  const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+}
 
 export function removeEntity(data: AcademicData, entity: Entity, id: string): AcademicData {
   switch (entity) {
