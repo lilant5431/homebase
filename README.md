@@ -88,3 +88,15 @@ Malformed structure throws `RangeError` under the shared placement input contrac
 Success sorts by date, start, assignment ID, source, then locked block ID. Conflicts sort by reason, assignment ID, block ID, then conflicting block ID, all in ascending code-unit order. Each overlap pair appears once, smaller block ID first; excess-work block ID lists are sorted. No inputs are mutated and no clock is read. With no locks, output exactly matches Phase 2.3 with generated-source tags.
 
 The existing greedy limitation remains. No scheduling UI, persistence, drag-and-drop, progress/completion tracking, force overrides, or sync is provided. See [ADR 0001](docs/adr/0001-locked-schedule-regeneration.md) for the intent/conflict decision and alternatives.
+
+## Scheduling persistence foundation (Phase 2.5A)
+
+`src/scheduleData.ts` defines `ScheduleData` version 1: `planningWindows` (`id`, `date`, `startTime`, `endTime`) and Phase 2.4 `lockedBlocks`. `emptyScheduleData()` returns fresh empty collections; `parseScheduleData(unknown)` strictly validates all records and returns `ok`, `invalid`, or `unsupportedVersion`. IDs are opaque, nonempty, and unique within each collection. Dates/times follow the shared scheduler contract. Unknown fields are rejected. Overlapping windows and structurally valid but infeasible locks are retained; regeneration checks feasibility later.
+
+`src/scheduleStorage.ts` owns **`homebase.schedule.v1`**, independently of unchanged **`homebase.academic.v1`**. `loadScheduleData()` adds `empty` (key absent) and `unavailable` (storage access failure); malformed JSON/schema is `invalid`, never empty. Loads never write, remove, migrate, or repair data. `saveScheduleData(unknown)` validates first, throws `RangeError` for invalid/unsupported caller state, and returns `false` for browser write failures. Explicit valid saves replace schedule state; later recovery UI must decide whether to replace existing invalid data.
+
+Persist only source records and user intent. Available time, priority scores, generated blocks, regeneration/conflict/unplaced results, UI state, and reference time remain derived and non-persistent. A versioned store is never silently interpreted as another schema version; future changes need a new key or an explicit tested migration.
+
+`src/backup.ts` exports `createBackupPayload(academic, schedule, exportedAt)` and `serializeBackup(...)` (formatted deterministic JSON). The independent envelope is `{ backupVersion: 1, exportedAt, academic, schedule }`. The caller supplies the timestamp; core logic reads no current clock or storage. Copies include every supported source field and do not alias mutable inputs. Academic input follows the existing `AcademicData` contract; this is not a new academic validation or restore path.
+
+No scheduling UI/orchestration, recurring windows, generated schedule persistence, backup download UI, import/restore, academic migration, or sync is included. See [ADR 0002](docs/adr/0002-scheduling-persistence-boundary.md).
