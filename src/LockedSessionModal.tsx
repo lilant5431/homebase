@@ -1,5 +1,6 @@
 import { useEffect, useRef, type FormEvent } from 'react'
 import { X } from 'lucide-react'
+import ModalBackdrop from './ModalBackdrop'
 import type { Assignment } from './domain'
 import type { LockedBlockDraft } from './lockChanges'
 import type { RegeneratedScheduleBlock } from './regeneration'
@@ -80,12 +81,7 @@ export default function LockedSessionModal({
       onClose()
   }
   return (
-    <div
-      className="modal-backdrop"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose()
-      }}
-    >
+    <ModalBackdrop onClose={onClose}>
       <div
         className="modal locked-session-modal"
         ref={dialog}
@@ -174,6 +170,6 @@ export default function LockedSessionModal({
           </div>
         </form>
       </div>
-    </div>
+    </ModalBackdrop>
   )
 }

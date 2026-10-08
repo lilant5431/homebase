@@ -1,12 +1,12 @@
 # Phase 2 integrated acceptance — Phase 2.5D
 
-Baseline: `b710ea0040f05ae873c853045124c3c82ad039d7` (remote `main`, PR #12). Assessment performed October 8, 2026. This record covers the existing planner through Phase 2.5C, not new scheduling features. ADRs 0001–0004 remain authoritative.
+Baseline: `b710ea0040f05ae873c853045124c3c82ad039d7` (remote `main`, PR #12). This record covers the existing planner through Phase 2.5C and the iPhone usability stabilization on PR #13, not new scheduling features. ADRs 0001–0004 remain authoritative.
 
 ## Evidence and reproduction
 
-The baseline has 599 passing tests. One additional real-application integration test brings the suite to **600**. `src/Phase2Acceptance.test.tsx` starts with empty storage and uses the actual App, forms, planner and persistence. It captures classes/assignments/availability/commitments, checks independently calculated workload, customizes/edits a lock, remounts, creates and repairs a source conflict, and unlocks without completion credit. It runs in existing hosted CI; it is a jsdom integration test, not a browser test.
+The baseline has 599 passing tests. One additional real-application integration test and three modal lifecycle regressions bring the suite to **603**. `src/Phase2Acceptance.test.tsx` starts with empty storage and uses the actual App, forms, planner and persistence. It captures classes/assignments/availability/commitments, checks independently calculated workload, customizes/edits a lock, remounts, creates and repairs a source conflict, and unlocks without completion credit. `src/ModalBackdrop.test.tsx` covers dialog focus/page restoration, keyboard-viewport events versus pinch zoom/listener cleanup, and dismissal/fallback without VisualViewport. These run in existing hosted CI; they are jsdom integration tests, not browser tests.
 
-`src/acceptance/phase2.browser.ts` adds **15 production-build Chromium cases**: five isolated cases at each of **1440 × 1000**, **820 × 1180**, and **390 × 844**. All passed. Each uses a fresh browser context with locale `en-US`, timezone `America/New_York`, and an explicit fixed date/minute, initially October 12, 2026 at 15:00. No arbitrary sleeps or external accounts are used.
+`src/acceptance/phase2.browser.ts` runs **25 production-build Chromium cases**: five isolated cases at each of **1440 × 1000**, **820 × 1180**, **390 × 844**, **844 × 390**, and **667 × 375**. All passed. Each uses a fresh browser context with locale `en-US`, timezone `America/New_York`, and an explicit fixed date/minute, initially October 12, 2026 at 15:00. No arbitrary sleeps or external accounts are used.
 
 - **Clean capture workflow:** real forms create Biology, Urgent essay (150 minutes, due 21:00), Later reading (30 minutes, due tomorrow), availability 16:00–19:00, and a commitment 17:00–18:00. Expected generated work is 16:00–17:00 and 18:00–19:00 for the urgent assignment; each assignment has 30 unplaced minutes. A 30-minute lock at 18:15–18:45 leaves 90 generated minutes, rather than duplicating the locked work. Two edits/reloads retain identity. Extending the commitment to 18:30 produces an atomic conflict; correcting the commitment restores the plan. Unlock returns the same workload to automatic placement.
 - **Boundary/failure workflow:** fixtures initialize the sources; real UI and persistence then exercise a successful write crossing 15:00→15:01, infeasible-candidate rejection with zero writes, a controlled quota failure with unchanged source/plan/reference, successful retry, identity and reload. Faults intercept only browser `Date`/Storage APIs; planner and save functions are not mocked. The write-crossing check verifies that the clock actually advanced while adoption kept the preflight reference.
@@ -32,9 +32,12 @@ While the preview is running, in another terminal:
 
 ```sh
 node src/acceptance/phase2.browser.ts
+node src/acceptance/mobile.browser.ts
 ```
 
-Playwright is already a repository dependency; no dependencies/configuration were added. The browser runner is typechecked/linted/formatted but **not executed by `npm test` or hosted CI**. It requires a local preview and an installed Chromium binary. In this cloud run, the existing binary cache was selected with `PLAYWRIGHT_BROWSERS_PATH=/tmp/homebase-pw-browsers`. The normal checkout commands above use Playwright's default cache. Build before every browser run so the preview represents the current source.
+Playwright is already a repository dependency; no dependencies/configuration were added. Both browser runners are typechecked/linted/formatted but **not executed by `npm test` or hosted CI**. They require a local preview and an installed Chromium binary. In this cloud run, the existing binary cache was selected with `PLAYWRIGHT_BROWSERS_PATH=/tmp/homebase-pw-browsers`. The normal checkout commands above use Playwright's default cache. Build before every browser run so the preview represents the current source.
+
+`mobile.browser.ts` adds **three mobile-context cases**, at 390 × 844, 844 × 390 and 667 × 375; all passed. They rotate an open drawer, reach all six navigation items, create/edit real academic records, check every form field is at least 16px, and reach all controls in a 210px-high visual viewport panned 45px down. The full layout-viewport shade remains visible below the smaller form. They also check cancellation/scroll restoration, availability forms, absence of horizontal overflow, and scale=2 events not counteracting pinch zoom. These controlled VisualViewport metrics test the application boundary, not a real Safari keyboard. Reduced-viewport screenshots and landscape planner screenshots were visually inspected; the shade covered the whole screen and controls remained reachable through internal scrolling.
 
 ## Reused secondary coverage
 
@@ -51,6 +54,16 @@ The nine reasons remain `assignmentMissing`, `assignmentCompleted`, `missingEsti
 ## Demonstrated defect and minimal repair
 
 **Manual-session touch-target width:** the new browser geometry regression failed before the fix: `Close session editor: touch target 33×44px is below 44×44px`. Existing CSS enforced height only, while the shared icon-button width remained 33px; short session actions also had no minimum width. A scoped `min-width: 44px` now complements the existing minimum height for session actions and locked-modal buttons. The geometry assertion checks both dimensions for actual modal controls and study-card actions at all three viewports. All 15 cases passed after rebuilding. No scheduler, persistence, schema, generic toolbar styling, or dependencies changed. No other blocking application defect was demonstrated within this coverage.
+
+### Physical iPhone report and targeted stabilization
+
+The user subsequently reported iOS 27 form-focus zoom, difficult landscape navigation including inaccessible Classes, and intermittent unshaded space below modals. Horizontal overflow/clipping was not confirmed by the user. This report supersedes the earlier absence of physical observations; **physical retesting of the fixes remains outstanding**.
+
+- **Focus zoom:** inspected modal inputs/selects/textareas were styled at 12px, below Safari's usual 16px focus-zoom threshold, and the academic editor used text-input `autoFocus`. Fields now use 16px text; academic/availability editors focus the dialog with `preventScroll`, leaving the keyboard to an explicit field interaction. Existing locked-session initial focus and keyboard containment remain intact. The viewport meta tag is unchanged: pinch zoom/user scaling are not disabled.
+- **Cut-off navigation:** the failing pre-fix mobile regression placed Classes' bottom at **y=443 in a 667 × 375 viewport**, even after attempting to scroll it into view. The fixed drawer had no vertical overflow scrolling. It now uses `100dvh` (with `vh` fallback), `min-height: 0`, safe-area padding and vertical scrolling, preserving child sizes. The mobile layout also applies to widths ≤950px with heights ≤500px, covering short phone landscapes such as 844 × 390. All six items are actually clicked at all tested phone sizes.
+- **Keyboard/backdrop geometry:** previously the modal used layout-viewport `92vh` without VisualViewport handling or background-scroll containment. Keyboard shrink/pan could leave the form outside usable space; the exact iOS blank-region mechanism cannot be reproduced conclusively in Chromium. All three modal types now share `ModalBackdrop`: a fixed full-screen shade, separate safe-area-padded scrollable form frame, scale=1 VisualViewport resize/scroll handling, and restored body style/scroll on close. Scale≠1 updates do not reflow the dialog to counteract pinch zoom. Grid tracks and native controls may shrink without intrinsic-width overflow. With controlled keyboard metrics, every field/action is reachable and the shade covers the full layout screen.
+
+Regression evidence comprises the three hosted modal lifecycle tests, the three mobile production-browser cases, and the complete planner acceptance expanded to both short landscapes (28 browser cases total). No scheduling engine, academic/scheduling schema, persistence key, dependency, CI gate, or hosting changes were made. No lint suppressions were added.
 
 ## Persistence and adversarial audit
 
@@ -71,11 +84,11 @@ Browser inspection checks the exact persisted keys: `homebase.academic.v1` and `
 | Device assumptions                | Chromium native controls/focus/geometry tested; existing secure-ID fallback regressions reused. Physical Safari controls, storage lifecycle and managed-device filtering remain unverified here.                                                                                                            |
 | Mocked test illusion              | Primary browser scenario uses real forms, planner and localStorage, with an independently calculated oracle. Only fault scenarios intercept browser boundaries; the clock is controlled explicitly. Composition comparisons alone are treated as wiring evidence, not independent correctness proof.        |
 
-All local gates passed: clean `npm ci`, **600 tests**, typecheck, zero-warning type-aware lint, production build, formatting and `git diff --check`. No lint suppressions or CI changes were introduced. Hosted `CI / verify` must also pass on the review PR's current head; its exact run/head evidence is reported in the PR/completion package. Hosted CI does not run the standalone Chromium cases.
+All local gates passed: clean `npm ci`, **603 tests**, typecheck, zero-warning type-aware lint, production build, formatting and `git diff --check`. No lint suppressions or CI changes were introduced. Hosted `CI / verify` must also pass on the review PR's current head; its exact run/head evidence is reported in the PR/completion package. Hosted CI does not run the standalone Chromium cases.
 
 ## Physical Safari checklist — outstanding
 
-No physical Safari test of this acceptance head was performed by Codex. Record device model, iOS/iPadOS version, tested commit/URL and per-step results before final approval. Use test records and future study times to avoid accidentally creating an elapsed-reference conflict.
+The user's iOS 27 observations are physical evidence of problems on the earlier PR head, not proof of the fixes. No physical Safari test of the updated head was performed by Codex. Record device model, iOS/iPadOS version, tested commit/URL and per-step results before final approval. Use test records and future study times to avoid accidentally creating an elapsed-reference conflict.
 
 1. On personal iPhone Safari, load Weekly View and create an estimated assignment.
 2. Add/edit/delete Study availability with native date/time controls; add a commitment and confirm generated sessions avoid it.
@@ -86,6 +99,8 @@ No physical Safari test of this acceptance head was performed by Codex. Record d
 7. Unlock healthy work and confirm regeneration without assignment completion credit.
 8. Try Refresh plan, navigation, modal Cancel/Close, touch targets and layout; confirm usable controls and no horizontal overflow.
 9. Close/reopen Safari and verify browser-local source data survives in the same profile/origin.
+
+For the iPhone usability fixes, additionally rotate with the menu open and reach Classes in both orientations; open/create/edit each kind of form; focus text/date/time/number controls with the keyboard or picker open; scroll to the first/last fields and Save/Cancel/Close; verify no unintended automatic zoom or unshaded bottom region; dismiss the keyboard; pinch zoom manually; and confirm the page's scroll position and portrait layout after closing/rotating. Chromium cannot conclusively verify Safari automatic focus zoom, native picker/keyboard geometry, browser-toolbar/safe-area animations, rubber-band scrolling, or physical pinch gestures. No complete Safari acceptance is claimed until these checks are reported.
 
 Repeat on managed iPad Safari **if the existing deployed hostname is allowed**. Prior user evidence reported Netlify categorized as Games and GitHub Pages on a global block list; that is environmental evidence, not validation of this head. If still blocked, record exactly: **Environment-blocked — application not loaded; managed-iPad behavior unverified.** No filtering workaround, hosting integration or deployment was attempted in this phase.
 

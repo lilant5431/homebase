@@ -24,6 +24,8 @@ const viewports = {
   desktop: { width: 1440, height: 1000 },
   tablet: { width: 820, height: 1180 },
   phone: { width: 390, height: 844 },
+  phoneLandscape: { width: 844, height: 390 },
+  smallPhoneLandscape: { width: 667, height: 375 },
 }
 
 async function navigate(page: Page, name: string) {
