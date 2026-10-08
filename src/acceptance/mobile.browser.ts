@@ -27,6 +27,60 @@ async function modalGeometry(page: Page) {
   await dialog.getByRole('button', { name: /Cancel/ }).scrollIntoViewIfNeeded()
   await expect(dialog.getByRole('button', { name: /Cancel/ })).toBeInViewport()
 }
+/** Measure actual native controls against their labels and the padded form content. */
+async function dateTimeGeometry(page: Page, stage: string) {
+  const dialog = page.getByRole('dialog')
+  const fields = dialog.locator('.form-grid input[type=date], .form-grid input[type=time]')
+  await expect(fields).toHaveCount(2)
+  const geometry = await fields.evaluateAll((inputs) =>
+    inputs.map((input) => {
+      const label = input.parentElement!,
+        grid = label.parentElement!,
+        body = grid.closest('.modal-body')!
+      const bounds = input.getBoundingClientRect(),
+        parent = label.getBoundingClientRect(),
+        form = body.getBoundingClientRect()
+      const style = getComputedStyle(input),
+        padding = getComputedStyle(body)
+      return {
+        type: (input as HTMLInputElement).type,
+        left: bounds.left,
+        right: bounds.right,
+        width: bounds.width,
+        labelLeft: parent.left,
+        labelRight: parent.right,
+        contentLeft: form.left + Number.parseFloat(padding.paddingLeft),
+        contentRight: form.right - Number.parseFloat(padding.paddingRight),
+        fontSize: Number.parseFloat(style.fontSize),
+        appearance: style.appearance,
+        scrollWidth: input.scrollWidth,
+        clientWidth: input.clientWidth,
+      }
+    }),
+  )
+  for (const field of geometry) {
+    expect(field.left, `${field.type} stays inside its label`).toBeGreaterThanOrEqual(field.labelLeft - 0.5)
+    expect(field.right, `${field.type} stays inside its label`).toBeLessThanOrEqual(field.labelRight + 0.5)
+    expect(field.left).toBeGreaterThanOrEqual(field.contentLeft - 0.5)
+    expect(field.right).toBeLessThanOrEqual(field.contentRight + 0.5)
+    expect(field.left, 'Date and Time use the same left content edge').toBeCloseTo(field.contentLeft, 0)
+    expect(field.right, 'Date and Time use the same right content edge').toBeCloseTo(field.contentRight, 0)
+    expect(field.fontSize).toBeGreaterThanOrEqual(16)
+    expect(field.appearance, 'Keep native picker styling').not.toBe('none')
+    expect(field.scrollWidth, 'Do not hide control overflow').toBeLessThanOrEqual(field.clientWidth + 1)
+  }
+  expect(geometry[0].width).toBeCloseTo(geometry[1].width, 0)
+  for (const field of await fields.all()) {
+    const original = await field.inputValue()
+    const value = (await field.getAttribute('type')) === 'date' ? '2026-10-12' : '17:30'
+    await field.focus()
+    await expect(field).toBeFocused()
+    await field.fill(value)
+    await expect(field).toHaveValue(value)
+    await field.fill(original)
+  }
+  console.log(`${stage} date/time geometry: ${JSON.stringify(geometry)}`)
+}
 async function navigate(page: Page, name: string) {
   await page.getByRole('button', { name: 'Open menu', exact: true }).click()
   const item = page
@@ -116,6 +170,7 @@ try {
       await page.getByRole('dialog').getByRole('button', { name: 'Add class', exact: true }).click()
       await page.getByRole('button', { name: 'New assignment', exact: true }).first().click()
       await modalGeometry(page)
+      await dateTimeGeometry(page, 'create')
       const records = await page.evaluate(() => ({
         academic: localStorage.getItem('homebase.academic.v1'),
         schedule: localStorage.getItem('homebase.schedule.v1'),
@@ -223,6 +278,7 @@ try {
       await navigate(page, 'Assignments')
       await page.getByRole('button', { name: 'Edit Landscape assignment', exact: true }).click()
       await modalGeometry(page)
+      await dateTimeGeometry(page, 'edit')
       await page.getByRole('dialog').getByLabel('Title', { exact: true }).fill('Edited landscape assignment')
       await page.getByRole('dialog').getByRole('button', { name: 'Save changes', exact: true }).click()
       await expect(

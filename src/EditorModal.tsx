@@ -125,7 +125,13 @@ export default function EditorModal({
     commitment = item as Commitment | undefined
   return (
     <ModalBackdrop onClose={onClose}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabIndex={-1}>
+      <div
+        className="modal academic-editor"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        tabIndex={-1}
+      >
         <div className="modal-header">
           <div>
             <span className="section-kicker">{existing ? 'MAKE A CHANGE' : 'ADD TO YOUR SPACE'}</span>

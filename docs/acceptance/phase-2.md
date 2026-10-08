@@ -99,6 +99,30 @@ Both production Chromium runners passed: **25 integrated planner cases + three m
 
 **Required physical retest on the new PR head:** create/edit an assignment in iPhone Safari landscape; explicitly open Title's keyboard and type; without dismissing it, move to Estimated work, type digits, then Notes and back to Title. Confirm each active field/caret/text stays visible, the editor never disappears, and scrolling follows gestures without jitter. Include multiline Notes and switching back to earlier lines. Rotate portrait↔landscape with an unsaved draft and check focus/value retention, then dismiss the keyboard and reach Save/Cancel/Close. Repeat in availability and manual-session editors with native date/time pickers. Verify pinch zoom, top/bottom shade including toolbar/rubber-band transitions, all menu items, restored page position, no overflow and byte-preserved records after Cancel/reload. Record device/OS, exact commit/URL and per-step results. **This is a candidate remediation, not accepted Phase 2 or a claimed physical Safari fix.**
 
+### Final mobile Date/Time alignment — keyboard checks physically accepted
+
+The user physically tested `92991297ab8a84e5d34590c274c78fdc605ab12e` and reported **all eight targeted Safari keyboard checks passed**. Keyboard focus/visibility, scrolling, rotation, form persistence, backdrop and native picker behavior are accepted physical evidence. The remaining report is portrait Time protruding beyond the form and inconsistent Date/Time right-edge spacing in landscape. The prior keyboard-retest requests above describe earlier stages; **do not repeat that remediation or require those eight checks again without a demonstrated regression**.
+
+**Layout cause and diagnostic limits:** `.form-grid` forced two equal columns at every width. In 390×844, its 318px content area minus the 13px gap provided only **152.5px per native control**, including border/padding and 16px native date/time content. Zero-minimum grid tracks and `width: 100%` did not guarantee that iOS's intrinsic/native rendered control content would fit. Border-box sizing and zero input minimum width already existed; they were not missing. Grid labels had no explicit minimum-width reset. Chromium and desktop Linux WebKit did not reproduce the reported iOS painted protrusion: their measured border boxes fit the old columns. The confirmed root constraint is the unconditional fractional-width layout; the exact physical iOS native-painting mechanism cannot be established here. We do not claim a desktop measurement proves the iOS symptom resolved.
+
+**Minimal correction:** the academic editor gains a CSS scope class. Only within the existing mobile editor, its date/time grid uses one full-width column and labels explicitly use `min-width: 0`. Both controls align with other fields in portrait and landscape, rather than trying to squeeze or hide native content. Desktop academic forms, availability/session editors, input appearance, 16px text, padding, box sizing, pinch zoom and the successful document-scrolling/focus/backdrop architecture are unchanged. No scheduling, schema or persistence changes.
+
+Measured horizontal geometry (pixels; form content bounds; both create and edit):
+
+| Viewport | Before: Date / Time widths | After: both widths | After: both left → right |
+| --- | --- | --- | --- |
+| 390×844 | 152.5 / 152.5 | 318 | 36 → 354 |
+| 844×390 | 315.5 / 315.5 | 644 | 100 → 744 |
+| 667×375 | 281 / 281 | 575 | 46 → 621 |
+
+Before measurements are from the actual previous production build in Chromium (390px also checked in desktop WebKit). After measurements agree in Chromium and desktop WebKit. The new geometry regression failed on the old row's content-edge alignment (`Date right 188.5`, required content right `354`). This demonstrates the layout correction, not an automated replay of iOS native painting.
+
+**Durable regression:** the existing `mobile.browser.ts` now measures actual date/time bounding rectangles against their own labels and padded form content, requires matching content edges/widths, 16px text, native appearance and no internal horizontal overflow. It focuses, fills, verifies and restores both original values in create/edit forms at all three sizes; it does not hide overflow or disable picker affordances. Existing focus/rotation/record-safety cases remain. All three mobile cases and all 25 integrated planner cases passed. Unit count remains **604/604**; typecheck, lint, build, formatting, clean install and diff checks passed.
+
+Supplemental desktop WebKit create/edit checks also passed at all three sizes using the identical geometry helper. Missing Debian shared libraries were downloaded/extracted only into `/tmp` and provided to the temporary Playwright browser cache; no application/system dependency or repository configuration was changed. The host's global-library preflight was bypassed only for this isolated supplemental launch after supplying the libraries; the actual WebKit browser and controls executed successfully. This is desktop WebKit evidence, **not physical iOS picker/painting acceptance**. The committed browser runner remains Chromium and is not run by hosted CI.
+
+**Only remaining physical check for this correction:** on the new PR head, inspect Date and Time in create/edit academic forms in iPhone portrait and landscape. Both borders/native controls must stay inside the form, with matching outer insets, readable values and visible picker affordances. Open and use both native pickers, then save/cancel normally. No repeat of the accepted keyboard architecture checklist is requested unless an actual regression is observed. PR #13 remains open; final Date/Time physical acceptance is pending.
+
 ## Persistence and adversarial audit
 
 Browser inspection checks the exact persisted keys: `homebase.academic.v1` and `homebase.schedule.v1`. The latter contains only `version`, `planningWindows` and `lockedBlocks`, with exact source-record fields. No generated sessions, scores, available-time calculations, conflicts, unplaced results, expired-lock lists, reference timestamps or UI state are stored. Lock edits preserve academic bytes; successful repeated reloads preserve source bytes and re-derive the same cards when the explicit reference is unchanged.
@@ -140,7 +164,7 @@ Repeat on managed iPad Safari **if the existing deployed hostname is allowed**. 
 
 ## Readiness and limitations
 
-**PENDING PHYSICAL SAFARI RETEST**, plus green hosted current-head CI and independent PR review. The last physical build failed. The replacement architecture passes the exercised automated/browser coverage, but is not yet physically accepted or official Phase 2 completion.
+**PENDING DATE/TIME ALIGNMENT PHYSICAL CHECK**, plus green hosted current-head CI and independent PR review. All eight targeted keyboard checks physically passed on `9299129`; those failures are resolved according to the user. The small alignment correction is automated/browser verified and awaits only Date/Time inspection/picker use. This is not official Phase 2 completion.
 
 The accepted priority-first greedy algorithm is not globally optimal. No sync, cross-tab coordination, drag-and-drop, progress/historical completion, expired-lock cleanup, force override or backup import/restore UI is added. Clearing site data/private browsing/storage loss can lose local sources; there is no backup download UI. Academic persistence errors require attention to the existing warning. Chromium viewport checks cannot prove physical Safari or managed-device compatibility, all UX quality, or correctness for every possible input. Prior insecure LAN HTTP ID behavior is covered by existing regressions, not reproduced by this loopback browser run.
 

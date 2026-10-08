@@ -1068,6 +1068,15 @@ body.mobile-editor-open .modal {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 13px;
 }
+/* Native iOS date/time content can outgrow a narrow fractional column.
+   Align academic date/time controls with the other full-width mobile fields;
+   keep native appearance and let the existing document editor scroll. */
+body.mobile-editor-open .academic-editor .form-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+body.mobile-editor-open .academic-editor .form-grid > label {
+  min-width: 0;
+}
 .optional {
   font-weight: 500;
   color: #a4b0a5;
