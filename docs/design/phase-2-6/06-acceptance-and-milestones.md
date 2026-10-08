@@ -1,0 +1,77 @@
+# Acceptance, dependencies and implementation milestones
+
+2.6A delivers a reviewed specification, not a completed interface. All implementation milestones below require a separate authorization, dedicated branch, independent PR review and green CI. No PR is merged automatically. [Vision/baseline](01-design-vision.md), [system](02-design-system.md), [screen inventory](03-screen-specifications.md), [motion](04-motion-and-interaction.md) and [handoff](05-technical-handoff.md) form one specification; if they disagree, resolve it in review before implementation. Tokens are authoritative for candidate values; handoff is authoritative for protected behavior.
+
+## 2.6A acceptance map
+
+| Requirement                                 | Reviewable evidence                                                                                                    |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Actual functionality and states inventoried | 03 names existing sources, six destinations, editors and failure/absence states; new Appearance is explicitly proposed |
+| Both coherent themes                        | 01 rationale, 02 identical semantic roles, static atlas both palettes                                                  |
+| Tokens/contrast                             | tokens.json, 02, contrast.md, executable documentation audit                                                           |
+| All major screens/components                | 03 inventory + component states in 02; atlas seven primary layout types                                                |
+| Desktop/tablet/portrait/short landscape     | 03 reference matrix; 05 DT-01 responsive contract                                                                      |
+| Glass/motion/reduction rules                | 02 material matrix, 04 per-interaction behavior                                                                        |
+| Appearance architecture                     | 05 independent key, precedence, first paint, live updates and fault behavior                                           |
+| Concrete Date/Time proposal                 | 05 grouped native controls, minimum geometry, physical gate and fallback; atlas specimens                              |
+| B–G boundaries/tests                        | Milestone table below                                                                                                  |
+| Tradeoffs/unknowns/dependencies             | 01 rejected alternatives and the issue register below                                                                  |
+| Ready for independent review                | Six documents, artifacts, calculated contrast/link checks; no production changes                                       |
+
+## Dependency and issue register
+
+| ID      | Decision / risk                                                                                                                                                                  | Resolution gate and owner                                                                                                                                                               |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| BASE-01 | PR #13 is OPEN at `352a744…`; independent design branch starts at main `b710ea0…`. Main does not contain its shared mobile editor/acceptance scripts.                            | Maintainer accepts/integrates PR #13 or approves equivalent behavior before 2.6C/E integration. Reinspect main and update the design baseline explicitly; never merge as a side effect. |
+| DT-01   | Physical Safari native Date/Time alignment remains a Phase 2.6 issue. Last stacked correction is not treated as final design approval. Horizontal grouped phone fit is unproven. | 2.6E engineer measures geometry; user tests native iPhone pickers/outer edges in both orientations/themes. Use paired vertical fallback unless horizontal fit is demonstrated.          |
+| AP-01   | Browser support for reduced transparency varies; native pickers can differ from CSS surfaces.                                                                                    | 2.6B preference faults/support tests; 2.6E physical light/dark picker review. Explicit reduction control always available.                                                              |
+| MAT-01  | Blur can cost scrolling/keyboard performance and composite differently across devices.                                                                                           | 2.6F physical profiling/contrast review; use opaque fallback if uncertain. No core functionality depends on effects.                                                                    |
+| A11Y-01 | 92 token contrast passes are not assembled-interface certification; arbitrary saved class colors are unverified.                                                                 | 2.6D/F color-independent labels, rendered focus/reflow and assistive-tech checks; legacy colors decorative only.                                                                        |
+| UX-01   | Narrow horizontal pair preference versus usable native minimum sizes.                                                                                                            | Review proposed 400px threshold; 390px atlas intentionally shows paired vertical alternative. Do not assume a design drawing can resolve native painting.                               |
+| DATA-01 | Academic failed-save behavior differs from scheduling rollback; backup API has no download/restore UI.                                                                           | Keep current behavior and honest warnings. Any stronger persistence/recovery feature needs its own scope/architecture review, not silent inclusion in redesign.                         |
+
+Physically accepted evidence: all eight targeted keyboard checks on `9299129` per user. Preserve them. The next device check for the existing alignment correction only needs Date/Time inspection/use; later redesigned forms will receive the scoped 2.6E acceptance because their composition changes. A managed iPad blocked by site policy is environment-blocked, not passed or failed app behavior; never bypass its restrictions.
+
+## Roadmap
+
+| Milestone                                                    | Authorized scope when separately requested                                                                                 | Exclusions / prerequisites                                                                                               | Required exit evidence                                                                                                                                                                       |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **2.6B — tokens and appearance foundation**                  | Semantic CSS, explicit System/Light/Dark preference, reduction controls, first-paint bootstrap, minimal Appearance utility | No page redesign, academic schema writes or animation package; independent of unmerged PR #13 if isolated from its files | Contrast audit, OS/live/override/blocked-storage tests, first-paint screenshots, byte-identical academic/schedule data, full gates/CI/PR review                                              |
+| **2.6C — shell and navigation**                              | Stable headers/actions, responsive rail/menu, both themes and typography                                                   | BASE-01 resolved for relevant Safari behavior; no route framework or search palette                                      | All six destinations and Appearance keyboard/touch reachable at five sizes; short landscape Classes, focus return, no page overflow, core gates/CI                                           |
+| **2.6D — overview and academic records**                     | Existing statistics/lists/classes/assessments/commitments, reusable rows/badges/empty states                               | Preserve list/count/deletion/completion semantics; no priority reordering or new analytics                               | CRUD/complete/reopen/cascade/sample safety, long text/reflow, two-theme parity, failed-save visibility, core gates/CI                                                                        |
+| **2.6E — editors and grouped Date/Time**                     | Field system, native grouped pair, errors, confirmations and existing mobile editor treatment                              | Requires accepted PR #13 lifecycle/equivalent. No custom picker, forced horizontal fit or new focus-scroll manager       | DT-01 native field geometry + physical portrait/landscape picker evidence, draft/cancel/rotation/error/ID preservation, labels/focus/44px targets, core gates/CI                             |
+| **2.6F — planner, conflict surfaces and restrained effects** | Weekly layout/availability/session labels/repairs; CSS motion and limited glass across completed surfaces                  | Pure scheduling and lock semantics untouched; no timeline placement/dragging or new reason codes                         | Existing integrated planner oracle, fixed-reference two-theme output equality, all conflicts/remaining-work meanings, reduced-effects/motion parity, physical scrolling, core gates/CI       |
+| **2.6G — integrated redesign acceptance**                    | Stabilize demonstrated regressions, consistency audit and final documentation                                              | No new features or next phase; no automatic merge                                                                        | Complete Capture→Organize→View→Edit→Complete→Persist workflow; schedule/lock/conflict/repair/reload; cross-theme/accessibility/browser matrix; physical user sign-off and independent review |
+
+Each implementation gate includes npm ci, tests, typecheck, lint, build, format checks and hosted `CI / verify` as configured. Include relevant browser cases and report unavailable checks. Tests must reproduce genuine defects where feasible. Documentation-only 2.6A checks local links, tokens/contrast, Markdown/HTML/CSS/JSON formatting, artifact rendering and `git diff --check`; hosted CI still exercises main's unchanged application suite.
+
+## Integrated acceptance details
+
+- **Comprehension:** each primary view has a clear title, important facts, visible next action and understandable consequence. Distinguish Due/Recommended/Manual/Commitment/Unscheduled/Conflict with text plus icon/marker in grayscale as well as color.
+- **Data safety:** compare stored source bytes after theme/effects toggles, opening/canceling editors and navigation; zero writes to academic/scheduling keys from appearance. Exercise schedule blocked/corrupt/unsupported source and write failure; no success feedback on rejection.
+- **Responsive:** all reference sizes plus zoom/reflow; touch targets, menu scrolling, full editor reachability, short-height toolbar wrapping, no off-screen Class/Time/action controls. Avoid enforcing a desktop seven-column grid on a phone.
+- **Accessibility:** keyboard traversal/return, screen-reader labels/status, no nested actions, current/checked states, error association, focus not obscured, color independence, reduced preferences and forced colors. 44px is the product target; test actual geometry.
+- **Appearance:** initial OS/default/override precedence, live change, denied/invalid storage, native color-scheme, readable solid fallback. No remount, reference tick, schedule regeneration or missing draft caused by theme.
+- **Visual quality:** representative real content, long titles, empty states, missing estimates/time, multiple conflicts and dense weeks; Daylight remains compact/calm, Night remains readable without illumination.
+
+## Documentation review and artifact limits
+
+The atlas is a static design study: seven screen types in both themes with desktop and phone layouts; the navigation plate illustrates the compact menu. Native Date/Time specimens can open browser pickers but do not save. No application modules, storage or network assets are loaded. Large reference boards intentionally exceed a small review browser's width; this atlas canvas is not the proposed application's responsive implementation. Product-responsive requirements are specified in 03 and 05, not proven by the board layout.
+
+Run `python3 docs/design/phase-2-6/verify.py` and `npx prettier --check 'docs/design/phase-2-6/**/*.{md,json,html,css}'` with the repository's configured Prettier available, plus `git diff --check`. Inspect atlas screenshots for both themes before publishing the documentation PR. The audit verifies local file links and calculated token contrast; external reference freshness and physical usability require human review. The recorded review package identifies the actual commands and hosted run, not assumed passes.
+
+### Local design-artifact review — 2026-10-08
+
+The documentation audit passed all **92 calculated contrast checks** and resolved local document/asset links. Prettier passed for the design Markdown, JSON, HTML and CSS. The static atlas rendered **28 boards** in Chromium with no page errors; representative desktop and phone screenshots were inspected and are linked from 01.
+
+A temporary browser geometry probe resized the editor specimen board to each reference width. Both themes produced the same contained native input rectangles and 16px text:
+
+| Review viewport | Date width | Time width | Group arrangement        |
+| --------------- | ---------: | ---------: | ------------------------ |
+| 390×844         |      330px |      330px | Paired vertical fallback |
+| 844×390         |   402.78px |   348.20px | Horizontal               |
+| 667×375         |   308.11px |   265.88px | Horizontal               |
+
+These measurements cover the **static Chromium specimen only**. They do not establish WebKit intrinsic painting, picker popover fit, physical keyboard behavior, browser chrome/safe-area behavior or product reflow. The application and its acceptance tests are unchanged; hosted CI results are reported with the PR. No physical Safari pass is claimed for the proposed redesign.
+
+Next authorized work, after design approval: **2.6B — tokens and appearance foundation**. No implementation starts as part of 2.6A.
