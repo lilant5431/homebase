@@ -44,6 +44,28 @@ async function navigate(page: Page, name: string) {
     'Page overflow must be checked with background scrolling unlocked',
   ).toBeLessThanOrEqual(await page.evaluate(() => innerWidth))
 }
+async function focusedFieldVisible(page: Page) {
+  // No scrolling helper: the application must reveal the field after viewport/focus events.
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const field = document.activeElement
+          const dialog = field?.closest('[role="dialog"]')
+          if (!(field instanceof HTMLElement) || !(dialog instanceof HTMLElement)) return false
+          const bounds = field.getBoundingClientRect(),
+            clip = dialog.getBoundingClientRect()
+          const top = Math.max(clip.top + dialog.clientTop, window.visualViewport?.offsetTop ?? 0)
+          const bottom = Math.min(
+            clip.top + dialog.clientTop + dialog.clientHeight,
+            (window.visualViewport?.offsetTop ?? 0) + (window.visualViewport?.height ?? innerHeight),
+          )
+          return bounds.top >= top && bounds.bottom <= bottom
+        }),
+      { message: 'Focused field must be visible without test-side scrolling' },
+    )
+    .toBe(true)
+}
 const browser = await chromium.launch({ headless: true })
 try {
   for (const viewport of sizes) {
@@ -111,7 +133,47 @@ try {
       await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click()
       await page.getByRole('button', { name: 'New assignment', exact: true }).first().click()
       await page.getByLabel('Title', { exact: true }).fill('Keyboard task')
+      await page.getByLabel(/^Estimated work/).fill('35')
       await page.evaluate(() => (window as ViewportProbe).resizeAcceptanceViewport?.(210, 45))
+      await focusedFieldVisible(page)
+      await expect(page.getByLabel(/^Estimated work/)).toBeFocused()
+      await page.keyboard.insertText('0')
+      await expect(page.getByLabel(/^Estimated work/)).toHaveValue('350')
+      await focusedFieldVisible(page)
+      // Model a focus switch for which Safari does not scroll the modal automatically.
+      await page.getByLabel('Title', { exact: true }).evaluate((node) => node.focus({ preventScroll: true }))
+      await focusedFieldVisible(page)
+      await page.keyboard.insertText(' while typing')
+      await expect(page.getByLabel('Title', { exact: true })).toHaveValue('Keyboard task while typing')
+      await expect(page.getByLabel('Title', { exact: true })).toBeFocused()
+      await focusedFieldVisible(page)
+      await page
+        .getByRole('dialog')
+        .locator('textarea')
+        .evaluate((node) => node.focus({ preventScroll: true }))
+      await focusedFieldVisible(page)
+      await page.keyboard.insertText('Visible notes')
+      await expect(page.getByRole('dialog').locator('textarea')).toHaveValue('Visible notes')
+      const stableScroll = await page.getByRole('dialog').evaluate((node) => node.scrollTop)
+      await page.evaluate(async () => {
+        ;(window as ViewportProbe).resizeAcceptanceViewport?.(210, 45)
+        ;(window as ViewportProbe).resizeAcceptanceViewport?.(210, 45)
+        await new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+        )
+      })
+      expect(
+        await page.getByRole('dialog').evaluate((node) => node.scrollTop),
+        'Unchanged viewport events must not repeatedly jump the field',
+      ).toBe(stableScroll)
+      const rotated =
+        viewport.width > viewport.height ? { width: 390, height: 844 } : { width: 844, height: 390 }
+      await page.setViewportSize(rotated)
+      await page.evaluate(() => (window as ViewportProbe).resizeAcceptanceViewport?.(210, 45))
+      await focusedFieldVisible(page)
+      await page.setViewportSize(viewport)
+      await page.evaluate(() => (window as ViewportProbe).resizeAcceptanceViewport?.(210, 45))
+      await focusedFieldVisible(page)
       const reduced = await page.getByRole('dialog').boundingBox()
       expect(reduced!.y).toBeGreaterThanOrEqual(45)
       expect(reduced!.y + reduced!.height, 'Modal must fit above the keyboard').toBeLessThanOrEqual(255)
@@ -119,6 +181,9 @@ try {
       expect(backdrop!.y).toBe(0)
       expect(backdrop!.height).toBe(viewport.height)
       expect(await page.evaluate(() => document.body.style.position)).toBe('fixed')
+      await page.screenshot({
+        path: `test-results/phase-2/mobile-${viewport.width}x${viewport.height}-focused-field.png`,
+      })
       // Every field and both action ends are reachable by scrolling the dialog.
       for (const control of await page
         .getByRole('dialog')
@@ -142,9 +207,26 @@ try {
         /user-scalable\s*=\s*no|maximum-scale\s*=/,
       )
       await page.evaluate(() => (window as ViewportProbe).resizeAcceptanceViewport?.(innerHeight, 0))
+      await focusedFieldVisible(page)
       await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click()
       expect(await page.evaluate(() => document.body.style.position)).toBe('')
       expect(await page.evaluate(() => document.body.style.overflow)).toBe('')
+      // Without VisualViewport, native window resize still rechecks the active field.
+      await page.evaluate(() =>
+        Object.defineProperty(window, 'visualViewport', { configurable: true, value: undefined }),
+      )
+      await page.getByRole('button', { name: 'New assignment', exact: true }).first().click()
+      await page.getByLabel(/^Estimated work/).fill('30')
+      await page.setViewportSize({ width: viewport.width, height: 210 })
+      await focusedFieldVisible(page)
+      await page
+        .getByRole('dialog')
+        .locator('textarea')
+        .evaluate((node) => node.focus({ preventScroll: true }))
+      await focusedFieldVisible(page)
+      await page.setViewportSize(viewport)
+      await focusedFieldVisible(page)
+      await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click()
       // Create and edit a real assignment as well as cancelling drafts.
       await page.getByRole('button', { name: 'New assignment', exact: true }).first().click()
       const editor = page.getByRole('dialog')
