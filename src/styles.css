@@ -1484,6 +1484,7 @@ textarea:focus-visible {
 .conflict-action,
 .session-assignment-action {
   min-height: 44px;
+  min-width: 44px;
 }
 .conflict-repair-actions {
   display: grid;
@@ -1512,4 +1513,7 @@ textarea:focus-visible {
 .locked-session-modal .modal-body input,
 .locked-session-modal button {
   min-height: 44px;
+}
+.locked-session-modal button {
+  min-width: 44px;
 }

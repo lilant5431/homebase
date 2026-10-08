@@ -31,6 +31,8 @@ GitHub Actions runs these checks on every pull request and push to `main` using 
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the Definition of Done, regression-first bug policy, and architectural-decision threshold.
 
+See the [Phase 2 acceptance record](docs/acceptance/phase-2.md) for reproducible production-build browser checks, evidence boundaries, and the outstanding physical Safari checklist. Automated readiness does not mark Phase 2 officially accepted.
+
 ## Structure
 
 - `src/domain.ts`: academic entities, dates, and data operations.
