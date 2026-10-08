@@ -1456,3 +1456,60 @@ textarea:focus-visible {
 .study-event .event-type {
   font-size: 10px;
 }
+
+/* Study cards keep assignment navigation and manual actions as sibling controls. */
+.study-details {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.session-source {
+  display: block;
+  margin-top: 4px;
+}
+.session-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.session-actions button,
+.conflict-action,
+.session-assignment-action {
+  min-height: 44px;
+}
+.conflict-repair-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+.conflict-session {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.conflict-session span {
+  overflow-wrap: anywhere;
+}
+.conflict-session button {
+  min-height: 44px;
+}
+.session-modal-footer {
+  flex-wrap: wrap;
+}
+.session-modal-footer button {
+  min-height: 44px;
+}
+.locked-session-modal .modal-body input,
+.locked-session-modal button {
+  min-height: 44px;
+}
