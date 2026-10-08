@@ -68,11 +68,14 @@ async function auditSource(page: Page) {
   return source as typeof source & { academic: AcademicData; schedule: ScheduleData }
 }
 async function cards(page: Page) {
-  return page
-    .getByRole('button', { name: /^(Study|Locked study):/ })
-    .evaluateAll((elements) =>
-      elements.map((element) => ({ label: element.getAttribute('aria-label'), text: element.textContent })),
-    )
+  return (
+    page
+      // Hidden background cards must remain unchanged during a failed editor save.
+      .getByRole('button', { name: /^(Study|Locked study):/, includeHidden: true })
+      .evaluateAll((elements) =>
+        elements.map((element) => ({ label: element.getAttribute('aria-label'), text: element.textContent })),
+      )
+  )
 }
 async function checkLayout(page: Page) {
   ensure(

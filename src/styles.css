@@ -989,6 +989,31 @@ textarea:focus-visible {
   overscroll-behavior: contain;
   box-shadow: 0 25px 80px #142b1f4a;
 }
+/* A mobile editor is the page while open. Let Safari's native focus/panning
+   scroll the document instead of a fixed body plus a nested modal scroller.
+   dvh provides a minimum shaded page, not a prediction of keyboard height. */
+body.mobile-editor-open #root {
+  display: none;
+}
+body.mobile-editor-open .modal-backdrop {
+  position: relative;
+  inset: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+}
+body.mobile-editor-open .modal-viewport {
+  position: static;
+  height: auto;
+  display: block;
+}
+body.mobile-editor-open .modal {
+  width: min(100%, 700px);
+  margin-inline: auto;
+  max-height: none;
+  overflow: visible;
+  overscroll-behavior: auto;
+}
 .modal-header {
   display: flex;
   justify-content: space-between;

@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import ModalBackdrop from './ModalBackdrop'
 
 afterEach(() => {
@@ -37,83 +37,66 @@ it('focuses the dialog without opening a text keyboard and restores the page aft
   expect(document.activeElement).toBe(opener)
   opener.remove()
 })
-it('responds to keyboard resize/pan but does not counteract pinch zoom and cleans up listeners', () => {
-  const viewport = Object.assign(new EventTarget(), { height: 390, offsetTop: 0, scale: 1 })
-  vi.stubGlobal('visualViewport', viewport)
-  const remove = vi.spyOn(viewport, 'removeEventListener')
+it('portals the mobile editor outside the background and preserves field state across layout changes', () => {
+  const media = Object.assign(new EventTarget(), { matches: true })
+  vi.stubGlobal('matchMedia', () => media)
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
   const view = render(content())
-  const frame = view.container.querySelector<HTMLElement>('.modal-viewport')!
-  Object.assign(viewport, { height: 210, offsetTop: 45 })
-  viewport.dispatchEvent(new Event('resize'))
-  viewport.dispatchEvent(new Event('scroll'))
-  expect(frame.style.height).toBe('210px')
-  expect(frame.style.top).toBe('45px')
-  Object.assign(viewport, { height: 105, offsetTop: 70, scale: 2 })
-  viewport.dispatchEvent(new Event('resize'))
-  expect(frame.style.height).toBe('210px')
-  expect(frame.style.top).toBe('45px')
+  const field = screen.getByLabelText('Title')
+  expect(view.container.contains(field)).toBe(false)
+  expect(document.body.classList.contains('mobile-editor-open')).toBe(true)
+  expect(document.body.style.position).toBe('')
+  fireEvent.change(field, { target: { value: 'Retain my draft' } })
+  field.focus()
+  act(() => {
+    media.matches = false
+    media.dispatchEvent(new Event('change'))
+  })
+  expect(document.body.style.position).toBe('fixed')
+  expect(document.body.classList.contains('mobile-editor-open')).toBe(false)
+  act(() => {
+    media.matches = true
+    media.dispatchEvent(new Event('change'))
+  })
+  expect(document.body.style.position).toBe('')
+  expect(screen.getByLabelText('Title')).toBe(field)
+  expect((field as HTMLInputElement).value).toBe('Retain my draft')
+  expect(document.activeElement).toBe(field)
   view.unmount()
-  expect(remove).toHaveBeenCalledWith('resize', expect.any(Function))
-  expect(remove).toHaveBeenCalledWith('scroll', expect.any(Function))
+  expect(document.body.classList.contains('mobile-editor-open')).toBe(false)
 })
 it('works without VisualViewport and dismisses only outside the form', () => {
   vi.stubGlobal('visualViewport', undefined)
   const close = vi.fn()
-  const view = render(content(close))
+  render(content(close))
   fireEvent.mouseDown(screen.getByLabelText('Title'))
   expect(close).not.toHaveBeenCalled()
-  fireEvent.mouseDown(view.container.querySelector('.modal-viewport')!)
+  fireEvent.mouseDown(document.querySelector('.modal-viewport')!)
   expect(close).toHaveBeenCalledTimes(1)
-  fireEvent.mouseDown(view.container.querySelector('.modal-backdrop')!)
+  fireEvent.mouseDown(document.querySelector('.modal-backdrop')!)
   expect(close).toHaveBeenCalledTimes(2)
 })
-it('reveals the active field within the dialog after contraction or a focus switch without repeated scrolling', () => {
-  const viewport = Object.assign(new EventTarget(), { height: 210, offsetTop: 45, scale: 1 })
+it('leaves native field reveal and zoom alone even when viewport metrics arrive late', () => {
+  const media = Object.assign(new EventTarget(), { matches: true })
+  vi.stubGlobal('matchMedia', () => media)
+  const viewport = Object.assign(new EventTarget(), { height: 390, offsetTop: 0, scale: 1 })
   vi.stubGlobal('visualViewport', viewport)
-  const frames: FrameRequestCallback[] = []
-  const request = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
-    frames.push(callback)
-    return frames.length
-  })
-  const cancel = vi.spyOn(window, 'cancelAnimationFrame')
+  const subscribe = vi.spyOn(viewport, 'addEventListener')
   const scrollPage = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
-  const view = render(
-    <ModalBackdrop onClose={() => {}}>
-      <div role="dialog" tabIndex={-1}>
-        <input aria-label="Lower field" />
-        <input aria-label="Upper field" />
-      </div>
-    </ModalBackdrop>,
-  )
-  const dialog = screen.getByRole('dialog'),
-    lower = screen.getByLabelText('Lower field'),
-    upper = screen.getByLabelText('Upper field')
-  vi.spyOn(dialog, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 63, 500, 174))
-  Object.defineProperty(dialog, 'clientHeight', { configurable: true, value: 174 })
-  vi.spyOn(lower, 'getBoundingClientRect').mockImplementation(
-    () => new DOMRect(10, 300 - dialog.scrollTop, 200, 44),
-  )
-  vi.spyOn(upper, 'getBoundingClientRect').mockImplementation(
-    () => new DOMRect(10, 120 - dialog.scrollTop, 200, 44),
-  )
-  lower.focus({ preventScroll: true })
-  viewport.dispatchEvent(new Event('resize'))
-  viewport.dispatchEvent(new Event('scroll'))
-  expect(request).toHaveBeenCalledTimes(1)
-  frames[0](0)
-  expect(lower.getBoundingClientRect().bottom).toBe(237)
-  expect(document.activeElement).toBe(lower)
-  viewport.dispatchEvent(new Event('resize'))
-  viewport.dispatchEvent(new Event('scroll'))
-  frames[1](0)
-  expect(dialog.scrollTop).toBe(107)
-  upper.focus({ preventScroll: true })
-  frames[2](0)
-  expect(upper.getBoundingClientRect().top).toBe(63)
-  expect(document.activeElement).toBe(upper)
+  const view = render(content())
+  const field = screen.getByLabelText('Title')
+  field.focus()
+  scrollPage.mockClear()
+  for (const scale of [1, 2]) {
+    Object.assign(viewport, { height: 105, offsetTop: 70, scale })
+    viewport.dispatchEvent(new Event('resize'))
+    viewport.dispatchEvent(new Event('scroll'))
+    window.dispatchEvent(new Event('resize'))
+  }
+  expect(subscribe).not.toHaveBeenCalled()
   expect(scrollPage).not.toHaveBeenCalled()
-  viewport.dispatchEvent(new Event('resize'))
-  const pending = frames.length
+  expect(document.activeElement).toBe(field)
+  expect(document.querySelector('.modal-viewport')?.hasAttribute('style')).toBe(false)
+  expect(document.body.style.position).toBe('')
   view.unmount()
-  expect(cancel).toHaveBeenCalledWith(pending)
 })
