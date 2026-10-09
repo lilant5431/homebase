@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { X } from 'lucide-react'
+import ModalBackdrop from './ModalBackdrop'
 import { newId } from './domain'
 import { emptyScheduleData, parseScheduleData, type StoredPlanningWindow } from './scheduleData'
 
@@ -44,13 +45,14 @@ export default function PlanningWindowModal({
     }
   }
   return (
-    <div
-      className="modal-backdrop"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose()
-      }}
-    >
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="availability-modal-title">
+    <ModalBackdrop onClose={onClose}>
+      <div
+        className="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="availability-modal-title"
+        tabIndex={-1}
+      >
         <div className="modal-header">
           <div>
             <span className="section-kicker">PROTECT YOUR STUDY TIME</span>
@@ -95,6 +97,6 @@ export default function PlanningWindowModal({
           </div>
         </form>
       </div>
-    </div>
+    </ModalBackdrop>
   )
 }
