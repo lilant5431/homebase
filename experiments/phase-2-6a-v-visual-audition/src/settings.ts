@@ -8,7 +8,8 @@ export const effects = [
     url: 'https://magicui.design/docs/components/grid-pattern',
     comparison: true,
     motion: true,
-    description: 'Architectural grid, diagonal light and a gently drifting reflection.',
+    description:
+      'The loved architectural grid, with flowing sunlight reaching glass, navigation and controls.',
   },
   {
     id: 'horizon',
@@ -17,7 +18,8 @@ export const effects = [
     url: '',
     comparison: false,
     motion: true,
-    description: 'Sparse distant lights, a quiet horizon and softly moving atmosphere.',
+    description:
+      'Visible runway geometry, a moving directional wash, cyan and amber reflections across the workspace.',
   },
   {
     id: 'glass',

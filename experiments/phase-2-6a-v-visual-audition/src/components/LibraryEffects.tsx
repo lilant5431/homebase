@@ -86,7 +86,17 @@ export function ShimmerButton({
   )
 }
 
-export function MagicGlass({ children, interactive }: { children: ReactNode; interactive: boolean }) {
+export function MagicGlass({
+  children,
+  interactive,
+  className = '',
+  cueTarget,
+}: {
+  children: ReactNode
+  interactive: boolean
+  className?: string
+  cueTarget?: 'navigation' | 'action'
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const frame = useRef<number | null>(null)
   useEffect(() => {
@@ -101,7 +111,7 @@ export function MagicGlass({ children, interactive }: { children: ReactNode; int
   return (
     <div
       ref={ref}
-      className="magic-glass"
+      className={`magic-glass ${className}`}
       data-library="Magic UI MagicCard gradient adaptation"
       onPointerMove={(event) => {
         if (!interactive || event.pointerType === 'touch' || frame.current !== null) return
@@ -122,8 +132,14 @@ export function MagicGlass({ children, interactive }: { children: ReactNode; int
         ref.current?.style.removeProperty('--pointer-y')
       }}
     >
+      <div aria-hidden="true" className="ambient-gradient" />
       <div aria-hidden="true" className="magic-gradient" />
       <div className="glass-inner">{children}</div>
+      {cueTarget && (
+        <span aria-hidden="true" className="cue-clip">
+          <span className="lighting-cue chrome-cue" data-cue-target={cueTarget} />
+        </span>
+      )}
     </div>
   )
 }

@@ -80,23 +80,23 @@ export function Composition({
   candidate,
   interactive,
   beamSupported,
+  playCue,
+  cueMessage,
+  cueConfirmed,
 }: {
   effect: EffectId
   candidate: boolean
   interactive: boolean
   beamSupported: boolean
+  playCue: () => void
+  cueMessage: string
+  cueConfirmed: boolean
 }) {
   const [view, setView] = useState<'overview' | 'week'>('overview')
   const [detail, setDetail] = useState<string | null>(null)
-  const [cue, setCue] = useState(0)
-  const [cueOn, setCueOn] = useState(false)
-  function playCue() {
-    setCue((value) => value + 1)
-    setCueOn(true)
-  }
   return (
     <div className="composition" data-testid="composition">
-      <MagicGlass interactive={interactive && effect === 'glass'}>
+      <MagicGlass interactive={interactive} cueTarget="navigation">
         <div className="navigation glass-material">
           {effect === 'beam' && <BorderBeam candidate={candidate} supported={beamSupported} />}
           <div className="brand">
@@ -117,6 +117,12 @@ export function Composition({
                 setDetail(null)
               }}
             >
+              <span aria-hidden="true" className="cue-clip">
+                <span
+                  className="lighting-cue control-cue"
+                  data-cue-target={view === 'overview' ? 'active' : undefined}
+                />
+              </span>
               <LayoutDashboard size={18} />
               Overview
               <ChevronRight size={14} />
@@ -129,11 +135,29 @@ export function Composition({
                 setDetail(null)
               }}
             >
+              <span aria-hidden="true" className="cue-clip">
+                <span
+                  className="lighting-cue control-cue"
+                  data-cue-target={view === 'week' ? 'active' : undefined}
+                />
+              </span>
               <CalendarDays size={18} />
               Weekly Planner
               <ChevronRight size={14} />
             </button>
           </nav>
+          <details className="preview-notes-menu">
+            <summary>
+              Preview notes
+              <ChevronRight size={14} />
+            </summary>
+            <MagicGlass interactive={interactive} className="menu-glass">
+              <div className="menu-plate">
+                <strong>Read-only workspace</strong>
+                <p>Illustrative academic records. Glass is limited to chrome; content stays solid.</p>
+              </div>
+            </MagicGlass>
+          </details>
           <div className="nav-context">
             <BookOpen size={18} />
             <div>
@@ -162,31 +186,34 @@ export function Composition({
                 : 'October 12–18 · A read-only schedule illustration.'}
             </p>
           </div>
-          <div className="floating-action glass-material">
-            {effect === 'shimmer' ? (
-              <ShimmerButton candidate={candidate} onClick={playCue}>
-                <Sparkles size={17} />
-                Play light cue
-              </ShimmerButton>
-            ) : (
-              <button className="primary-action" onClick={playCue}>
-                <Sparkles size={17} />
-                Play light cue
-              </button>
-            )}
-          </div>
+          <MagicGlass interactive={interactive} className="action-glass" cueTarget="action">
+            <div className="floating-action glass-material">
+              {effect === 'shimmer' ? (
+                <ShimmerButton candidate={candidate} onClick={playCue}>
+                  <Sparkles size={17} />
+                  Play light cue
+                </ShimmerButton>
+              ) : (
+                <button className="primary-action light-sensitive" onClick={playCue}>
+                  <span aria-hidden="true" className="cue-clip">
+                    <span className="lighting-cue control-cue" data-cue-target="control" />
+                  </span>
+                  <Sparkles size={17} />
+                  Play light cue
+                </button>
+              )}
+            </div>
+          </MagicGlass>
         </header>
-        <div className="cue-status" role="status">
-          {cue > 0
-            ? 'Light cue played. This preview does not save or schedule work.'
-            : 'Interactive visual preview · the records below are illustrative.'}
+        <div className="cue-status" role="status" data-confirmed={cueConfirmed}>
+          {cueConfirmed && <Check size={13} />}
+          {cueMessage}
         </div>
-        <div
-          key={cue}
-          className={`cue-line ${cueOn ? 'cue-playing' : ''}`}
-          aria-hidden="true"
-          onAnimationEnd={() => setCueOn(false)}
-        />
+        <div className="environment-band" aria-hidden="true">
+          <span className="alignment-ticks" />
+          <span className="band-light" />
+          <span className="band-marker" />
+        </div>
         {view === 'overview' ? (
           <>
             <div className="metrics">

@@ -1,9 +1,10 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { App } from './App'
 
 function renderApp(media: string[] = []) {
+  vi.stubGlobal('CSS', { supports: () => true, registerProperty: vi.fn() })
   vi.stubGlobal('matchMedia', (query: string) => ({
     matches: media.includes(query),
     addEventListener: vi.fn(),
@@ -12,6 +13,15 @@ function renderApp(media: string[] = []) {
   return render(<App />)
 }
 beforeEach(() => vi.unstubAllGlobals())
+afterEach(() => {
+  vi.useRealTimers()
+  vi.restoreAllMocks()
+})
+async function reference(user: ReturnType<typeof userEvent.setup>, id: string) {
+  const summary = screen.getByText('Sources & archived comparisons')
+  if (!summary.parentElement?.hasAttribute('open')) await user.click(summary)
+  await user.selectOptions(screen.getByLabelText('Technical comparison'), id)
+}
 
 describe('visual audition controls and isolation', () => {
   it('switches both themes and every effect using real controls', async () => {
@@ -22,7 +32,7 @@ describe('visual audition controls and isolation', () => {
     await user.click(screen.getByRole('button', { name: 'Night Flight' }))
     expect(container.firstChild).toHaveAttribute('data-theme', 'night')
     for (const id of ['lattice', 'horizon', 'glass', 'beam', 'shimmer', 'baseline']) {
-      await user.selectOptions(screen.getByLabelText('Live effect'), id)
+      await reference(user, id)
       expect(container.firstChild).toHaveAttribute('data-effect', id)
     }
   })
@@ -42,7 +52,7 @@ describe('visual audition controls and isolation', () => {
     const user = userEvent.setup()
     const { container } = renderApp(['(min-width: 1100px)'])
     await user.click(screen.getByRole('button', { name: 'Daylight' }))
-    await user.selectOptions(screen.getByLabelText('Live effect'), 'beam')
+    await reference(user, 'beam')
     await user.click(screen.getByRole('button', { name: 'Pause' }))
     expect(container.firstChild).toHaveAttribute('data-inactive', 'true')
     await user.click(screen.getByRole('button', { name: 'Resume' }))
@@ -81,13 +91,14 @@ describe('visual audition controls and isolation', () => {
   it('compares library defaults only for licensed adaptations and disables irrelevant speed controls', async () => {
     const user = userEvent.setup()
     const { container } = renderApp(['(min-width: 1100px)'])
+    await reference(user, 'integrated')
     expect(screen.getByLabelText(/Library defaults/)).toBeDisabled()
-    await user.selectOptions(screen.getByLabelText('Live effect'), 'lattice')
+    await reference(user, 'lattice')
     await user.click(screen.getByLabelText(/Library defaults/))
     expect(container.firstChild).toHaveAttribute('data-candidate', 'true')
     expect(screen.getByRole('slider', { name: /Animation speed/ })).toBeDisabled()
-    await user.selectOptions(screen.getByLabelText('Live effect'), 'glass')
-    expect(container.firstChild).toHaveAttribute('data-candidate', 'false')
+    await reference(user, 'glass')
+    expect(container.firstChild).toHaveAttribute('data-candidate', 'true')
     expect(screen.getByRole('slider', { name: /Animation speed/ })).toBeDisabled()
   })
   it('switches contextual compositions, inspects illustrative records, and plays a cue without claiming save', async () => {

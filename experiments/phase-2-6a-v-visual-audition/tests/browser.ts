@@ -77,8 +77,8 @@ async function geometry(page: Page, label: string) {
   report.geometryCases++
 }
 async function expandedControls(page: Page) {
-  const details = page.locator('details')
-  if (!((await details.getAttribute('open')) !== null)) await page.locator('summary').click()
+  const details = page.locator('.lab-controls > details:not(.technical-references)')
+  if (!((await details.getAttribute('open')) !== null)) await details.locator('summary').click()
 }
 async function allAnimations(page: Page) {
   return page.evaluate(() =>
@@ -96,36 +96,30 @@ async function screenShot(page: Page, name: string) {
   report.screenshots.push(file)
   await page.getByRole('button', { name: 'Resume', exact: true }).click()
 }
-async function profile(page: Page, effect: string) {
-  await page.locator('#effect').selectOption(effect)
-  await page.locator('#preview').scrollIntoViewIfNeeded()
-  const sample = await page.evaluate(
-    () =>
-      new Promise<Sample>((resolve) => {
-        const deltas: number[] = []
-        let last: number | undefined
-        const start = performance.now()
-        function tick(now: number) {
-          if (last !== undefined) deltas.push(now - last)
-          last = now
-          if (now - start >= 1000) {
-            const sorted = [...deltas].sort((a, b) => a - b)
-            resolve({
-              frames: deltas.length,
-              medianMs: sorted[Math.floor(sorted.length / 2)],
-              p95Ms: sorted[Math.floor(sorted.length * 0.95)],
-              activeAnimations: document
-                .getAnimations()
-                .filter((animation) => animation.playState === 'running').length,
-            })
-          } else requestAnimationFrame(tick)
-        }
-        requestAnimationFrame(tick)
-      }),
-  )
-  report.performance.push({ effect, ...sample })
+async function reference(page: Page, id: string) {
+  const details = page.locator('.technical-references')
+  if ((await details.getAttribute('open')) === null) await details.locator('summary').click()
+  await page.locator('#effect').selectOption(id)
 }
-
+async function phase(page: Page, fraction: number) {
+  return page.evaluate((fraction) => {
+    const field = document
+      .getAnimations()
+      .find((animation) => animation instanceof CSSAnimation && animation.animationName === 'ambient-field')!
+    field.currentTime = Number(field.effect!.getTiming().duration) * fraction
+    const style = (selector: string, pseudo?: string) =>
+      getComputedStyle(document.querySelector(selector)!, pseudo).backgroundImage
+    return {
+      x: getComputedStyle(document.querySelector('.preview-stage')!).getPropertyValue('--scene-light-x'),
+      nav: style('.magic-glass .ambient-gradient'),
+      menu: style('.menu-glass .ambient-gradient'),
+      action: style('.action-glass .ambient-gradient'),
+      active: style('.nav-item.active', '::before'),
+      control: style('.primary-action', '::before'),
+      sky: style('.sky-light'),
+    }
+  }, fraction)
+}
 for (const [engineName, engine] of [
   ['Chromium', chromium],
   ['WebKit', webkit],
@@ -148,130 +142,265 @@ for (const [engineName, engine] of [
     await page.setViewportSize({ width, height })
     for (const theme of ['Daylight', 'Night Flight']) {
       await page.getByRole('button', { name: theme, exact: true }).click()
-      for (const effect of effects) {
-        await page.locator('#effect').selectOption(effect)
+      for (const id of ['integrated', ...effects]) {
+        await reference(page, id)
         await page.getByRole('button', { name: 'Overview', exact: false }).click()
-        await geometry(page, `${engineName} ${width}×${height} ${theme} ${effect} overview`)
+        await geometry(page, `${engineName} ${width}×${height} ${theme} ${id} overview`)
         await page.getByRole('button', { name: /Weekly Planner/ }).click()
-        await geometry(page, `${engineName} ${width}×${height} ${theme} ${effect} week`)
+        await geometry(page, `${engineName} ${width}×${height} ${theme} ${id} week`)
       }
     }
   }
   await page.setViewportSize({ width: 1440, height: 900 })
+  await reference(page, 'integrated')
+  await page.getByText('Preview notes', { exact: true }).click()
+  await geometry(page, `${engineName}: opened in-flow preview menu`)
+  await expandedControls(page)
   await page.getByRole('button', { name: 'Overview', exact: false }).click()
   await page.getByRole('button', { name: 'Night Flight', exact: true }).click()
-  await page.locator('#effect').selectOption('horizon')
-  await expandedControls(page)
+  await page.locator('#preview').scrollIntoViewIfNeeded()
+  await page.locator('.audition[data-inactive="false"]').waitFor()
+  const before = await phase(page, 0.05)
+  const after = await phase(page, 0.65)
+  for (const role of ['x', 'nav', 'menu', 'action', 'active', 'control', 'sky'] as const)
+    assert.notEqual(before[role], after[role], `${engineName}: shared lighting changes ${role}`)
   await page.getByRole('button', { name: 'Cinematic', exact: true }).click()
-  assert.equal(await page.locator('#intensity').inputValue(), '92')
+  await page.getByRole('button', { name: 'Daylight', exact: true }).click()
+  assert.equal(await page.locator('#intensity').inputValue(), '92', 'theme preserves preset')
+  assert.equal(await page.locator('#speed').inputValue(), '1.2', 'theme preserves speed')
   await page.getByRole('button', { name: 'Pause', exact: true }).click()
-  assert.ok(
-    (await allAnimations(page)).every((animation) => animation.state === 'paused'),
-    'pause freezes actual CSS animations',
-  )
+  assert.ok((await allAnimations(page)).every((animation) => animation.state === 'paused'))
   await page.getByRole('button', { name: 'Resume', exact: true }).click()
   await page.locator('#preview').scrollIntoViewIfNeeded()
-  await page.waitForTimeout(100)
-  assert.ok(
-    (await allAnimations(page)).some((animation) => animation.state === 'running'),
-    'resume restarts movement',
-  )
+  await page.locator('.audition[data-inactive="false"]').waitFor()
+  assert.ok((await allAnimations(page)).some((animation) => animation.state === 'running'))
   await page.getByLabel('Reduce motion', { exact: true }).check()
-  assert.equal((await allAnimations(page)).length, 0, 'manual reduction removes continuous animations')
+  assert.equal((await allAnimations(page)).length, 0)
+  await page.getByRole('button', { name: 'Play light cue' }).click()
+  assert.equal(await page.locator('.audition').getAttribute('data-cue-active'), 'false')
+  assert.ok(await page.getByText('Light cue confirmed.', { exact: false }).count())
   await page.getByLabel('Reduce motion', { exact: true }).uncheck()
   await page.getByLabel('Reduce visual effects', { exact: true }).check()
-  const opaque = await page.locator('.navigation').evaluate((element) => ({
-    bg: getComputedStyle(element).backgroundColor,
-    blur: getComputedStyle(element).backdropFilter,
-    opacity: getComputedStyle(document.querySelector('.atmosphere')!).display,
-  }))
-  assert.ok(!opaque.bg.includes('rgba'), 'opaque fallback')
-  assert.equal(opaque.blur, 'none')
-  assert.equal(opaque.opacity, 'none')
+  assert.equal(
+    await page.locator('.navigation').evaluate((element) => getComputedStyle(element).backdropFilter),
+    'none',
+  )
+  assert.equal(
+    await page.locator('.navigation').evaluate((element) => getComputedStyle(element).backgroundImage),
+    'none',
+  )
   await page.getByRole('button', { name: 'Reset recommended values' }).click()
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.locator('.audition[data-reduced-motion="true"]').waitFor()
-  assert.equal((await allAnimations(page)).length, 0, 'OS reduced motion honored')
+  assert.equal((await allAnimations(page)).length, 0)
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.locator('.audition[data-reduced-motion="false"]').waitFor()
-  await page.locator('#effect').selectOption('glass')
-  await page.locator('.navigation').hover({ position: { x: 90, y: 80 } })
-  await page.mouse.move(400, 300)
+  await page.locator('.navigation').hover({ position: { x: 80, y: 80 } })
   await page.waitForTimeout(50)
-  assert.ok(
+  assert.notEqual(
     await page
       .locator('.magic-glass')
-      .evaluate((element) => element.style.getPropertyValue('--pointer-x') !== ''),
-    'pointer gradient responds',
+      .first()
+      .evaluate((element) => element.style.getPropertyValue('--pointer-x')),
+    '',
+    'shared glass responds in the integrated scene',
   )
   await page.getByRole('button', { name: 'Pause', exact: true }).click()
   assert.equal(
-    await page.locator('.magic-glass').evaluate((element) => element.style.getPropertyValue('--pointer-x')),
+    await page
+      .locator('.magic-glass')
+      .first()
+      .evaluate((element) => element.style.getPropertyValue('--pointer-x')),
     '',
-    'pause clears pointer response',
   )
   await page.getByRole('button', { name: 'Resume', exact: true }).click()
-  await page.locator('#effect').selectOption('shimmer')
-  await page.getByLabel(/Library defaults/).check()
-  assert.ok(await page.locator('.candidate-shimmer').count(), 'candidate values applied')
-  await page.getByLabel(/Library defaults/).uncheck()
-  await page.getByRole('button', { name: 'Play light cue' }).click()
-  assert.ok(await page.getByText('Light cue played.', { exact: false }).count())
-  await page.getByRole('button', { name: 'Inspect The shape of a good argument' }).click()
-  await page.getByRole('button', { name: 'Close details' }).click()
-  await page.locator('#effect').focus()
-  assert.equal(
-    await page.locator('#effect').evaluate((element) => getComputedStyle(element).outlineStyle),
-    'solid',
-    'keyboard focus visible',
-  )
-  if (engineName === 'Chromium') {
-    for (const effect of effects) await profile(page, effect)
-    await page.getByRole('button', { name: 'Daylight', exact: true }).click()
-    await page.locator('#effect').selectOption('lattice')
-    await page.getByRole('button', { name: 'Balanced', exact: true }).click()
-    await screenShot(page, 'daylight-desktop-balanced')
-    await page.getByRole('button', { name: 'Night Flight', exact: true }).click()
-    await page.locator('#effect').selectOption('horizon')
-    await page.getByRole('button', { name: 'Cinematic', exact: true }).click()
-    await screenShot(page, 'night-desktop-cinematic')
-    await page.getByRole('button', { name: /Weekly Planner/ }).click()
-    await screenShot(page, 'night-weekly-desktop')
-    for (const [theme, effect, file] of [
-      ['Daylight', 'lattice', 'daylight-phone-balanced'],
-      ['Night Flight', 'horizon', 'night-phone-cinematic'],
-      ['Night Flight', 'glass', 'night-glass-phone'],
-    ]) {
-      await page.setViewportSize({ width: 390, height: 844 })
-      await page.getByRole('button', { name: theme, exact: true }).click()
-      await page.locator('#effect').selectOption(effect)
-      await page.getByRole('button', { name: 'Overview', exact: false }).click()
-      await page
-        .getByRole('button', { name: theme === 'Daylight' ? 'Balanced' : 'Cinematic', exact: true })
-        .click()
-      if ((await page.locator('details').getAttribute('open')) !== null) await page.locator('summary').click()
-      await screenShot(page, file)
-    }
-  }
-  if (engineName === 'Chromium') {
-    await page.emulateMedia({ forcedColors: 'active' })
+  await page.locator('#preview').scrollIntoViewIfNeeded()
+  await page.locator('.audition[data-inactive="false"]').waitFor()
+  const cueCount = await page.locator('[data-cue-target]').count()
+  assert.equal(cueCount, 5)
+  for (let repeat = 0; repeat < 3; repeat++) {
     await page.getByRole('button', { name: 'Play light cue' }).click()
+    assert.equal(await page.locator('[data-cue-target]').count(), cueCount)
+    const count = await page.evaluate(
+      () =>
+        document
+          .getAnimations()
+          .filter(
+            (animation) => !(animation instanceof CSSAnimation) && !(animation instanceof CSSTransition),
+          ).length,
+    )
+    assert.equal(count, 5, 'retrigger cancels previous cue animations')
+  }
+  await page.getByRole('button', { name: 'Pause', exact: true }).click()
+  assert.equal(await page.locator('.audition').getAttribute('data-cue-active'), 'false')
+  assert.equal(
+    await page.evaluate(
+      () =>
+        document
+          .getAnimations()
+          .filter(
+            (animation) => !(animation instanceof CSSAnimation) && !(animation instanceof CSSTransition),
+          ).length,
+    ),
+    0,
+  )
+  await page.getByRole('button', { name: 'Resume', exact: true }).click()
+  await page.locator('#preview').scrollIntoViewIfNeeded()
+  await page.getByRole('button', { name: 'Play light cue' }).click()
+  await page.locator('.audition[data-cue-active="false"]').waitFor()
+  await page.getByRole('button', { name: 'Inspect The shape of a good argument' }).focus()
+  await page.keyboard.press('Enter')
+  await page.getByRole('complementary', { name: 'Illustrative record details' }).waitFor()
+  await page.getByRole('button', { name: 'Close details' }).focus()
+  await page.keyboard.press('Space')
+  assert.equal(await page.getByRole('complementary', { name: 'Illustrative record details' }).count(), 0)
+  await page.getByRole('button', { name: /Weekly Planner/ }).focus()
+  assert.equal(
+    await page
+      .getByRole('button', { name: /Weekly Planner/ })
+      .evaluate((element) => getComputedStyle(element).outlineStyle),
+    'solid',
+  )
+  await page.keyboard.press('Enter')
+  await page.getByRole('heading', { name: 'A week with breathing room.' }).waitFor()
+  await page.setViewportSize({ width: 667, height: 375 })
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await page.locator('.audition[data-inactive="true"]').waitFor()
+  assert.ok(
+    (await allAnimations(page)).every((animation) => animation.state === 'paused'),
+    'offscreen scene pauses',
+  )
+  await page.locator('#preview').scrollIntoViewIfNeeded()
+  await page.locator('.audition[data-inactive="false"]').waitFor()
+  await page.getByRole('button', { name: 'Play light cue' }).click()
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => true })
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+  await page.locator('.audition[data-inactive="true"]').waitFor()
+  assert.equal(await page.locator('.audition').getAttribute('data-cue-active'), 'false')
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => false })
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+  if (engineName === 'Chromium') {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.getByRole('button', { name: 'Overview', exact: false }).click()
+    for (const theme of ['Daylight', 'Night Flight']) {
+      await page.getByRole('button', { name: theme, exact: true }).click()
+      await page.getByRole('button', { name: 'Balanced', exact: true }).click()
+      await page.locator('#preview').scrollIntoViewIfNeeded()
+      const sample = await page.evaluate(
+        () =>
+          new Promise<Sample>((resolve) => {
+            const deltas: number[] = []
+            let last: number | undefined
+            const start = performance.now()
+            function tick(now: number) {
+              if (last !== undefined) deltas.push(now - last)
+              last = now
+              if (now - start >= 1000) {
+                const sorted = [...deltas].sort((a, b) => a - b)
+                resolve({
+                  frames: deltas.length,
+                  medianMs: sorted[Math.floor(sorted.length / 2)],
+                  p95Ms: sorted[Math.floor(sorted.length * 0.95)],
+                  activeAnimations: document
+                    .getAnimations()
+                    .filter((animation) => animation.playState === 'running').length,
+                })
+              } else requestAnimationFrame(tick)
+            }
+            requestAnimationFrame(tick)
+          }),
+      )
+      report.performance.push({ effect: theme, ...sample })
+    }
+    for (const [width, height, device] of [
+      [1440, 900, 'desktop'],
+      [390, 844, 'phone'],
+    ] as const) {
+      await page.setViewportSize({ width, height })
+      for (const theme of ['Daylight', 'Night Flight']) {
+        await page.getByRole('button', { name: theme, exact: true }).click()
+        await page
+          .getByRole('button', { name: theme === 'Daylight' ? 'Balanced' : 'Cinematic', exact: true })
+          .click()
+        for (const details of ['.technical-references', '.lab-controls > details:not(.technical-references)'])
+          if ((await page.locator(details).getAttribute('open')) !== null)
+            await page.locator(details).locator('summary').click()
+        for (const view of ['Overview', 'Weekly Planner']) {
+          await page.getByRole('button', { name: view, exact: false }).click()
+          await screenShot(
+            page,
+            `v2-${theme === 'Daylight' ? 'daylight' : 'night'}-${view === 'Overview' ? 'overview' : 'planner'}-${device}`,
+          )
+        }
+      }
+    }
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.getByRole('button', { name: 'Overview', exact: false }).click()
+    for (const theme of ['Daylight', 'Night Flight']) {
+      await page.getByRole('button', { name: theme, exact: true }).click()
+      await page.locator('#preview').scrollIntoViewIfNeeded()
+      await page.getByRole('button', { name: 'Play light cue' }).click()
+      await page.waitForTimeout(420)
+      const file = `screenshots/v2-${theme === 'Daylight' ? 'daylight' : 'night'}-cue-desktop.png`
+      await page.screenshot({ path: file, fullPage: true, animations: 'allow' })
+      report.screenshots.push(file)
+      await page.locator('.audition[data-cue-active="false"]').waitFor()
+    }
+    await page.emulateMedia({ forcedColors: 'active' })
+    await page.locator('.audition[data-reduced-effects="true"]').waitFor()
     assert.equal((await allAnimations(page)).length, 0)
     await page.emulateMedia({ forcedColors: 'none' })
   }
-  assert.deepEqual(errors, [], `${engineName}: browser exceptions`)
-  assert.deepEqual(external, [], `${engineName}: unexpected runtime external requests`)
   const fallbackPage = await context.newPage()
   await fallbackPage.addInitScript(() => {
     CSS.supports = () => false
+    Object.defineProperty(CSS, 'registerProperty', { value: undefined, configurable: true })
   })
   await open(fallbackPage)
-  await fallbackPage.locator('#effect').selectOption('beam')
-  assert.equal(await fallbackPage.locator('.beam-fallback').count(), 1)
+  assert.equal(await fallbackPage.locator('.preview-stage').getAttribute('data-light-motion'), 'false')
+  assert.equal(
+    (await allAnimations(fallbackPage)).length,
+    0,
+    'unsupported field stays static, no discrete jumps',
+  )
   assert.equal(
     await fallbackPage.locator('.navigation').evaluate((element) => getComputedStyle(element).backdropFilter),
     'none',
   )
+  await reference(fallbackPage, 'beam')
+  assert.equal(await fallbackPage.locator('.beam-fallback').count(), 1)
+  const touchContext = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  })
+  const touch = await touchContext.newPage()
+  touch.on('pageerror', (error) => errors.push(error.message))
+  await open(touch)
+  for (const theme of ['Daylight', 'Night Flight']) {
+    await touch.getByRole('button', { name: theme, exact: true }).tap()
+    await touch.locator('#preview').scrollIntoViewIfNeeded()
+    await touch.locator('.audition[data-inactive="false"]').waitFor()
+    await touch.getByRole('button', { name: 'Play light cue' }).tap()
+    assert.equal(await touch.locator('.audition').getAttribute('data-cue-active'), 'true')
+    assert.equal(
+      await touch
+        .locator('.magic-glass')
+        .first()
+        .evaluate((element) => element.style.getPropertyValue('--pointer-x')),
+      '',
+      'touch does not require mouse reflection',
+    )
+    await touch.getByRole('button', { name: /Weekly Planner/ }).tap()
+    await touch.getByRole('heading', { name: 'A week with breathing room.' }).waitFor()
+  }
+  await touchContext.close()
+  assert.deepEqual(errors, [], `${engineName}: browser exceptions`)
+  assert.deepEqual(external, [], `${engineName}: unexpected runtime external requests`)
   await browser.close()
   report.engines.push(`${engineName}: passed (simulation, not physical iPhone acceptance)`)
 }

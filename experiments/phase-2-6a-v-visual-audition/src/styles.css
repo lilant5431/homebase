@@ -775,16 +775,6 @@ output {
   color: var(--muted);
   margin: 14px 0 4px;
 }
-.cue-line {
-  width: 100%;
-  height: 1px;
-  margin-bottom: 18px;
-  background: var(--line);
-}
-.cue-playing {
-  background: var(--action);
-  animation: cue 700ms ease-out both;
-}
 .metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1331,20 +1321,6 @@ output {
     transform: translate(calc(100cqw - 100%), 0);
   }
 }
-@keyframes cue {
-  0% {
-    opacity: 0.1;
-    box-shadow: 0 0 0 var(--ice);
-  }
-  35% {
-    opacity: 1;
-    box-shadow: 0 0 12px var(--ice);
-  }
-  100% {
-    opacity: 1;
-    box-shadow: 0 0 0 var(--ice);
-  }
-}
 .audition[data-inactive='true'] *,
 .audition[data-inactive='true'] *::before,
 .audition[data-inactive='true'] *::after {
@@ -1826,5 +1802,366 @@ html:has(.audition[data-reduced-motion='true']) {
   }
   .workspace-top .eyebrow {
     font-size: 10px;
+  }
+}
+
+/* V2: one inherited CSS light field coordinates background and interactive chrome.
+   No light positions are React state; unsupported property animation stays static. */
+@property --scene-light-x {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 24%;
+}
+@property --scene-light-y {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 12%;
+}
+@property --scene-secondary-x {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 78%;
+}
+@property --scene-light-angle {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: -32deg;
+}
+@keyframes ambient-field {
+  from {
+    --scene-light-x: 18%;
+    --scene-light-y: 8%;
+    --scene-secondary-x: 78%;
+    --scene-light-angle: -34deg;
+  }
+  to {
+    --scene-light-x: 78%;
+    --scene-light-y: 30%;
+    --scene-secondary-x: 36%;
+    --scene-light-angle: -24deg;
+  }
+}
+.preview-stage[data-light-motion='true'] {
+  animation: ambient-field var(--motion-duration) ease-in-out infinite alternate;
+}
+.scene-label {
+  margin-bottom: 8px;
+}
+.scene-label h2 {
+  font:
+    600 15px/1.5 'Manrope',
+    sans-serif;
+  margin-top: 5px;
+}
+.technical-references {
+  margin-top: 10px;
+}
+.technical-references,
+.scene-label {
+  grid-column: 1 / -1;
+}
+.technical-body {
+  padding: 12px 0;
+}
+.technical-references summary {
+  line-height: 1.5;
+}
+.action-glass {
+  flex: 0 0 auto;
+  align-self: center;
+  border-radius: 15px;
+}
+.action-glass .glass-inner {
+  border-radius: inherit;
+}
+.ambient-gradient {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse at var(--scene-light-x) var(--scene-light-y), var(--ice), transparent 62%),
+    radial-gradient(ellipse at var(--scene-secondary-x) 95%, var(--warm), transparent 65%);
+}
+.audition[data-integrated='true'] .ambient-gradient {
+  opacity: calc(var(--intensity) * 0.8);
+}
+.audition[data-integrated='true'] .magic-gradient {
+  opacity: calc(var(--intensity) * 0.45);
+}
+.audition[data-integrated='true'] .glass-material {
+  background-image: linear-gradient(
+    120deg,
+    var(--glass-highlight),
+    transparent 24%,
+    transparent 70%,
+    var(--glass-highlight)
+  );
+}
+.audition[data-integrated='true'] .grid-pattern {
+  mask-image: none;
+  opacity: 0.19;
+}
+.audition[data-integrated='true'] .sun-ray {
+  animation: none;
+  left: calc(var(--scene-light-x) - 20%);
+  width: 62%;
+  height: 190%;
+  top: -45%;
+  transform: rotate(var(--scene-light-angle));
+  opacity: 0.58;
+}
+.audition[data-integrated='true'] .ray-two {
+  left: var(--scene-secondary-x);
+  width: 24%;
+  opacity: 0.3;
+}
+.audition[data-integrated='true'] .geometric-orbit {
+  animation: none;
+  width: 55%;
+  left: calc(var(--scene-secondary-x) - 28%);
+  top: calc(var(--scene-light-y) - 25%);
+  transform: rotate(calc(var(--scene-light-angle) + 70deg));
+  opacity: 0.75;
+}
+.audition[data-integrated='true'] .reflection {
+  background: linear-gradient(120deg, transparent 8%, var(--glass-highlight) 22%, transparent 52%);
+  background-position: var(--scene-light-x) 0;
+  background-size: 140% 100%;
+  opacity: 0.65;
+}
+/* Bounded top horizon: remains recognizable behind the header at every aspect ratio. */
+.audition[data-integrated='true'] .horizon {
+  inset: 0 0 auto;
+  height: 260px;
+}
+.audition[data-integrated='true'] .distant-roof {
+  opacity: 0.65;
+}
+.audition[data-integrated='true'] .runway-lights {
+  filter: drop-shadow(0 0 3px var(--ice));
+}
+.taxiway-lights {
+  fill: var(--ice);
+  opacity: 0.8;
+}
+.audition[data-integrated='true'] .horizon-line {
+  stroke-width: 1.5;
+  opacity: 0.5;
+}
+.audition[data-integrated='true'] .sky-light {
+  animation: none;
+  inset: -5% -10% auto;
+  height: min(650px, 70%);
+  opacity: 0.9;
+  background:
+    conic-gradient(
+      from var(--scene-light-angle) at var(--scene-light-x) -5%,
+      transparent 0deg,
+      #8bddfc4d 15deg,
+      transparent 42deg
+    ),
+    radial-gradient(ellipse at var(--scene-secondary-x) 28%, #edaa3826, transparent 55%);
+}
+.audition[data-integrated='true'][data-theme='night'] .workspace-top {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--glass-edge);
+}
+.audition[data-integrated='true'][data-theme='night'] .eyebrow {
+  letter-spacing: 0.14em;
+}
+.environment-band {
+  position: relative;
+  height: 26px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: 6px 0 20px;
+  overflow: hidden;
+  background: linear-gradient(120deg, transparent 5%, var(--glass-highlight) 24%, transparent 70%);
+}
+.band-light {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at var(--scene-light-x) 50%, var(--ice), transparent 65%);
+  opacity: calc(var(--intensity) * 0.5);
+}
+.alignment-ticks {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, var(--control-border) 0 1px, transparent 1px 20px);
+  mask-image: linear-gradient(180deg, #000 3px, transparent 4px);
+  opacity: 0.35;
+}
+.band-marker {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, var(--glass-highlight) 45%, transparent 80%);
+  background-position: var(--scene-light-x) 0;
+  background-size: 180% 100%;
+  opacity: var(--intensity);
+}
+.audition[data-integrated='true'][data-theme='night'] .environment-band {
+  height: 36px;
+  border-color: var(--glass-edge);
+  background: linear-gradient(170deg, transparent 20%, #8bddfc0f 50%, transparent 80%);
+}
+.audition[data-integrated='true'][data-theme='night'] .band-marker {
+  background:
+    radial-gradient(circle, var(--ice) 0 1.5px, transparent 3px) 0 18px / 24px 10px repeat-x,
+    radial-gradient(circle, var(--warm) 0 1.5px, transparent 3px) 10px 6px / 60px 10px repeat-x;
+  opacity: calc(var(--intensity) * 0.9);
+}
+.audition[data-integrated='true'] .primary-action,
+.nav-item {
+  position: relative;
+  isolation: isolate;
+}
+.audition[data-integrated='true'] .primary-action {
+  box-shadow:
+    0 5px 18px #0002,
+    inset 0 1px 0 #ffffff55;
+}
+.cue-status {
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  line-height: 1.6;
+}
+.cue-status[data-confirmed='true'] {
+  color: var(--text);
+}
+.cue-status svg {
+  color: var(--action);
+  margin-top: 2px;
+}
+.cue-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+.lighting-cue {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 15%, #ffffff80 45%, transparent 75%);
+}
+.audition[data-theme='night'] .lighting-cue {
+  background: linear-gradient(115deg, transparent 15%, #8bddfc99 45%, #f5c96a30 60%, transparent 80%);
+}
+.scene-cue {
+  height: 70%;
+}
+.magic-glass > .cue-clip {
+  z-index: 0;
+}
+.glass-inner {
+  z-index: 1;
+}
+.control-cue {
+  display: none;
+}
+@supports ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+  .audition[data-integrated='true'] .primary-action::before,
+  .audition[data-integrated='true'] .nav-item.active::before,
+  .control-cue {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at var(--scene-light-x) var(--scene-light-y), var(--ice), transparent 65%),
+      radial-gradient(ellipse at var(--scene-secondary-x) 100%, var(--warm), transparent 65%);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    opacity: var(--intensity);
+  }
+  .control-cue {
+    display: block;
+    opacity: 0;
+  }
+}
+.audition[data-reduced-effects='true'] .ambient-gradient,
+.audition[data-reduced-effects='true'] .lighting-cue,
+.audition[data-reduced-effects='true'] .environment-band,
+.audition[data-reduced-effects='true'] .primary-action::before,
+.audition[data-reduced-effects='true'] .nav-item::before {
+  display: none;
+}
+.audition[data-reduced-effects='true'] .glass-material,
+.audition[data-blur='false'] .glass-material {
+  background-image: none;
+}
+@media (forced-colors: active) {
+  .ambient-gradient,
+  .lighting-cue,
+  .environment-band {
+    display: none;
+  }
+}
+
+/* Native disclosure: a real, in-flow glass menu, with an opaque explanation plate. */
+.preview-notes-menu {
+  border: 0;
+  margin: 12px 0 0;
+}
+.preview-notes-menu summary {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--text);
+  background: var(--surface);
+  padding: 8px;
+  font-size: 11px;
+}
+.preview-notes-menu[open] summary svg {
+  transform: rotate(90deg);
+}
+.menu-glass {
+  padding: 5px;
+  margin-top: 7px;
+  border-radius: 12px;
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.menu-plate {
+  position: relative;
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.menu-plate strong {
+  font-weight: 500;
+}
+.menu-plate p {
+  color: var(--muted);
+  margin-top: 6px;
+}
+.audition[data-reduced-effects='true'] .menu-glass,
+.audition[data-blur='false'] .menu-glass {
+  background: var(--surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+@media (forced-colors: active) {
+  .menu-glass,
+  .menu-plate,
+  .preview-notes-menu summary {
+    background: Canvas;
+    color: CanvasText;
   }
 }

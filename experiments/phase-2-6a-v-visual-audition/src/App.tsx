@@ -12,11 +12,13 @@ import {
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Atmosphere } from './components/Atmosphere'
 import { Composition } from './components/Composition'
+import { useLightingCue } from './lighting'
 import { effects, presets, useMedia, type EffectId, type Preset, type Theme } from './settings'
 
 export function App() {
   const [theme, setTheme] = useState<Theme>('night')
-  const [effect, setEffect] = useState<EffectId>('horizon')
+  const [archiveEffect, setArchiveEffect] = useState<EffectId | null>(null)
+  const effect = archiveEffect ?? (theme === 'day' ? 'lattice' : 'horizon')
   const [intensity, setIntensity] = useState(65)
   const [speed, setSpeed] = useState(0.75)
   const [preset, setPreset] = useState<Preset | null>('Balanced')
@@ -43,7 +45,12 @@ export function App() {
   const blurSupported =
     typeof CSS !== 'undefined' &&
     (CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)'))
-  const movable = selected.motion && !(effect === 'lattice' && candidate)
+  const fieldSupported = typeof CSS !== 'undefined' && typeof CSS.registerProperty === 'function'
+  const integrated = archiveEffect === null
+  const effectiveCandidate = candidate && !integrated && selected.comparison
+  const cue = useLightingCue(stage, !inactive && !reduceMotion, `${theme}:${effect}:${effectiveCandidate}`)
+  const movable =
+    (integrated ? fieldSupported : selected.motion) && !(effect === 'lattice' && effectiveCandidate)
   useEffect(() => {
     const listener = () => setHidden(document.hidden)
     document.addEventListener('visibilitychange', listener)
@@ -72,7 +79,9 @@ export function App() {
       className="audition"
       data-theme={theme}
       data-effect={effect}
-      data-candidate={candidate && selected.comparison}
+      data-integrated={integrated}
+      data-cue-active={cue.active}
+      data-candidate={effectiveCandidate}
       data-reduced-motion={reduceMotion}
       data-reduced-effects={reduceEffects}
       data-inactive={inactive}
@@ -81,8 +90,8 @@ export function App() {
         {
           '--intensity': intensity / 100,
           '--motion-duration': `${18 / speed}s`,
-          '--beam-duration': `${(candidate ? 6 : 10) / speed}s`,
-          '--shimmer-duration': `${(candidate ? 3 : 6) / speed}s`,
+          '--beam-duration': `${(effectiveCandidate ? 6 : 10) / speed}s`,
+          '--shimmer-duration': `${(effectiveCandidate ? 3 : 6) / speed}s`,
           colorScheme: theme === 'night' ? 'dark' : 'light',
         } as CSSProperties
       }
@@ -91,7 +100,7 @@ export function App() {
         <a href="#preview" className="lab-brand">
           <Compass size={24} />
           <span>
-            homebase<span>VISUAL AUDITION / 2.6A-V</span>
+            homebase<span>VISUAL AUDITION / 2.6A-V2</span>
           </span>
         </a>
         <div className="lab-tag">An experiment in light & space</div>
@@ -118,23 +127,18 @@ export function App() {
               Night Flight
             </button>
           </fieldset>
-          <label className="control-label" htmlFor="effect">
-            Live effect
-          </label>
-          <select
-            id="effect"
-            value={effect}
-            onChange={(event) => {
-              setEffect(event.target.value as EffectId)
-              setCandidate(false)
-            }}
-          >
-            {effects.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
+          <div className="scene-label">
+            <span className="eyebrow">
+              {integrated ? 'COORDINATED ENVIRONMENT' : 'ARCHIVAL COMPARISON · NOT SHORTLISTED'}
+            </span>
+            <h2>
+              {integrated
+                ? theme === 'day'
+                  ? 'Integrated Sunlit Lattice'
+                  : 'Integrated Illuminated Horizon'
+                : selected.name}
+            </h2>
+          </div>
           <p className="effect-description">{selected.description}</p>
           <fieldset className="presets">
             <legend>Intensity presets</legend>
@@ -222,17 +226,49 @@ export function App() {
                   {(systemEffects || forcedColors) && <small>Requested by your device</small>}
                 </span>
               </label>
+            </div>
+          </details>
+          <details className="technical-references">
+            <summary>
+              Sources & archived comparisons
+              <ChevronDown size={16} />
+            </summary>
+            <div className="technical-body">
+              <p className="control-help">
+                Rejected effects remain here as technical references, not preferred design options.
+              </p>
+              <label className="control-label" htmlFor="effect">
+                Technical comparison
+              </label>
+              <select
+                id="effect"
+                value={archiveEffect ?? 'integrated'}
+                onChange={(event) =>
+                  setArchiveEffect(
+                    event.target.value === 'integrated' ? null : (event.target.value as EffectId),
+                  )
+                }
+              >
+                <option value="integrated">Return to integrated themes</option>
+                {effects.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.id === 'baseline'
+                      ? 'Performance / reduced-effects baseline'
+                      : `Archive · ${item.name}`}
+                  </option>
+                ))}
+              </select>
               <label className="check-control">
                 <input
                   type="checkbox"
-                  checked={candidate && selected.comparison}
-                  disabled={!selected.comparison}
+                  checked={candidate && !integrated && selected.comparison}
+                  disabled={integrated || !selected.comparison}
                   onChange={(event) => setCandidate(event.target.checked)}
                 />
                 <span>
                   Library defaults
                   <small>
-                    {selected.comparison
+                    {!integrated && selected.comparison
                       ? 'Compare untuned values with Homebase tuning'
                       : 'Original effect; no library counterpart'}
                   </small>
@@ -249,7 +285,10 @@ export function App() {
             ) : (
               <p>{selected.credit}</p>
             )}
-            <small>All adaptations and limitations are documented in the component audit.</small>
+            <small>
+              Shared glass: Magic UI Magic Card gradient technique. Full MIT attribution and source hashes are
+              retained.
+            </small>
           </div>
         </aside>
         <div className="preview-column">
@@ -263,17 +302,27 @@ export function App() {
             <span>
               {reduceEffects
                 ? 'Opaque fallback'
-                : candidate && selected.comparison
+                : effectiveCandidate
                   ? 'Library defaults'
-                  : 'Homebase tuning'}
+                  : integrated
+                    ? 'Coordinated light + shared glass'
+                    : 'Archival tuning'}
             </span>
           </div>
-          <div id="preview" className="preview-stage" ref={stage}>
-            <Atmosphere effect={effect} candidate={candidate && selected.comparison} />
+          <div
+            id="preview"
+            className="preview-stage"
+            ref={stage}
+            data-light-motion={fieldSupported && !reduceMotion && !effectiveCandidate && integrated}
+          >
+            <Atmosphere effect={effect} candidate={effectiveCandidate} />
             <Composition
               effect={effect}
-              candidate={candidate && selected.comparison}
-              interactive={!inactive && !reduceMotion}
+              candidate={effectiveCandidate}
+              interactive={!inactive && !reduceMotion && (integrated || effect === 'glass')}
+              cueMessage={cue.message}
+              cueConfirmed={cue.confirmed}
+              playCue={cue.play}
               beamSupported={beamSupported}
             />
           </div>
@@ -286,6 +335,9 @@ export function App() {
             </p>
           </div>
           <div className="fallback-notes" role="status">
+            {integrated &&
+              !fieldSupported &&
+              'Animated light positions unsupported: static coordinated reflections. '}
             {!blurSupported && 'Backdrop blur unavailable: opaque navigation fallback. '}
             {effect === 'beam' && !beamSupported && 'Motion path unsupported: static illuminated border. '}
             {reduceMotion && 'Nonessential movement stopped. '}
@@ -296,10 +348,11 @@ export function App() {
       <footer id="method" className="lab-footer">
         <div>
           <span className="eyebrow">LIGHT, WITHOUT THE WEIGHT</span>
-          <h2>Six effects. One clear workspace.</h2>
+          <h2>Two environments. One shared light language.</h2>
           <p>
-            Four attributed MIT Magic UI adaptations and two original CSS/SVG scenes. No animation library,
-            WebGL, accounts, tracking or browser storage. Pause and reduction settings apply to every effect.
+            Sunlit lattice and illuminated horizon share attributed Magic UI gradient reflections. Rejected
+            candidates are archival references. No animation library, WebGL, accounts, tracking or browser
+            storage. Pause and reduction settings apply to every effect.
           </p>
         </div>
         <div>
