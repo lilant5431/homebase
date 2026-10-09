@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Homebase 2.6A · Concept atlas</title>
     <link rel="stylesheet" href="atlas.css" />
+    <link rel="stylesheet" href="materials-motion.css" />
   </head>
   <body>
     <header class="atlas-header">
@@ -16,10 +17,537 @@
         for review. Product reflow and tablet/short-landscape behavior are specified in the documents.
       </p>
       <nav class="index">
+        <a href="#materials-motion">Materials &amp; Motion</a>
         <a href="../01-design-vision.md">Design rationale</a><a href="#daylight">Modern Daylight</a
         ><a href="#night">Night Flight</a><a href="../05-technical-handoff.md">Date/Time contract</a>
       </nav>
     </header>
+    <section class="material-showcase" id="materials-motion">
+      <h2>Materials &amp; Motion Showcase</h2>
+      <p>
+        Review-only visual specimens, isolated from Homebase. Buttons expose native hover/focus/press styling
+        but do not navigate, save, or access storage. Fixed state samples and storyboards are labeled. No
+        animation library or ongoing ambient animation.
+      </p>
+      <article class="material-theme" data-theme="daylight" id="materials-daylight">
+        <p class="study-kicker">HOMEBASE / MATERIAL STUDY</p>
+        <h2>Modern Daylight</h2>
+        <p class="study-caption">
+          Cool-white layers · steel-blue precision · light on a quiet work surface. Status and actionable
+          content stay solid; reflections belong only behind navigation chrome.
+        </p>
+        <div class="effects-pair">
+          <div class="effects-column effects-normal">
+            <h3>Normal visual effects</h3>
+            <p class="study-caption">
+              Static reflected light, bounded translucency, fine edges. Readable opaque actions.
+            </p>
+            <div class="material-scene">
+              <span class="specimen-label">Navigation · four explicit states</span>
+              <div class="chrome-glass">
+                <div class="chrome-brand"><span>h /</span> Homebase</div>
+                <button type="button" class="material-nav" aria-label="Overview, Default visual specimen">
+                  <span class="nav-glyph" aria-hidden="true">□</span>Overview<span class="state-name"
+                    >Default</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-hover"
+                  aria-label="Assignments, Hover visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">✓</span>Assignments<span class="state-name"
+                    >Hover</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-active"
+                  aria-label="Weekly Planner, Active visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">▤</span>Weekly Planner<span class="state-name"
+                    >Active</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-focused"
+                  aria-label="Assessments, Focus visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">◇</span>Assessments<span class="state-name"
+                    >Focus</span
+                  >
+                </button>
+              </div>
+              <span class="specimen-label">Menu · open and selected</span>
+              <div class="chrome-glass popup-glass">
+                <div class="menu-heading">APPEARANCE · OPEN MENU</div>
+                <div role="group" aria-label="Appearance visual state specimens">
+                  <button type="button" class="material-menu-item is-selected">
+                    <span>System</span><span class="selected-mark">✓ Selected</span></button
+                  ><button type="button" class="material-menu-item">Light <span>Modern Daylight</span></button
+                  ><button type="button" class="material-menu-item">Dark <span>Night Flight</span></button>
+                </div>
+                <hr class="menu-divider" />
+                <p class="menu-foot">Drawn states; does not change or save appearance.</p>
+              </div>
+              <span class="specimen-label">Primary action · four explicit states</span>
+              <div class="action-grid">
+                <div>
+                  <span class="specimen-label">Default</span
+                  ><button type="button" class="material-button">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Focus</span
+                  ><button type="button" class="material-button is-focused">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Pressed</span
+                  ><button type="button" class="material-button is-pressed">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Disabled</span
+                  ><button type="button" class="material-button" disabled>Lock session</button
+                  ><span class="disabled-note">Select a feasible session first.</span>
+                </div>
+              </div>
+              <span class="specimen-label">Floating holder · never a mobile form save bar</span>
+              <div class="chrome-glass floating-glass">
+                <div class="holder-content">Study plan actions</div>
+                <button type="button" class="material-button">Refresh plan</button>
+              </div>
+              <div class="indicator-specimen">
+                <span class="indicator-dot" aria-hidden="true"></span>Active destination · solid marker ·
+                Night halo belongs only to active navigation
+              </div>
+              <span class="material-warning">△ Unscheduled work · 30 min — solid warning specimen</span>
+            </div>
+          </div>
+          <div class="effects-column effects-reduced">
+            <h3>Reduced effects / unsupported blur</h3>
+            <p class="study-caption">Opaque layers, visible boundaries, no reflected light or halo.</p>
+            <div class="material-scene">
+              <span class="specimen-label">Navigation · four explicit states</span>
+              <div class="chrome-glass">
+                <div class="chrome-brand"><span>h /</span> Homebase</div>
+                <button type="button" class="material-nav" aria-label="Overview, Default visual specimen">
+                  <span class="nav-glyph" aria-hidden="true">□</span>Overview<span class="state-name"
+                    >Default</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-hover"
+                  aria-label="Assignments, Hover visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">✓</span>Assignments<span class="state-name"
+                    >Hover</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-active"
+                  aria-label="Weekly Planner, Active visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">▤</span>Weekly Planner<span class="state-name"
+                    >Active</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-focused"
+                  aria-label="Assessments, Focus visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">◇</span>Assessments<span class="state-name"
+                    >Focus</span
+                  >
+                </button>
+              </div>
+              <span class="specimen-label">Menu · open and selected</span>
+              <div class="chrome-glass popup-glass">
+                <div class="menu-heading">APPEARANCE · OPAQUE FALLBACK</div>
+                <div role="group" aria-label="Appearance visual state specimens">
+                  <button type="button" class="material-menu-item is-selected">
+                    <span>System</span><span class="selected-mark">✓ Selected</span></button
+                  ><button type="button" class="material-menu-item">Light <span>Modern Daylight</span></button
+                  ><button type="button" class="material-menu-item">Dark <span>Night Flight</span></button>
+                </div>
+                <hr class="menu-divider" />
+                <p class="menu-foot">Drawn states; does not change or save appearance.</p>
+              </div>
+              <span class="specimen-label">Primary action · four explicit states</span>
+              <div class="action-grid">
+                <div>
+                  <span class="specimen-label">Default</span
+                  ><button type="button" class="material-button">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Focus</span
+                  ><button type="button" class="material-button is-focused">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Pressed</span
+                  ><button type="button" class="material-button is-pressed">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Disabled</span
+                  ><button type="button" class="material-button" disabled>Lock session</button
+                  ><span class="disabled-note">Select a feasible session first.</span>
+                </div>
+              </div>
+              <span class="specimen-label">Floating holder · never a mobile form save bar</span>
+              <div class="chrome-glass floating-glass">
+                <div class="holder-content">Study plan actions</div>
+                <button type="button" class="material-button">Refresh plan</button>
+              </div>
+              <div class="indicator-specimen">
+                <span class="indicator-dot" aria-hidden="true"></span>Active destination · solid marker · halo
+                removed
+              </div>
+              <span class="material-warning">△ Unscheduled work · 30 min — solid warning specimen</span>
+            </div>
+          </div>
+        </div>
+        <div class="motion-studies">
+          <h3>Three motion studies · static storyboards</h3>
+          <p class="study-caption">
+            Frames specify a transition; they do not run a timer, save a record or lock a session. Semantic
+            state changes are immediate.
+          </p>
+          <section class="motion-study">
+            <h3>01 / Navigation selection</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · before click</span>
+                <div class="frame-nav before">□ Overview · current</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · 90ms</span>
+                <div class="frame-nav transitioning">▤ Weekly Planner · current</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 180ms</span>
+                <div class="frame-nav">▤ Weekly Planner · current</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              180ms standard easing: cubic-bezier(.2,0,0,1). The label and current destination update
+              immediately; only marker emphasis settles. New selection replaces the transition; no page slide
+              or focus delay. Reduced motion: jump directly to final. Purpose: retain orientation.
+            </p>
+          </section>
+          <section class="motion-study">
+            <h3>02 / Menu entry and exit</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · closed</span>
+                <div class="frame-nav before">Appearance ▾</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · 80ms</span>
+                <div class="frame-menu ghost">Edge silhouette only; no half-opacity text claim.</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 160ms</span>
+                <div class="frame-menu">✓ System — selected<br />Light · Dark</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              Enter 160ms standard; exit 120ms cubic-bezier(.4,0,1,1). Desktop menu opacity and at most 8px
+              travel; text and its required baseplate stay fully readable throughout. Closing removes
+              interaction immediately and restores opener focus. Reopening reverses current progress without
+              queued exits. Reduced motion: immediate show/hide. Purpose: connect the menu to its trigger. No
+              mobile editor transform.
+            </p>
+          </section>
+          <section class="motion-study">
+            <h3>03 / Successful session lock</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · before adoption</span>
+                <div class="frame-lock">
+                  <span class="source-tag">◇ Recommended</span>4:00–4:30 PM · 30 min
+                </div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · adopted, 60ms</span>
+                <div class="frame-lock">
+                  <span class="source-tag"><span class="soft-check" aria-hidden="true">✓</span> ▣ Manual</span
+                  >4:00–4:30 PM · 30 min
+                </div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 120ms</span>
+                <div class="frame-lock"><span class="source-tag">✓ ▣ Manual</span>4:00–4:30 PM · 30 min</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              120ms standard easing after successful persistence/source adoption. Manual label and lock icon
+              appear synchronously; only a decorative check settles in opacity. Invalid intent, failed save or
+              cancel stays in the original state with its real error; never show temporary success. Reduced
+              motion: immediate final state. No session movement or completion credit. Purpose: distinguish
+              user intent from a recommendation.
+            </p>
+          </section>
+        </div>
+      </article>
+      <article class="material-theme" data-theme="night" id="materials-night">
+        <p class="study-kicker">HOMEBASE / MATERIAL STUDY</p>
+        <h2>Night Flight</h2>
+        <p class="study-caption">
+          Midnight layers · ice-blue edges · restrained evening atmosphere. Status and actionable content stay
+          solid; reflections belong only behind navigation chrome.
+        </p>
+        <div class="effects-pair">
+          <div class="effects-column effects-normal">
+            <h3>Normal visual effects</h3>
+            <p class="study-caption">
+              Static reflected light, bounded translucency, fine edges. Readable opaque actions.
+            </p>
+            <div class="material-scene">
+              <span class="specimen-label">Navigation · four explicit states</span>
+              <div class="chrome-glass">
+                <div class="chrome-brand"><span>h /</span> Homebase</div>
+                <button type="button" class="material-nav" aria-label="Overview, Default visual specimen">
+                  <span class="nav-glyph" aria-hidden="true">□</span>Overview<span class="state-name"
+                    >Default</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-hover"
+                  aria-label="Assignments, Hover visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">✓</span>Assignments<span class="state-name"
+                    >Hover</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-active"
+                  aria-label="Weekly Planner, Active visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">▤</span>Weekly Planner<span class="state-name"
+                    >Active</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-focused"
+                  aria-label="Assessments, Focus visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">◇</span>Assessments<span class="state-name"
+                    >Focus</span
+                  >
+                </button>
+              </div>
+              <span class="specimen-label">Menu · open and selected</span>
+              <div class="chrome-glass popup-glass">
+                <div class="menu-heading">APPEARANCE · OPEN MENU</div>
+                <div role="group" aria-label="Appearance visual state specimens">
+                  <button type="button" class="material-menu-item is-selected">
+                    <span>System</span><span class="selected-mark">✓ Selected</span></button
+                  ><button type="button" class="material-menu-item">Light <span>Modern Daylight</span></button
+                  ><button type="button" class="material-menu-item">Dark <span>Night Flight</span></button>
+                </div>
+                <hr class="menu-divider" />
+                <p class="menu-foot">Drawn states; does not change or save appearance.</p>
+              </div>
+              <span class="specimen-label">Primary action · four explicit states</span>
+              <div class="action-grid">
+                <div>
+                  <span class="specimen-label">Default</span
+                  ><button type="button" class="material-button">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Focus</span
+                  ><button type="button" class="material-button is-focused">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Pressed</span
+                  ><button type="button" class="material-button is-pressed">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Disabled</span
+                  ><button type="button" class="material-button" disabled>Lock session</button
+                  ><span class="disabled-note">Select a feasible session first.</span>
+                </div>
+              </div>
+              <span class="specimen-label">Floating holder · never a mobile form save bar</span>
+              <div class="chrome-glass floating-glass">
+                <div class="holder-content">Study plan actions</div>
+                <button type="button" class="material-button">Refresh plan</button>
+              </div>
+              <div class="indicator-specimen">
+                <span class="indicator-dot" aria-hidden="true"></span>Active destination · solid marker ·
+                Night halo belongs only to active navigation
+              </div>
+              <span class="material-warning">△ Unscheduled work · 30 min — solid warning specimen</span>
+            </div>
+          </div>
+          <div class="effects-column effects-reduced">
+            <h3>Reduced effects / unsupported blur</h3>
+            <p class="study-caption">Opaque layers, visible boundaries, no reflected light or halo.</p>
+            <div class="material-scene">
+              <span class="specimen-label">Navigation · four explicit states</span>
+              <div class="chrome-glass">
+                <div class="chrome-brand"><span>h /</span> Homebase</div>
+                <button type="button" class="material-nav" aria-label="Overview, Default visual specimen">
+                  <span class="nav-glyph" aria-hidden="true">□</span>Overview<span class="state-name"
+                    >Default</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-hover"
+                  aria-label="Assignments, Hover visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">✓</span>Assignments<span class="state-name"
+                    >Hover</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-active"
+                  aria-label="Weekly Planner, Active visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">▤</span>Weekly Planner<span class="state-name"
+                    >Active</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-focused"
+                  aria-label="Assessments, Focus visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">◇</span>Assessments<span class="state-name"
+                    >Focus</span
+                  >
+                </button>
+              </div>
+              <span class="specimen-label">Menu · open and selected</span>
+              <div class="chrome-glass popup-glass">
+                <div class="menu-heading">APPEARANCE · OPAQUE FALLBACK</div>
+                <div role="group" aria-label="Appearance visual state specimens">
+                  <button type="button" class="material-menu-item is-selected">
+                    <span>System</span><span class="selected-mark">✓ Selected</span></button
+                  ><button type="button" class="material-menu-item">Light <span>Modern Daylight</span></button
+                  ><button type="button" class="material-menu-item">Dark <span>Night Flight</span></button>
+                </div>
+                <hr class="menu-divider" />
+                <p class="menu-foot">Drawn states; does not change or save appearance.</p>
+              </div>
+              <span class="specimen-label">Primary action · four explicit states</span>
+              <div class="action-grid">
+                <div>
+                  <span class="specimen-label">Default</span
+                  ><button type="button" class="material-button">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Focus</span
+                  ><button type="button" class="material-button is-focused">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Pressed</span
+                  ><button type="button" class="material-button is-pressed">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Disabled</span
+                  ><button type="button" class="material-button" disabled>Lock session</button
+                  ><span class="disabled-note">Select a feasible session first.</span>
+                </div>
+              </div>
+              <span class="specimen-label">Floating holder · never a mobile form save bar</span>
+              <div class="chrome-glass floating-glass">
+                <div class="holder-content">Study plan actions</div>
+                <button type="button" class="material-button">Refresh plan</button>
+              </div>
+              <div class="indicator-specimen">
+                <span class="indicator-dot" aria-hidden="true"></span>Active destination · solid marker · halo
+                removed
+              </div>
+              <span class="material-warning">△ Unscheduled work · 30 min — solid warning specimen</span>
+            </div>
+          </div>
+        </div>
+        <div class="motion-studies">
+          <h3>Three motion studies · static storyboards</h3>
+          <p class="study-caption">
+            Frames specify a transition; they do not run a timer, save a record or lock a session. Semantic
+            state changes are immediate.
+          </p>
+          <section class="motion-study">
+            <h3>01 / Navigation selection</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · before click</span>
+                <div class="frame-nav before">□ Overview · current</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · 90ms</span>
+                <div class="frame-nav transitioning">▤ Weekly Planner · current</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 180ms</span>
+                <div class="frame-nav">▤ Weekly Planner · current</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              180ms standard easing: cubic-bezier(.2,0,0,1). The label and current destination update
+              immediately; only marker emphasis settles. New selection replaces the transition; no page slide
+              or focus delay. Reduced motion: jump directly to final. Purpose: retain orientation.
+            </p>
+          </section>
+          <section class="motion-study">
+            <h3>02 / Menu entry and exit</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · closed</span>
+                <div class="frame-nav before">Appearance ▾</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · 80ms</span>
+                <div class="frame-menu ghost">Edge silhouette only; no half-opacity text claim.</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 160ms</span>
+                <div class="frame-menu">✓ System — selected<br />Light · Dark</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              Enter 160ms standard; exit 120ms cubic-bezier(.4,0,1,1). Desktop menu opacity and at most 8px
+              travel; text and its required baseplate stay fully readable throughout. Closing removes
+              interaction immediately and restores opener focus. Reopening reverses current progress without
+              queued exits. Reduced motion: immediate show/hide. Purpose: connect the menu to its trigger. No
+              mobile editor transform.
+            </p>
+          </section>
+          <section class="motion-study">
+            <h3>03 / Successful session lock</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · before adoption</span>
+                <div class="frame-lock">
+                  <span class="source-tag">◇ Recommended</span>4:00–4:30 PM · 30 min
+                </div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · adopted, 60ms</span>
+                <div class="frame-lock">
+                  <span class="source-tag"><span class="soft-check" aria-hidden="true">✓</span> ▣ Manual</span
+                  >4:00–4:30 PM · 30 min
+                </div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 120ms</span>
+                <div class="frame-lock"><span class="source-tag">✓ ▣ Manual</span>4:00–4:30 PM · 30 min</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              120ms standard easing after successful persistence/source adoption. Manual label and lock icon
+              appear synchronously; only a decorative check settles in opacity. Invalid intent, failed save or
+              cancel stays in the original state with its real error; never show temporary success. Reduced
+              motion: immediate final state. No session movement or completion credit. Purpose: distinguish
+              user intent from a recommendation.
+            </p>
+          </section>
+        </div>
+      </article>
+      <p>
+        Exact recipes, interruptions, fallbacks and verification limits:
+        <a href="../02-design-system.md">material system</a> and
+        <a href="../04-motion-and-interaction.md">motion handoff</a>. The Date/Time issue remains DT-01 for
+        2.6E, not a fix demonstrated here.
+      </p>
+    </section>
     <section id="daylight">
       <h2 class="theme-title">Modern Daylight</h2>
       <section class="plate" id="daylight-overview">

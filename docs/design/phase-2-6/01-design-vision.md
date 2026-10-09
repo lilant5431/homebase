@@ -4,9 +4,9 @@ Status: **proposal for independent review, not an implemented redesign**. Resear
 
 ## Baseline and authority
 
-Repository: `lilant5431/homebase`. Independent documentation branch: `docs/phase-2-6a-design-spec`, based on remote main `b710ea0040f05ae873c853045124c3c82ad039d7`. [PR #13](https://github.com/lilant5431/homebase/pull/13) was OPEN at inspection, head `352a744f356eb7ff84d428230438a9a772463e18`. No merge, cherry-pick, product changes or schema changes belong to this milestone.
+Repository: `lilant5431/homebase`. Independent documentation branch: `docs/phase-2-6a-design-spec`, based on remote main `b710ea0040f05ae873c853045124c3c82ad039d7`. [PR #13](https://github.com/lilant5431/homebase/pull/13) was OPEN at the initial design inspection, implementation head `352a744f356eb7ff84d428230438a9a772463e18`. Its documentation closure head is now `4eab3f5863d396bbf2c73f25f7e301a4255eda36`; it remains OPEN and those implementation changes are not in main. No merge, cherry-pick, product changes or schema changes belong to this milestone.
 
-Inventory distinguishes the main implementation from PR #13's proposed shared mobile editor and acceptance work. User evidence establishes that the eight keyboard checks passed physically on `9299129`. The subsequent stacked Date/Time correction has automated evidence; **the latest task explicitly carries Date/Time visual alignment as unresolved Phase 2.6 issue DT-01**. Neither that correction nor this design is declared physically accepted. Implementing redesigned editors depends on maintainer acceptance/integration of PR #13 or an explicitly reviewed equivalent; do not silently copy the unmerged branch. The documents themselves are independent of its merge.
+Inventory distinguishes the main implementation from PR #13's proposed shared mobile editor and acceptance work. User evidence establishes that the eight keyboard checks passed physically on `9299129`. The subsequent stacked Date/Time correction has automated evidence; **the latest task explicitly carries Date/Time visual alignment as unresolved Phase 2.6 issue DT-01**. Neither that correction nor this design is declared physically accepted. Implementing redesigned editors depends on maintainer acceptance/integration of PR #13 or an explicitly reviewed equivalent; do not silently copy the unmerged branch. The documents themselves are independent of its merge. The closure record now reports four failed Date/Time visual checks on `352a744` (portrait Create/Edit clipping and alignment; landscape Create/Edit alignment), while native pickers remain usable. DT-01 is proposed for explicit maintainer acceptance as a non-blocking visual exception, not resolved. **DT-01 is scheduled for implementation and physical verification in 2.6E — Editors and grouped Date/Time.**
 
 ## Product identity
 
@@ -57,3 +57,15 @@ These are browser-rendered conceptual boards from the static atlas, not screensh
 ![Modern Daylight phone editor concept](assets/previews/daylight-editor-phone.png)
 
 ![Night Flight phone conflict concept](assets/previews/night-conflict-phone.png)
+
+## Materials and motion review supplement
+
+The [Materials & Motion Showcase](assets/mockups.html#materials-motion) closes the gap between layout boards and material intent. Both themes show normal effects beside the opaque alternative: navigation default/hover/active/focus, selected open menus, primary action default/focus/press/disabled, and floating chrome with opaque actionable content. Three static storyboards define selection, menu entry/exit and **successful** lock feedback. Native buttons allow inspecting CSS hover/focus/press but have no product handlers, network calls or storage access.
+
+Daylight uses a cool-white scrim, reflected daylight behind chrome, fine white edge highlights and restrained blue markers. Night uses a midnight scrim, static blue light behind chrome, ice-blue marker and one small active-marker halo. Amber remains consequential warning, not decorative illumination. No glass is applied to academic text, editor fields or conflict explanations. The reflected backdrop is a material-test scene, not proposed wallpaper underneath product content.
+
+These supplement the existing token system: no semantic foreground, action, status, focus or glass alpha was changed. Exact material recipes and reductions are recorded in 02; the storyboards and interruption behavior are in 04. Approve the restrained depth/reflection treatment in design review; final rasterized contrast/performance still requires implementation-device testing.
+
+![Modern Daylight materials and motion concept](assets/previews/daylight-materials-motion.png)
+
+![Night Flight materials and motion concept](assets/previews/night-materials-motion.png)

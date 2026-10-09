@@ -74,4 +74,14 @@ for path in ROOT.rglob('*.html'):
         if '://' in target or target.startswith('#'):
             continue
         assert (path.parent / unquote(target)).exists(), (path, target)
-print(f'{len(rows)} contrast checks passed; local document links resolve.')
+# Showcase reflection bounds are documented recipes, not new semantic colors.
+# Text-bearing labels sit on scene backgrounds; validate their maximum glow wash.
+reflection_checks = 0
+for name, opacity in [('daylight', 0.30), ('night', 0.40)]:
+    theme = TOKENS['themes'][name]
+    for background in ['quiet', 'canvas']:
+        composite = [opacity * c + (1 - opacity) * b for c, b in zip(rgb(theme['glow']), rgb(theme[background]))]
+        result = ratio(rgb(theme['muted']), composite)
+        assert result >= 4.5, (name, 'muted / showcase reflected light', background, result)
+        reflection_checks += 1
+print(f'{len(rows)} token contrast checks and {reflection_checks} showcase reflection checks passed; local document links resolve.')
