@@ -3,6 +3,8 @@ import { useCallback, useLayoutEffect, useRef, useState, type RefObject } from '
 const cueDuration = 900
 const cueDelays: Record<string, number> = {
   environment: 0,
+  sky: 0,
+  water: 80,
   navigation: 100,
   active: 170,
   action: 230,

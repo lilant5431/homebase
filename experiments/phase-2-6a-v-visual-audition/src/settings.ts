@@ -12,14 +12,13 @@ export const effects = [
       'The loved architectural grid, with flowing sunlight reaching glass, navigation and controls.',
   },
   {
-    id: 'horizon',
-    name: 'Airport horizon',
+    id: 'landscape',
+    name: 'Atmospheric Landscape',
     credit: 'Original bounded SVG + CSS',
     url: '',
     comparison: false,
     motion: true,
-    description:
-      'Visible runway geometry, a moving directional wash, cyan and amber reflections across the workspace.',
+    description: 'Layered mountains, drifting clouds and a calm lake, under sunlit or moonlit skies.',
   },
   {
     id: 'glass',
@@ -50,16 +49,22 @@ export const effects = [
   },
   {
     id: 'baseline',
-    name: 'Static CSS baseline',
+    name: 'Basic',
     credit: 'Original CSS only',
     url: '',
     comparison: false,
     motion: false,
-    description: 'Still gradients and solid materials: compare the value of additional effects.',
+    description: 'Clear surfaces, considered spacing and reflective chrome without a cinematic background.',
   },
 ] as const
 export type EffectId = (typeof effects)[number]['id']
-export type Theme = 'day' | 'night'
+export type Environment = 'lattice' | 'landscape' | 'basic'
+export type AppearanceMode = 'system' | 'light' | 'dark'
+export const environments: { id: Environment; name: string; effect: EffectId }[] = [
+  { id: 'lattice', name: 'Sunlit Lattice', effect: 'lattice' },
+  { id: 'landscape', name: 'Atmospheric Landscape', effect: 'landscape' },
+  { id: 'basic', name: 'Basic', effect: 'baseline' },
+]
 export type Preset = 'Calm' | 'Balanced' | 'Cinematic'
 export const presets: Record<Preset, { intensity: number; speed: number }> = {
   Calm: { intensity: 35, speed: 0.45 },

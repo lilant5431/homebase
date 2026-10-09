@@ -21,6 +21,7 @@ for path in root.glob("src/**/*"):
     source = path.read_text()
     assert not re.search(r"\b(localStorage|sessionStorage|indexedDB)\b", source), path
     assert "homebase.academic.v1" not in source and "homebase.schedule.v1" not in source and "homebase.appearance.v1" not in source, path
+    assert not re.search(r"\bDate\b|performance\.now\(", source), path
     assert not re.search(r"from ['\"]\.\./\.\./", source), path
 
 
@@ -52,4 +53,4 @@ for theme, colors in themes.items():
 output = root / "test-results"
 output.mkdir(exist_ok=True)
 (output / "contrast-report.json").write_text(json.dumps(results, indent=2) + "\n")
-print(f"PASS: 5 source hashes; local Markdown links; storage/import isolation scan; {len(results)} solid-role contrast checks")
+print(f"PASS: 5 source hashes; local Markdown links; storage/import/clock isolation scan; {len(results)} solid-role contrast checks")

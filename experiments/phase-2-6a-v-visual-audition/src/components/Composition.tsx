@@ -15,6 +15,7 @@ import {
 import { useState } from 'react'
 import { BorderBeam, MagicGlass, ShimmerButton } from './LibraryEffects'
 import type { EffectId } from '../settings'
+import { Landscape } from './Landscape'
 
 const assignments = [
   {
@@ -210,9 +211,14 @@ export function Composition({
           {cueMessage}
         </div>
         <div className="environment-band" aria-hidden="true">
-          <span className="alignment-ticks" />
-          <span className="band-light" />
-          <span className="band-marker" />
+          {effect === 'landscape' ? (
+            <Landscape />
+          ) : (
+            <>
+              <span className="band-light" />
+              <span className="band-marker" />
+            </>
+          )}
         </div>
         {view === 'overview' ? (
           <>

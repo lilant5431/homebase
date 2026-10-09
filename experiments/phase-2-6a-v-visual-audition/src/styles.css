@@ -531,43 +531,6 @@ output {
   background: linear-gradient(180deg, transparent 30%, var(--canvas) 98%);
   opacity: 0.3;
 }
-.horizon {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-}
-.stars {
-  fill: var(--text);
-  opacity: 0.6;
-}
-.audition[data-theme='day'] .stars {
-  opacity: 0.2;
-}
-.distant-roof {
-  fill: var(--canvas);
-  opacity: 0.5;
-}
-.runway-lights {
-  fill: var(--ice);
-}
-.warm-light {
-  fill: var(--warm);
-}
-.horizon-line {
-  stroke: var(--ice);
-  stroke-width: 1;
-  fill: none;
-  opacity: 0.16;
-}
-.sky-light {
-  position: absolute;
-  inset: 5% -20% 20%;
-  background:
-    radial-gradient(ellipse at 42% 55%, #4c9ee94d, transparent 60%),
-    radial-gradient(ellipse at 65% 75%, #d88c301a, transparent 45%);
-  animation: skylight calc(var(--motion-duration) * 1.3) ease-in-out infinite alternate;
-}
 .material-light {
   position: absolute;
   inset: 0;
@@ -1936,44 +1899,6 @@ html:has(.audition[data-reduced-motion='true']) {
   will-change: transform;
   opacity: 0.65;
 }
-/* Bounded top horizon: remains recognizable behind the header at every aspect ratio. */
-.audition[data-integrated='true'] .horizon {
-  inset: 0 0 auto;
-  height: 260px;
-}
-.audition[data-integrated='true'] .distant-roof {
-  opacity: 0.65;
-}
-.audition[data-integrated='true'] .runway-lights {
-  filter: drop-shadow(0 0 3px var(--ice));
-}
-.taxiway-lights {
-  fill: var(--ice);
-  opacity: 0.8;
-}
-.audition[data-integrated='true'] .horizon-line {
-  stroke-width: 1.5;
-  opacity: 0.5;
-}
-.audition[data-integrated='true'] .sky-light {
-  animation: none;
-  inset: -5% -10% auto;
-  height: min(650px, 70%);
-  opacity: 0.9;
-  background:
-    conic-gradient(from -32deg at 50% -5%, transparent 0deg, #8bddfc4d 15deg, transparent 42deg),
-    radial-gradient(ellipse at 72% 28%, #edaa3826, transparent 55%);
-  transform: translateX(calc((var(--scene-light-x) - 48%) / 3)) rotate(calc(var(--scene-light-angle) + 32deg));
-  transform-origin: 50% 0;
-  will-change: transform;
-}
-.audition[data-integrated='true'][data-theme='night'] .workspace-top {
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--glass-edge);
-}
-.audition[data-integrated='true'][data-theme='night'] .eyebrow {
-  letter-spacing: 0.14em;
-}
 .environment-band {
   position: relative;
   height: 26px;
@@ -1989,13 +1914,6 @@ html:has(.audition[data-reduced-motion='true']) {
   background: radial-gradient(ellipse at var(--scene-light-x) 50%, var(--ice), transparent 65%);
   opacity: calc(var(--intensity) * 0.5);
 }
-.alignment-ticks {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(90deg, var(--control-border) 0 1px, transparent 1px 20px);
-  mask-image: linear-gradient(180deg, #000 3px, transparent 4px);
-  opacity: 0.35;
-}
 .band-marker {
   position: absolute;
   inset: 0;
@@ -2003,17 +1921,6 @@ html:has(.audition[data-reduced-motion='true']) {
   background-position: var(--scene-light-x) 0;
   background-size: 180% 100%;
   opacity: var(--intensity);
-}
-.audition[data-integrated='true'][data-theme='night'] .environment-band {
-  height: 36px;
-  border-color: var(--glass-edge);
-  background: linear-gradient(170deg, transparent 20%, #8bddfc0f 50%, transparent 80%);
-}
-.audition[data-integrated='true'][data-theme='night'] .band-marker {
-  background:
-    radial-gradient(circle, var(--ice) 0 1.5px, transparent 3px) 0 18px / 24px 10px repeat-x,
-    radial-gradient(circle, var(--warm) 0 1.5px, transparent 3px) 10px 6px / 60px 10px repeat-x;
-  opacity: calc(var(--intensity) * 0.9);
 }
 .audition[data-integrated='true'] .primary-action,
 .nav-item {
@@ -2169,4 +2076,145 @@ html:has(.audition[data-reduced-motion='true']) {
     background: Canvas;
     color: CanvasText;
   }
+}
+
+/* V3: independent environment and palette. Content roles remain unchanged. */
+.environment-picker {
+  margin-bottom: 18px;
+}
+.palette-picker {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.palette-picker button {
+  gap: 5px;
+  padding-inline: 5px;
+  font-size: 11px;
+}
+.palette-status {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.audition[data-effect='landscape'] {
+  --land-sky-top: #b7d5ee;
+  --land-sky-bottom: #eaf2ed;
+  --land-light: #fff1bd;
+  --land-cloud: #ffffff;
+  --land-mountain-far: #97b5c8;
+  --land-mountain-mid: #6e96a6;
+  --land-mountain-near: #3e6d80;
+  --land-water: #9fc3d2;
+  --ice: #57b8cc;
+  --warm: #d6a65b;
+  --ambient: #a8d2de;
+}
+.audition[data-effect='landscape'][data-theme='night'] {
+  --land-sky-top: #101d35;
+  --land-sky-bottom: #354c6a;
+  --land-light: #d7e8fd;
+  --land-cloud: #859cb8;
+  --land-mountain-far: #304863;
+  --land-mountain-mid: #1d354f;
+  --land-mountain-near: #142941;
+  --land-water: #304d68;
+  --ice: #9acfeb;
+  --warm: #d9b785;
+  --ambient: #628cae;
+}
+.audition[data-effect='landscape'] .environment-band {
+  height: 180px;
+  border: 1px solid var(--glass-edge);
+  border-radius: 14px;
+  background: var(--land-sky-top);
+}
+.landscape-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.landscape-scene > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.landscape-stars {
+  opacity: 0;
+}
+.audition[data-theme='night'] .landscape-stars {
+  opacity: 0.65;
+}
+.landscape-orb {
+  opacity: 0.85;
+}
+.landscape-clouds {
+  opacity: 0.32;
+  transform: translateX(calc((var(--scene-light-x) - 48%) / 4));
+  will-change: transform;
+}
+.landscape-reflections,
+.landscape-ripples {
+  transform: translateX(calc((var(--scene-secondary-x) - 56%) / 12));
+}
+.landscape-wash {
+  position: absolute;
+  inset: 0 -20%;
+  background: radial-gradient(ellipse at 45% 15%, var(--ambient), transparent 65%);
+  opacity: 0.35;
+  transform: translateX(calc((var(--scene-light-x) - 48%) / 3));
+  will-change: transform;
+}
+.landscape-mist {
+  position: absolute;
+  inset: 0 -10%;
+  background: linear-gradient(110deg, transparent 15%, var(--glass-highlight) 45%, transparent 70%);
+  opacity: 0.12;
+  transform: translateX(calc((var(--scene-secondary-x) - 56%) / 3));
+  will-change: transform;
+}
+.lake-light {
+  position: absolute;
+  inset: 66% 0 0;
+  background: radial-gradient(ellipse at 60% 0%, var(--land-light), transparent 55%);
+  opacity: calc(var(--intensity) * 0.18);
+  transform: translateX(calc((var(--scene-light-x) - 48%) / 4));
+}
+.water-cue {
+  top: 66%;
+  background: linear-gradient(110deg, transparent 15%, var(--land-light) 48%, transparent 80%);
+}
+.audition[data-effect='baseline'] .atmosphere,
+.audition[data-effect='baseline'] .environment-band {
+  display: none;
+}
+.audition[data-effect='baseline'] .workspace-header {
+  margin-bottom: 18px;
+}
+.audition[data-effect='baseline'] .cue-status {
+  margin-bottom: 20px;
+}
+@media (max-width: 1099px) {
+  .environment-picker {
+    grid-column: 1 / -1;
+  }
+  .palette-picker {
+    grid-row: auto;
+    grid-column: 1 / -1;
+    margin-bottom: 16px;
+  }
+}
+@media (max-width: 600px) {
+  .audition[data-effect='landscape'] .environment-band {
+    height: 130px;
+  }
+}
+@media (forced-colors: active) {
+  .landscape-scene {
+    display: none;
+  }
+}
+
+.landscape-sky-cue {
+  height: 66%;
+  background: linear-gradient(110deg, transparent 15%, var(--land-light) 48%, transparent 80%);
 }

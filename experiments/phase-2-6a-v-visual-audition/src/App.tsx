@@ -4,6 +4,7 @@ import {
   CirclePlay,
   Compass,
   Moon,
+  Monitor,
   RotateCcw,
   SlidersHorizontal,
   Sun,
@@ -13,12 +14,27 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Atmosphere } from './components/Atmosphere'
 import { Composition } from './components/Composition'
 import { useLightingCue } from './lighting'
-import { effects, presets, useMedia, type EffectId, type Preset, type Theme } from './settings'
+import {
+  effects,
+  environments,
+  presets,
+  useMedia,
+  type EffectId,
+  type Preset,
+  type Environment,
+  type AppearanceMode,
+} from './settings'
 
 export function App() {
-  const [theme, setTheme] = useState<Theme>('night')
+  const [environment, setEnvironment] = useState<Environment>('lattice')
+  const [mode, setMode] = useState<AppearanceMode>('system')
+  const systemDark = useMedia('(prefers-color-scheme: dark)')
+  const effectiveMode = mode === 'system' ? (systemDark ? 'dark' : 'light') : mode
+  // Retain the tested palette CSS; environment and appearance are independent state.
+  const theme = effectiveMode === 'dark' ? 'night' : 'day'
+  const selectedEnvironment = environments.find((item) => item.id === environment)!
   const [archiveEffect, setArchiveEffect] = useState<EffectId | null>(null)
-  const effect = archiveEffect ?? (theme === 'day' ? 'lattice' : 'horizon')
+  const effect = archiveEffect ?? selectedEnvironment.effect
   const [intensity, setIntensity] = useState(65)
   const [speed, setSpeed] = useState(0.75)
   const [preset, setPreset] = useState<Preset | null>('Balanced')
@@ -50,7 +66,8 @@ export function App() {
   const effectiveCandidate = candidate && !integrated && selected.comparison
   const cue = useLightingCue(stage, !inactive && !reduceMotion, `${theme}:${effect}:${effectiveCandidate}`)
   const movable =
-    (integrated ? fieldSupported : selected.motion) && !(effect === 'lattice' && effectiveCandidate)
+    (integrated ? fieldSupported && environment !== 'basic' : selected.motion) &&
+    !(effect === 'lattice' && effectiveCandidate)
   useEffect(() => {
     const listener = () => setHidden(document.hidden)
     document.addEventListener('visibilitychange', listener)
@@ -78,6 +95,9 @@ export function App() {
     <div
       className="audition"
       data-theme={theme}
+      data-environment={environment}
+      data-mode={effectiveMode}
+      data-preference={mode}
       data-effect={effect}
       data-integrated={integrated}
       data-cue-active={cue.active}
@@ -100,7 +120,7 @@ export function App() {
         <a href="#preview" className="lab-brand">
           <Compass size={24} />
           <span>
-            homebase<span>VISUAL AUDITION / 2.6A-V2</span>
+            homebase<span>VISUAL AUDITION / 2.6A-V3</span>
           </span>
         </a>
         <div className="lab-tag">An experiment in light & space</div>
@@ -116,16 +136,40 @@ export function App() {
             <h1>Find your atmosphere.</h1>
             <p>Experience the light. Keep the clarity.</p>
           </div>
-          <fieldset className="theme-picker">
-            <legend>Appearance</legend>
-            <button aria-pressed={theme === 'day'} onClick={() => setTheme('day')}>
-              <Sun size={17} />
-              Daylight
-            </button>
-            <button aria-pressed={theme === 'night'} onClick={() => setTheme('night')}>
-              <Moon size={17} />
-              Night Flight
-            </button>
+          <div className="environment-picker">
+            <label className="control-label" htmlFor="environment">
+              Environment
+            </label>
+            <select
+              id="environment"
+              value={environment}
+              onChange={(event) => {
+                setEnvironment(event.target.value as Environment)
+                setArchiveEffect(null)
+              }}
+            >
+              {environments.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.id === 'landscape' ? 'Landscape' : item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <fieldset className="theme-picker palette-picker">
+            <legend>Palette</legend>
+            {(['system', 'light', 'dark'] as const).map((value) => {
+              const Icon = value === 'system' ? Monitor : value === 'light' ? Sun : Moon
+              return (
+                <button key={value} aria-pressed={mode === value} onClick={() => setMode(value)}>
+                  <Icon size={16} />
+                  {value === 'system' ? 'System' : value === 'light' ? 'Light' : 'Dark'}
+                </button>
+              )
+            })}
+            <p className="palette-status">
+              {mode === 'system' ? 'Following device appearance' : 'Explicit palette'} ·{' '}
+              {effectiveMode === 'light' ? 'Light' : 'Dark'}
+            </p>
           </fieldset>
           <div className="scene-label">
             <span className="eyebrow">
@@ -133,9 +177,7 @@ export function App() {
             </span>
             <h2>
               {integrated
-                ? theme === 'day'
-                  ? 'Integrated Sunlit Lattice'
-                  : 'Integrated Illuminated Horizon'
+                ? `${selectedEnvironment.name} — ${effectiveMode === 'light' ? 'Light' : 'Dark'}`
                 : selected.name}
             </h2>
           </div>
@@ -250,13 +292,13 @@ export function App() {
                 }
               >
                 <option value="integrated">Return to integrated themes</option>
-                {effects.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.id === 'baseline'
-                      ? 'Performance / reduced-effects baseline'
-                      : `Archive · ${item.name}`}
-                  </option>
-                ))}
+                {effects
+                  .filter((item) => item.comparison)
+                  .map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {`Archive · ${item.name}`}
+                    </option>
+                  ))}
               </select>
               <label className="check-control">
                 <input
@@ -295,7 +337,7 @@ export function App() {
           <div className="preview-caption">
             <span>
               <span className="status-dot" />
-              {theme === 'night' ? 'Night Flight' : 'Modern Daylight'}
+              {effectiveMode === 'dark' ? 'Dark palette' : 'Light palette'}
               <span className="caption-separator">/</span>
               {selected.name}
             </span>
@@ -313,7 +355,9 @@ export function App() {
             id="preview"
             className="preview-stage"
             ref={stage}
-            data-light-motion={fieldSupported && !reduceMotion && !effectiveCandidate && integrated}
+            data-light-motion={
+              fieldSupported && !reduceMotion && !effectiveCandidate && integrated && environment !== 'basic'
+            }
           >
             <Atmosphere effect={effect} candidate={effectiveCandidate} />
             <Composition
@@ -348,9 +392,9 @@ export function App() {
       <footer id="method" className="lab-footer">
         <div>
           <span className="eyebrow">LIGHT, WITHOUT THE WEIGHT</span>
-          <h2>Two environments. One shared light language.</h2>
+          <h2>Three environments. Six appearances.</h2>
           <p>
-            Sunlit lattice and illuminated horizon share attributed Magic UI gradient reflections. Rejected
+            Lattice, atmospheric landscape and Basic share attributed Magic UI gradient reflections. Rejected
             candidates are archival references. No animation library, WebGL, accounts, tracking or browser
             storage. Pause and reduction settings apply to every effect.
           </p>

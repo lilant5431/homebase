@@ -27,11 +27,11 @@ describe('visual audition controls and isolation', () => {
   it('switches both themes and every effect using real controls', async () => {
     const user = userEvent.setup()
     const { container } = renderApp()
-    await user.click(screen.getByRole('button', { name: 'Daylight' }))
+    await user.click(screen.getByRole('button', { name: 'Light' }))
     expect(container.firstChild).toHaveAttribute('data-theme', 'day')
-    await user.click(screen.getByRole('button', { name: 'Night Flight' }))
+    await user.click(screen.getByRole('button', { name: 'Dark' }))
     expect(container.firstChild).toHaveAttribute('data-theme', 'night')
-    for (const id of ['lattice', 'horizon', 'glass', 'beam', 'shimmer', 'baseline']) {
+    for (const id of ['lattice', 'glass', 'beam', 'shimmer']) {
       await reference(user, id)
       expect(container.firstChild).toHaveAttribute('data-effect', id)
     }
@@ -51,7 +51,7 @@ describe('visual audition controls and isolation', () => {
   it('pauses and resumes, and reset restores recommended tuning without changing theme or effect', async () => {
     const user = userEvent.setup()
     const { container } = renderApp(['(min-width: 1100px)'])
-    await user.click(screen.getByRole('button', { name: 'Daylight' }))
+    await user.click(screen.getByRole('button', { name: 'Light' }))
     await reference(user, 'beam')
     await user.click(screen.getByRole('button', { name: 'Pause' }))
     expect(container.firstChild).toHaveAttribute('data-inactive', 'true')
@@ -157,7 +157,7 @@ describe('visual audition controls and isolation', () => {
     })
     try {
       render(<App />)
-      await userEvent.setup().click(screen.getByRole('button', { name: 'Daylight' }))
+      await userEvent.setup().click(screen.getByRole('button', { name: 'Light' }))
       expect(storage).not.toHaveBeenCalled()
       expect(write).not.toHaveBeenCalled()
     } finally {
