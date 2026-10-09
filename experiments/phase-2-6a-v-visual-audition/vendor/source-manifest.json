@@ -1,0 +1,37 @@
+[
+  {
+    "component": "grid-pattern",
+    "upstream": "https://github.com/magicuidesign/magicui/blob/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/registry/magicui/grid-pattern.tsx",
+    "commit": "cdb348cb4c72a9b54b554d8617801e479fbc8714",
+    "sha256": "1d1caaf01de0a1ebfdffea1163535f8fbfdfbee33cd0a640e09388815d1823df",
+    "local": "vendor/originals/grid-pattern.tsx.txt"
+  },
+  {
+    "component": "border-beam",
+    "upstream": "https://github.com/magicuidesign/magicui/blob/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/registry/magicui/border-beam.tsx",
+    "commit": "cdb348cb4c72a9b54b554d8617801e479fbc8714",
+    "sha256": "ccdfb52cb8f2089e7823a9edfe9c3a52e52ab6759ed5b91d184b1e2bb80cf414",
+    "local": "vendor/originals/border-beam.tsx.txt"
+  },
+  {
+    "component": "shimmer-button",
+    "upstream": "https://github.com/magicuidesign/magicui/blob/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/registry/magicui/shimmer-button.tsx",
+    "commit": "cdb348cb4c72a9b54b554d8617801e479fbc8714",
+    "sha256": "c85ffda63ba086d2078a8dacffdfc25f0b106e1566362fa251888a214ee3c010",
+    "local": "vendor/originals/shimmer-button.tsx.txt"
+  },
+  {
+    "component": "magic-card",
+    "upstream": "https://github.com/magicuidesign/magicui/blob/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/registry/magicui/magic-card.tsx",
+    "commit": "cdb348cb4c72a9b54b554d8617801e479fbc8714",
+    "sha256": "6139e78ed228ebca18ed144f4a2714a89214c2ef604f1f82bc2f61204c3f3fa3",
+    "local": "vendor/originals/magic-card.tsx.txt"
+  },
+  {
+    "component": "Shimmer Button keyframes",
+    "upstream": "https://github.com/magicuidesign/magicui/blob/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/styles/globals.css",
+    "commit": "cdb348cb4c72a9b54b554d8617801e479fbc8714",
+    "local": "vendor/originals/shimmer-keyframes.css.txt",
+    "sha256": "388f3057b203b19d509354db8460b5ed000b99e8485a9251a879061890fb1bbc"
+  }
+]
