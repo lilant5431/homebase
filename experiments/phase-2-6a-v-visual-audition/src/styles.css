@@ -1754,3 +1754,77 @@ output {
     background: Highlight;
   }
 }
+
+/* Links that act as controls retain a complete touch target, including compact header. */
+.lab-brand,
+.header-link {
+  min-width: 44px;
+  min-height: 44px;
+}
+.provenance a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+html:has(.audition[data-reduced-motion='true']) {
+  scroll-behavior: auto;
+}
+@supports not (container-type: size) {
+  .spark-container {
+    display: none;
+  }
+}
+
+/* Metadata stays readable at the actual composition scale rather than a thumbnail. */
+.workspace-top .eyebrow,
+.workspace-status {
+  font-size: 10px;
+}
+.workspace-header p,
+.record-meta {
+  font-size: 12px;
+}
+.cue-status,
+.metrics article > span,
+.metrics small,
+.content-card .eyebrow {
+  font-size: 10px;
+}
+.nav-item {
+  font-size: 12px;
+}
+.assignment-row h4 {
+  font-size: 14px;
+}
+.session-summary p,
+.breathing-room,
+.bottom-note p,
+.legend,
+.session-label,
+.week-footnote {
+  font-size: 11px;
+}
+.badge {
+  font-size: 10px;
+}
+.session-block strong {
+  font-size: 12px;
+}
+@media (max-width: 1250px) {
+  .nav-item {
+    font-size: 10px;
+  }
+}
+@media (max-width: 700px), (max-height: 500px) {
+  .nav-item {
+    font-size: 12px;
+  }
+}
+@media (max-width: 500px) {
+  .nav-item {
+    font-size: 11px;
+  }
+  .workspace-top .eyebrow {
+    font-size: 10px;
+  }
+}

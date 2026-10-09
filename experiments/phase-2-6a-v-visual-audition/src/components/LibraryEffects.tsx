@@ -1,5 +1,6 @@
+/*! Magic UI adaptations. Copyright (c) Magic UI. MIT; full notice in /third-party-notices.txt. */
 // Minimal adaptations of Magic UI, copyright (c) Magic UI, MIT.
-// Original source, pinned commit, hashes and full license: ../vendor (from project root).
+// Original source, pinned commit, hashes and full license: the project vendor/ directory.
 // GridPattern preserves the SVG pattern construction; MagicCard uses its gradient-only
 // pointer geometry. BorderBeam swaps Motion for CSS; Shimmer retains the nested layers
 // and source keyframes. No claim that these are unmodified upstream components.

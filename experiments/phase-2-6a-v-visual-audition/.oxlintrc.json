@@ -48,7 +48,7 @@
       }
     },
     {
-      "files": ["**/*.{test,spec}.{ts,tsx}"],
+      "files": ["**/*.audition.tsx"],
       "rules": {
         "vitest/no-focused-tests": "error",
         "vitest/valid-expect": "error",
