@@ -1,6 +1,79 @@
-# Verification evidence — V3
+# Verification evidence — V4
 
-Current experimental revision on October 9, 2026, based on unchanged main `580b25f69a724a5e0c54e15927e05eafcda6d887`. Node 24.19.0/npm 11.9.0; same independent manifests, TypeScript 7.0.2, Vite 8.3.2, Oxlint 1.87.0/oxlint-tsgolint 7.0.2003 and Playwright 1.63.0. Evidence below distinguishes automated simulations from user-reported physical V2 observations.
+October 9, 2026. Reviewed/published V3 source was `6aef662e1505c338d29b35107a31234456f4d8b1`; fetched PR #15 was OPEN on the expected experiment branch with green CI. PR #14 remained OPEN/read-only at `02abb2097e184dc21fe102b349a9d43c2da1ad99`. Production baseline remains `580b25f69a724a5e0c54e15927e05eafcda6d887`. Only the isolated experiment is changed; production manifests, dependencies, source, entrypoint, Vite configuration, CI and persistence are untouched.
+
+## Current actual verification
+
+| Check                     | Actual V4 result                                                                                                                                                                                             |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Experiment clean install  | Passed: `npm ci --cache /tmp/homebase-audition-npm-cache`, 120 packages. Default cache path was unavailable in the managed sandbox; task-specific cache retry succeeded without changing manifests/lockfile. |
+| Experiment unit tests     | **37 passed / 3 files**, five new focused cases beyond V3.                                                                                                                                                   |
+| Typecheck                 | Passed; TypeScript 7.0.2 including typed browser runner.                                                                                                                                                     |
+| Lint                      | Passed; existing type-aware Oxlint, zero warnings, no suppressions.                                                                                                                                          |
+| Production build          | Passed; Vite 8.3.2, `dist/index.html` present.                                                                                                                                                               |
+| Formatting / whitespace   | `npm run format:check` and `git diff --check` passed.                                                                                                                                                        |
+| Evidence audit            | `python3 tests/audit.py`: five unchanged source hashes, local Markdown/asset links, storage/import/clock isolation scan, 24 representative solid-role contrast pairs passed.                                 |
+| Built-preview browser run | **Chromium and actual Linux WebKit passed**: 434 geometry cases, 66 full-page scene checks and 144 midpoint cue-coverage cases. No browser exceptions or external runtime requests.                          |
+| Production Homebase       | Separately: clean install (117 packages), **604 passing tests / 20 files**, typecheck, lint, build and formatting passed.                                                                                    |
+
+The first added opacity assertion incorrectly compared CSS `#fff` with `#ffffff`; the observed card was correctly opaque white. The assertion now compares resolved RGB against the actual selected palette. The subsequent complete two-engine run passed. This was a test-authoring correction, not a product defect or disabled diagnostic. One preliminary browser run was superseded after separating the global cue from ambient backgrounds; final results below cover the final build.
+
+Five new unit cases protect whole-atmosphere placement/finite contour geometry, both palettes of the explicit archive with retained tuning/view, in-place scene vs locally swept chrome keyframes, and cancellation on sketch-to-archive switching. Existing six-appearance, System precedence, immutability of appearance dimensions, cue retrigger/timer/removal, reductions, visibility and storage-disconnection tests remain passing.
+
+### Browser matrix and actual assertions
+
+Viewport matrix: **1440×900, 820×1180, 390×844, 844×390, 667×375, 320×640**. Both compositions, palettes and engines:
+
+- 144 primary six-appearance layout cases.
+- 240 archival layout cases (four existing library references plus V3 Landscape).
+- 48 reserved-edge simulations and two open-menu cases.
+- Within these, 66 full-page Landscape cases compare actual scene/stage rectangles on every edge, require no visible scenic band, retain three contour ranges/reflected water, and verify opaque academic card faces.
+- **144 additional cue checks** trigger the cue and freeze its actual Web Animation at the illuminated midpoint. Scene rectangle must cover every stage edge within the 1px border tolerance and remain untransformed; sky/water must overlap and reach the top/bottom. This covers all six appearances, both views, all six sizes and both engines, including tall mobile documents and Basic's visible cue without ambient scenery.
+
+Reserved edges are a CSS 44px left/right +34px bottom simulation at 390×844/667×375, not physical iOS safe-area measurements. Geometry asserts no horizontal overflow/clipped controls/content and minimum 44×44 targets. Archive selection stays a reference override, retains selected environment/palette and can return to integrated scenes. Actual motion/gradient phases, rim exclusion/XOR masks, live System/native color scheme, forced colors (Chromium), OS/manual reductions, opaque/unsupported fallbacks, keyboard/touch, bounded retriggers/cancellation/completion, offscreen pause and synthesized hidden-document handlers remain exercised. Browser storage getters throw; no access occurred.
+
+Linux WebKit used the existing disposable browser cache/missing OS-library setup described in the historical record. Host-path validation was bypassed, **not the actual engine or any assertion**. This is desktop WebKit evidence, not physical iPhone Safari acceptance. Runtime build was fixed throughout the final complete run.
+
+## Visual and reference evidence
+
+[Targeted reference study](landscape-v4-references.md) distinguishes source/description evidence, failed preview fetches, paid-source exclusion and original geometry. No reference artwork was copied/traced or shipped. Magic UI attribution and pinned adapters remain intact.
+
+**30 current Chromium screenshots**: all six appearances × Overview/Planner × desktop/phone (24), two desktop Landscape pulse frames, and four running archived-V3 Light/Dark desktop/phone frames. Screenshots were inspected for linework, full-page atmosphere, opaque content, full-height cue and genuine legacy comparison. [README image index](../README.md). V1/V2/V3 images remain historical. Cue images pause the actual discrete animations at the midpoint, not a custom mockup; still images cannot establish fluidity or native Safari rendering.
+
+The active Landscape is original finite SVG/CSS: three independently sized sky/range/water planes, 20 nonblinking dark-mode stars, sparse open mountain/ridge contours, lightly filled drawn clouds and reflected water strokes. The scene spans the entire preview's document geometry. Existing neutral gallery controls/footer stay outside the concept space. No image/download, hatching/noise, shader, Canvas, particles, layout animation, new animation package or continuous JS frame loop. Older original V3 SVG and band dimensions remain inspectable as an archive.
+
+The 70%-height scene pulse and lateral translation caused uncovered edges; both are removed. A separate full-stage cue field works even when Basic hides atmosphere. Scene pulses peak at 0.65; chrome still sweeps within local clips. Five regular/seven Landscape targets, one timer and **1,180ms maximum** remain. Pause/reduction/hidden/offscreen/appearance change/unmount cancellation is unchanged.
+
+## Budget and performance
+
+**Zero new dependencies**; five existing runtime packages and unchanged manifests/lockfile. Full isolated build: **262.58 kB JS raw /82.31 kB gzip; 38.83 kB CSS raw /8.65 kB gzip**. Relative to V3: approximately +1.33 kB compressed JS/+0.49 kB CSS, including the retained original scene. Fonts are unchanged. These are whole-gallery sizes, not hypothetical production integration costs; committed review PNGs are not bundled.
+
+One-second headless Chromium samples from the final built preview, 1440×900/Balanced:
+
+| Appearance      | Intervals observed | Median |    p95 | Running CSS animations |
+| --------------- | -----------------: | -----: | -----: | ---------------------: |
+| Lattice Light   |                 36 | 33.3ms | 33.4ms |                      1 |
+| Lattice Dark    |                 37 | 33.3ms | 33.4ms |                      1 |
+| Landscape Light |                 40 | 16.8ms | 50.0ms |                      1 |
+| Landscape Dark  |                 45 | 16.7ms | 33.4ms |                      1 |
+
+Basic's lack of continuous motion is checked in both engines. This is short, non-controlled cloud sampling, **not a guaranteed frame rate, phone benchmark or thermal/battery test**. Light Landscape's p95 includes slower frames; the expanded painted area and chrome blur remain real costs. Prior acceptable physical performance/warmth cannot automatically accept V4. Calm, Pause and opaque reductions remain available.
+
+## Physical evidence and remaining review
+
+The latest user-reported pre-V4 physical iPhone outcomes passed exactly: System follows iPhone appearance, smooth scrolling/rotation, correct reduced-motion/effects, acceptable sustained responsiveness/warmth, and an appealing mountain/cloud/lake/star direction. Preserve those facts separately from the earlier V2 passes below. Full-page blending, sketch treatment and desktop cue coverage were the requested revisions. **No new V4 physical outcome or final artistic approval is claimed.**
+
+Retest Light/Dark Landscape in portrait and landscape, compare the old band, inspect desktop cue bottom/edges, repeat and pause cues, check reductions/System independence, and observe several-minute phone scrolling/rotation/responsiveness/warmth. The gallery has no editors and does not resolve DT-01. No production integration/persistence/PR #14 changes.
+
+Hosted **CI / verify** checks production Homebase on the final PR head, not this standalone experiment/browser suite. Its exact-head run URL and outcome accompany PR #15 and the completion report; local experiment evidence remains separate. PR #15 and #14 must remain open and unmerged.
+
+---
+
+The following V3/V2/V1 records are historical; their counts, geometry, sizes and remaining physical-review statements do not substitute for the V4 evidence above.
+
+# Historical V3 verification evidence
+
+Historical V3 experimental revision on October 9, 2026, based on unchanged main `580b25f69a724a5e0c54e15927e05eafcda6d887`. Node 24.19.0/npm 11.9.0; same independent manifests, TypeScript 7.0.2, Vite 8.3.2, Oxlint 1.87.0/oxlint-tsgolint 7.0.2003 and Playwright 1.63.0. Evidence below distinguishes automated simulations from user-reported physical V2 observations.
 
 ## Current scope and checks
 

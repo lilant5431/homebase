@@ -105,3 +105,41 @@ describe('independent appearance dimensions', () => {
     expect(container.querySelectorAll('.magic-glass')).toHaveLength(3)
   })
 })
+
+describe('full-page sketch and archived landscape', () => {
+  it('places the sketch in the whole decorative atmosphere, not the content banner', () => {
+    const { container } = render(<App />)
+    environment('landscape')
+    const sketch = screen.getByTestId('full-page-landscape')
+    expect(sketch.parentElement).toHaveClass('atmosphere')
+    expect(container.querySelector('.environment-band .landscape-scene')).toBeNull()
+    expect(sketch.querySelectorAll('.sketch-range')).toHaveLength(3)
+    expect(sketch.querySelectorAll('.landscape-stars circle')).toHaveLength(20)
+    expect(sketch.querySelectorAll('.sketch-water')).toHaveLength(1)
+    expect(sketch.querySelectorAll('[data-cue-target]')).toHaveLength(2)
+  })
+  it.each(['Light', 'Dark'])(
+    'retains V3 as an explicit %s comparison and returns without resetting tuning',
+    (mode) => {
+      const { container } = render(<App />)
+      environment('landscape')
+      fireEvent.click(screen.getByRole('button', { name: mode }))
+      fireEvent.click(screen.getByRole('button', { name: 'Cinematic' }))
+      fireEvent.click(screen.getByRole('button', { name: /Weekly Planner/ }))
+      fireEvent.change(screen.getByLabelText('Technical comparison'), {
+        target: { value: 'landscape-legacy' },
+      })
+      expect(container.firstChild).toHaveAttribute('data-effect', 'landscape-legacy')
+      expect(container.firstChild).toHaveAttribute('data-coordinated', 'true')
+      expect(container.querySelector('.environment-band .landscape-legacy')).not.toBeNull()
+      expect(screen.queryByTestId('full-page-landscape')).toBeNull()
+      expect(screen.getByLabelText(/Library defaults/)).toBeDisabled()
+      expect(screen.getByRole('heading', { name: 'V3 Landscape band' })).toBeVisible()
+      fireEvent.change(screen.getByLabelText('Technical comparison'), { target: { value: 'integrated' } })
+      expect(screen.getByTestId('full-page-landscape')).toBeVisible()
+      expect(container.firstChild).toHaveAttribute('data-mode', mode.toLowerCase())
+      expect(screen.getByRole('slider', { name: /Visual intensity/ })).toHaveValue('92')
+      expect(screen.getByRole('heading', { name: 'A week with breathing room.' })).toBeVisible()
+    },
+  )
+})

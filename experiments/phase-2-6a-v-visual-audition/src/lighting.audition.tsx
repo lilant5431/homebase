@@ -77,6 +77,30 @@ describe('bounded coordinated lighting cue', () => {
     expect(animations.every((animation) => animation.cancel.mock.calls.length === 1)).toBe(true)
     expect(vi.getTimerCount()).toBe(0)
   })
+  it('pulses scene targets in place and sweeps only locally clipped chrome', () => {
+    const { container } = render(<App />)
+    fireEvent.change(screen.getByLabelText('Environment'), { target: { value: 'landscape' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Play light cue' }))
+    const animate = vi.mocked(Element.prototype.animate)
+    const targets = [...container.querySelectorAll<HTMLElement>('[data-cue-target]')]
+    expect(animate).toHaveBeenCalledTimes(7)
+    targets.forEach((target, index) => {
+      const frames = animate.mock.calls[index][0] as Keyframe[]
+      if (['environment', 'sky', 'water'].includes(target.dataset.cueTarget!)) {
+        expect(frames.every((frame) => frame.transform === undefined)).toBe(true)
+        expect(frames[1].opacity).toBe(0.65)
+      } else expect(frames[0].transform).toBe('translateX(-35%)')
+    })
+  })
+  it('cancels a sketch cue when changing to the V3 reference without silently replaying', () => {
+    render(<App />)
+    fireEvent.change(screen.getByLabelText('Environment'), { target: { value: 'landscape' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Play light cue' }))
+    fireEvent.change(screen.getByLabelText('Technical comparison'), { target: { value: 'landscape-legacy' } })
+    expect(animations.every((animation) => animation.cancel.mock.calls.length === 1)).toBe(true)
+    expect(vi.getTimerCount()).toBe(0)
+    expect(animations).toHaveLength(7)
+  })
   it('uses static confirmation when reduced and does not replay on restoration', () => {
     const { container } = render(<App />)
     fireEvent.click(screen.getByLabelText(/Reduce motion/))

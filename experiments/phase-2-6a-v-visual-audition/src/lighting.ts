@@ -38,21 +38,24 @@ export function useLightingCue(stage: RefObject<HTMLDivElement | null>, enabled:
     setMessage('Light cue confirmed. This preview does not save or schedule work.')
     if (!enabled || !stage.current || typeof stage.current.animate !== 'function') return
     const targets = stage.current.querySelectorAll<HTMLElement>('[data-cue-target]')
-    animations.current = Array.from(targets, (target) =>
-      target.animate(
-        [
-          { opacity: 0, transform: 'translateX(-35%)' },
-          { opacity: 0.85, offset: 0.4 },
-          { opacity: 0, transform: 'translateX(30%)' },
-        ],
-        {
-          duration: cueDuration,
-          delay: cueDelays[target.dataset.cueTarget || ''] || 0,
-          easing: 'cubic-bezier(.2,.7,.3,1)',
-          fill: 'none',
-        },
-      ),
-    )
+    animations.current = Array.from(targets, (target) => {
+      // Scene light pulses in place: translating a viewport-sized layer leaves
+      // uncovered edges. Only local chrome highlights sweep within their clips.
+      const sceneTarget = ['environment', 'sky', 'water'].includes(target.dataset.cueTarget || '')
+      const keyframes: Keyframe[] = sceneTarget
+        ? [{ opacity: 0 }, { opacity: 0.65, offset: 0.4 }, { opacity: 0 }]
+        : [
+            { opacity: 0, transform: 'translateX(-35%)' },
+            { opacity: 0.85, offset: 0.4 },
+            { opacity: 0, transform: 'translateX(30%)' },
+          ]
+      return target.animate(keyframes, {
+        duration: cueDuration,
+        delay: cueDelays[target.dataset.cueTarget || ''] || 0,
+        easing: 'cubic-bezier(.2,.7,.3,1)',
+        fill: 'none',
+      })
+    })
     setActive(true)
     timer.current = setTimeout(() => {
       cancel()

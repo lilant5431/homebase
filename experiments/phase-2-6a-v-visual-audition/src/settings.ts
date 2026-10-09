@@ -18,7 +18,18 @@ export const effects = [
     url: '',
     comparison: false,
     motion: true,
-    description: 'Layered mountains, drifting clouds and a calm lake, under sunlit or moonlit skies.',
+    description:
+      'An airy, full-page colored sketch: mountain contours, drawn clouds and lightly reflected water.',
+  },
+  {
+    id: 'landscape-legacy',
+    name: 'V3 Landscape band',
+    credit: 'Original V3 SVG + CSS · archived comparison',
+    url: '',
+    comparison: false,
+    motion: true,
+    description:
+      'The previous filled mountain/lake strip, retained in both palettes for comparison with the full-page sketch.',
   },
   {
     id: 'glass',

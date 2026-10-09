@@ -1,3 +1,4 @@
+import { Landscape } from './Landscape'
 import { GridPattern } from './LibraryEffects'
 import type { EffectId } from '../settings'
 
@@ -18,7 +19,7 @@ export function Atmosphere({ effect, candidate }: { effect: EffectId; candidate:
           )}
         </>
       )}
-      {effect === 'landscape' && (
+      {(effect === 'landscape' || effect === 'landscape-legacy') && (
         <>
           <div className="landscape-wash" />
           <div className="landscape-mist" />
@@ -27,8 +28,8 @@ export function Atmosphere({ effect, candidate }: { effect: EffectId; candidate:
       {(effect === 'glass' || effect === 'beam' || effect === 'shimmer') && (
         <div className="material-light" />
       )}
+      {effect === 'landscape' && <Landscape />}
       <div className="atmosphere-vignette" />
-      <span className="lighting-cue scene-cue" data-cue-target="environment" />
     </div>
   )
 }

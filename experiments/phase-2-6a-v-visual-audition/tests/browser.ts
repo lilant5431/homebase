@@ -12,15 +12,25 @@ const sizes = [
   [667, 375],
   [320, 640],
 ]
-const effects = ['lattice', 'glass', 'beam', 'shimmer']
+const effects = ['lattice', 'glass', 'beam', 'shimmer', 'landscape-legacy']
 type Sample = { frames: number; medianMs: number; p95Ms: number; activeAnimations: number }
 const report: {
   baseURL: string
   engines: string[]
   geometryCases: number
+  fullPageCases: number
+  cueCoverageCases: number
   screenshots: string[]
   performance: (Sample & { effect: string })[]
-} = { baseURL, engines: [], geometryCases: 0, screenshots: [], performance: [] }
+} = {
+  baseURL,
+  engines: [],
+  geometryCases: 0,
+  fullPageCases: 0,
+  cueCoverageCases: 0,
+  screenshots: [],
+  performance: [],
+}
 await fs.mkdir('test-results', { recursive: true })
 await fs.mkdir('screenshots', { recursive: true })
 
@@ -75,6 +85,31 @@ async function geometry(page: Page, label: string) {
   assert.deepEqual(result.escaped, [], `${label}: clipped content/controls`)
   assert.deepEqual(result.targets, [], `${label}: target below 44×44`)
   report.geometryCases++
+  if (await page.locator('.landscape-sketch').count()) {
+    const scene = await page.locator('.landscape-sketch').boundingBox()
+    const stage = (await page.locator('#preview').boundingBox())!
+    assert.ok(scene, `${label}: landscape exists`)
+    for (const edge of ['x', 'y', 'width', 'height'] as const)
+      assert.ok(Math.abs(scene[edge] - stage[edge]) <= 2, `${label}: full-page scene ${edge}`)
+    assert.equal(
+      await page.locator('.environment-band').evaluate((element) => getComputedStyle(element).display),
+      'none',
+    )
+    assert.equal(await page.locator('.sketch-range').count(), 3)
+    assert.equal(await page.locator('.sketch-ripples').count(), 1)
+    assert.equal(
+      await page
+        .locator('.content-card')
+        .first()
+        .evaluate((element) => getComputedStyle(element).backgroundColor),
+      await page
+        .locator('.audition')
+        .evaluate((element) =>
+          element.getAttribute('data-mode') === 'light' ? 'rgb(255, 255, 255)' : 'rgb(18, 29, 46)',
+        ),
+    )
+    report.fullPageCases++
+  }
 }
 async function expandedControls(page: Page) {
   const details = page.locator('.lab-controls > details:not(.technical-references)')
@@ -182,6 +217,72 @@ for (const [engineName, engine] of [
   await reservedArea.evaluate((element) => {
     element.parentNode?.removeChild(element)
   })
+  for (const [width, height] of sizes) {
+    await page.setViewportSize({ width, height })
+    for (const environment of ['lattice', 'landscape', 'basic']) {
+      await page.getByLabel('Environment', { exact: true }).selectOption(environment)
+      for (const mode of ['Light', 'Dark']) {
+        await page.getByRole('button', { name: mode, exact: true }).click()
+        for (const view of ['Overview', 'Weekly Planner']) {
+          await page.getByRole('button', { name: view, exact: false }).click()
+          await page.locator('#preview').scrollIntoViewIfNeeded()
+          await page.locator('.audition[data-inactive="false"]').waitFor()
+          await page.getByRole('button', { name: 'Play light cue' }).click()
+          const coverage = await page.evaluate(() => {
+            const targets = [...document.querySelectorAll<HTMLElement>('[data-cue-target]')]
+            const rect = (element: Element) => {
+              const r = element.getBoundingClientRect()
+              return { top: r.top, bottom: r.bottom, left: r.left, right: r.right }
+            }
+            for (const animation of document.getAnimations()) {
+              if (animation instanceof CSSAnimation || animation instanceof CSSTransition) continue
+              animation.pause()
+              const delay = Number(animation.effect!.getTiming().delay)
+              animation.currentTime = delay + 360
+            }
+            const target = (name: string) => targets.find((element) => element.dataset.cueTarget === name)!
+            return {
+              stage: rect(document.querySelector('#preview')!),
+              environment: rect(target('environment')),
+              sky: target('sky') ? rect(target('sky')) : null,
+              water: target('water') ? rect(target('water')) : null,
+              transform: getComputedStyle(target('environment')).transform,
+              opacity: getComputedStyle(target('environment')).opacity,
+            }
+          })
+          assert.equal(coverage.transform, 'none', `${engineName}: scene cue stays in place`)
+          assert.ok(Number(coverage.opacity) > 0, `${engineName}: midpoint is illuminated`)
+          for (const edge of ['top', 'bottom', 'left', 'right'] as const)
+            assert.ok(
+              Math.abs(coverage.stage[edge] - coverage.environment[edge]) <= 2,
+              `${engineName} ${width}×${height} ${mode} ${view}: entire cue ${edge}`,
+            )
+          if (environment === 'landscape') {
+            assert.ok(coverage.sky && coverage.water)
+            assert.ok(coverage.sky.top <= coverage.stage.top + 2)
+            assert.ok(coverage.water.bottom >= coverage.stage.bottom - 2)
+            assert.ok(coverage.sky.bottom >= coverage.water.top, 'sky/water coverage overlaps without a seam')
+          }
+          report.cueCoverageCases++
+          await page.getByRole('button', { name: 'Pause', exact: true }).click()
+          await page.getByRole('button', { name: 'Resume', exact: true }).click()
+        }
+      }
+    }
+  }
+  // Explicit archive: old filled band stays functional under either palette.
+  await page.getByLabel('Environment', { exact: true }).selectOption('landscape')
+  await reference(page, 'landscape-legacy')
+  for (const mode of ['Light', 'Dark']) {
+    await page.getByRole('button', { name: mode, exact: true }).click()
+    assert.equal(await page.locator('.landscape-legacy').count(), 1)
+    assert.equal(await page.locator('.landscape-sketch').count(), 0)
+    assert.ok(await page.locator('.environment-band').isVisible())
+    assert.ok(await page.getByLabel('Library defaults', { exact: false }).isDisabled())
+    assert.equal(await page.locator('.audition').getAttribute('data-environment'), 'landscape')
+  }
+  await reference(page, 'integrated')
+  await page.getByLabel('Environment', { exact: true }).selectOption('basic')
   await page.getByRole('button', { name: 'System', exact: true }).click()
   for (const mode of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme: mode })
@@ -429,7 +530,7 @@ for (const [engineName, engine] of [
             await page.getByRole('button', { name: view, exact: false }).click()
             await screenShot(
               page,
-              `v3-${environment}-${mode.toLowerCase()}-${view === 'Overview' ? 'overview' : 'planner'}-${device}`,
+              `v4-${environment}-${mode.toLowerCase()}-${view === 'Overview' ? 'overview' : 'planner'}-${device}`,
             )
           }
         }
@@ -442,12 +543,30 @@ for (const [engineName, engine] of [
       await page.getByRole('button', { name: mode, exact: true }).click()
       await page.locator('#preview').scrollIntoViewIfNeeded()
       await page.getByRole('button', { name: 'Play light cue' }).click()
-      await page.waitForTimeout(420)
-      const file = `screenshots/v3-landscape-${mode.toLowerCase()}-cue-desktop.png`
+      await page.evaluate(() => {
+        for (const animation of document.getAnimations()) {
+          if (animation instanceof CSSAnimation || animation instanceof CSSTransition) continue
+          animation.pause()
+          animation.currentTime = Number(animation.effect!.getTiming().delay) + 360
+        }
+      })
+      const file = `screenshots/v4-landscape-${mode.toLowerCase()}-cue-desktop.png`
       await page.screenshot({ path: file, fullPage: true, animations: 'allow' })
       report.screenshots.push(file)
       await page.locator('.audition[data-cue-active="false"]').waitFor()
     }
+    await reference(page, 'landscape-legacy')
+    for (const [width, height, device] of [
+      [1440, 900, 'desktop'],
+      [390, 844, 'phone'],
+    ] as const) {
+      await page.setViewportSize({ width, height })
+      for (const mode of ['Light', 'Dark']) {
+        await page.getByRole('button', { name: mode, exact: true }).click()
+        await screenShot(page, `v4-archived-v3-landscape-${mode.toLowerCase()}-${device}`)
+      }
+    }
+    await reference(page, 'integrated')
     await page.emulateMedia({ forcedColors: 'active' })
     await page.locator('.audition[data-reduced-effects="true"]').waitFor()
     assert.equal((await allAnimations(page)).length, 0)

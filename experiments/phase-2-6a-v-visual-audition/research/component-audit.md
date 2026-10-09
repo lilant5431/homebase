@@ -1,4 +1,4 @@
-# Component audit — Phase 2.6A-V / V2 / V3
+# Component audit — Phase 2.6A-V / V2 / V3 / V4
 
 Research checked October 8, 2026. This is an independent, publicly reviewable experimental app, not Homebase product integration. Eleven specific components were inspected using their actual source, dependencies and official license evidence. The candidate entries are the original research record; the dated V2/V3 selection updates below describe the current audition. No paid assets, login or subscription was used.
 
@@ -92,3 +92,7 @@ The new coordinated CSS light field, bounded SVG horizon (24 stars, 36 runway po
 V3 removes the original aviation scene from runtime following physical user feedback. Its V1/V2 audit statements remain historical. An original reusable SVG Landscape now uses three mountain layers, two cloud paths, a calm lake/reflections, twenty fixed stars and a sun/moon disc; palette tokens change lighting without duplicating geometry. Existing Grid Pattern/Magic Card reuse remains, and the four licensed source comparisons stay archival. Basic is promoted to a complete light/dark user choice. Source notices/hashes and redistribution decisions are unchanged; no new dependency or copied component is introduced.
 
 A cue adds two finite Landscape sky/water targets to the original five chrome/environment targets, retaining the bounded 1,180ms duration and cancellation architecture. Physical V2 passing behavior is user-reported and recorded separately; the new scene is not physically accepted yet.
+
+## V4 reference-only landscape refinement
+
+[Targeted reference study](landscape-v4-references.md) covers colored minimal line-art, mountain outlines, atmospheric depth and contour UI backdrops. These illustration sources are reference-only; no paid artwork/code/path geometry is copied or redistributed. The new full-page drawing and retained V3 band are original SVG/CSS. Magic UI adapters, five pinned source hashes, MIT notices and dependencies are unchanged. No new license or runtime dependency burden is introduced. Previous audition recommendations and V3 measurements above are historical where explicitly labeled; current results are in [verification](verification.md).

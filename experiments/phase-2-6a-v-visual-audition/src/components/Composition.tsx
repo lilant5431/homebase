@@ -15,7 +15,7 @@ import {
 import { useState } from 'react'
 import { BorderBeam, MagicGlass, ShimmerButton } from './LibraryEffects'
 import type { EffectId } from '../settings'
-import { Landscape } from './Landscape'
+import { LandscapeLegacy } from './LandscapeLegacy'
 
 const assignments = [
   {
@@ -211,8 +211,8 @@ export function Composition({
           {cueMessage}
         </div>
         <div className="environment-band" aria-hidden="true">
-          {effect === 'landscape' ? (
-            <Landscape />
+          {effect === 'landscape-legacy' ? (
+            <LandscapeLegacy />
           ) : (
             <>
               <span className="band-light" />

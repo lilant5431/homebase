@@ -63,6 +63,7 @@ export function App() {
     (CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)'))
   const fieldSupported = typeof CSS !== 'undefined' && typeof CSS.registerProperty === 'function'
   const integrated = archiveEffect === null
+  const coordinated = integrated || effect === 'landscape-legacy'
   const effectiveCandidate = candidate && !integrated && selected.comparison
   const cue = useLightingCue(stage, !inactive && !reduceMotion, `${theme}:${effect}:${effectiveCandidate}`)
   const movable =
@@ -100,6 +101,7 @@ export function App() {
       data-preference={mode}
       data-effect={effect}
       data-integrated={integrated}
+      data-coordinated={coordinated}
       data-cue-active={cue.active}
       data-candidate={effectiveCandidate}
       data-reduced-motion={reduceMotion}
@@ -120,7 +122,7 @@ export function App() {
         <a href="#preview" className="lab-brand">
           <Compass size={24} />
           <span>
-            homebase<span>VISUAL AUDITION / 2.6A-V3</span>
+            homebase<span>VISUAL AUDITION / 2.6A-V4</span>
           </span>
         </a>
         <div className="lab-tag">An experiment in light & space</div>
@@ -277,7 +279,7 @@ export function App() {
             </summary>
             <div className="technical-body">
               <p className="control-help">
-                Rejected effects remain here as technical references, not preferred design options.
+                Compare the older V3 Landscape band, or inspect archived library techniques.
               </p>
               <label className="control-label" htmlFor="effect">
                 Technical comparison
@@ -293,7 +295,7 @@ export function App() {
               >
                 <option value="integrated">Return to integrated themes</option>
                 {effects
-                  .filter((item) => item.comparison)
+                  .filter((item) => item.comparison || item.id === 'landscape-legacy')
                   .map((item) => (
                     <option key={item.id} value={item.id}>
                       {`Archive · ${item.name}`}
@@ -356,14 +358,17 @@ export function App() {
             className="preview-stage"
             ref={stage}
             data-light-motion={
-              fieldSupported && !reduceMotion && !effectiveCandidate && integrated && environment !== 'basic'
+              fieldSupported && !reduceMotion && !effectiveCandidate && coordinated && effect !== 'baseline'
             }
           >
             <Atmosphere effect={effect} candidate={effectiveCandidate} />
+            <div className="scene-cue-field" aria-hidden="true">
+              <span className="lighting-cue scene-cue" data-cue-target="environment" />
+            </div>
             <Composition
               effect={effect}
               candidate={effectiveCandidate}
-              interactive={!inactive && !reduceMotion && (integrated || effect === 'glass')}
+              interactive={!inactive && !reduceMotion && (coordinated || effect === 'glass')}
               cueMessage={cue.message}
               cueConfirmed={cue.confirmed}
               playCue={cue.play}
