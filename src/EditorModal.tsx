@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { X } from 'lucide-react'
+import ModalBackdrop from './ModalBackdrop'
 import {
   newId,
   type AcademicData,
@@ -123,13 +124,14 @@ export default function EditorModal({
     assessment = item as Assessment | undefined,
     commitment = item as Commitment | undefined
   return (
-    <div
-      className="modal-backdrop"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose()
-      }}
-    >
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <ModalBackdrop onClose={onClose}>
+      <div
+        className="modal academic-editor"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        tabIndex={-1}
+      >
         <div className="modal-header">
           <div>
             <span className="section-kicker">{existing ? 'MAKE A CHANGE' : 'ADD TO YOUR SPACE'}</span>
@@ -153,7 +155,6 @@ export default function EditorModal({
                 name="title"
                 required
                 maxLength={120}
-                autoFocus
                 defaultValue={
                   modal.entity === 'class'
                     ? classItem?.name
@@ -308,6 +309,6 @@ export default function EditorModal({
           </div>
         </form>
       </div>
-    </div>
+    </ModalBackdrop>
   )
 }
