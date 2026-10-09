@@ -1,6 +1,6 @@
-# Component audit — Phase 2.6A-V / V2
+# Component audit — Phase 2.6A-V / V2 / V3
 
-Research checked October 8, 2026. This is an independent, publicly reviewable experimental app, not Homebase product integration. Eleven specific components were inspected using their actual source, dependencies and official license evidence. No paid assets, login or subscription was used.
+Research checked October 8, 2026. This is an independent, publicly reviewable experimental app, not Homebase product integration. Eleven specific components were inspected using their actual source, dependencies and official license evidence. The candidate entries are the original research record; the dated V2/V3 selection updates below describe the current audition. No paid assets, login or subscription was used.
 
 ## License boundaries
 
@@ -77,7 +77,7 @@ Verified MIT/free. Original React, Motion motion values/springs, next-themes, Ta
 
 Verified MIT/free source. Radix dropdown primitives, Lucide, `cn` and Tailwind; portals, keyboard/menu semantics and focus treatment. React/Vite possible, but installing the complete system for gallery controls is unnecessary. Low rendering risk; animation CSS must respect reduced motion. Reference informs explicit labels/focus/current state. Native selects, buttons and disclosure are used instead; no imitation menu role without arrow-key behavior.
 
-## What is actually running
+## What ran in V1
 
 Four licensed Magic UI adaptations: Grid Pattern, Border Beam, Shimmer Button and gradient-mode Magic Card. Two original effects: deterministic CSS/SVG horizon lighting and a static CSS-only baseline. Sunlight/reflections added around the grid and glass are **original Homebase audition work**, not unlicensed ports of React Bits/Aceternity. These exclusions are deliberate and visible in the gallery's credits. No restricted source/assets were copied into this repository.
 
@@ -86,3 +86,9 @@ Four licensed Magic UI adaptations: Grid Pattern, Border Beam, Shimmer Button an
 October 9, 2026 refinement uses the same inspected sources and unchanged license notices/source hashes. Grid Pattern remains the loved Daylight foundation; Magic Card gradient-mode is now a shared chrome technique in both primary scenes (navigation, action holder and native Preview notes menu). Library defaults remain an archival technical comparison. Border Beam/Shimmer are not shortlisted following explicit user rejection; static CSS is only a performance/reduced-effects reference. Their retained source is clearly labeled archival, not newly endorsed.
 
 The new coordinated CSS light field, bounded SVG horizon (24 stars, 36 runway points and 20 taxiway points), exposed decorative lighting band and five-surface bounded cue are original audition code. They do not incorporate excluded library assets. The cue uses browser Web Animations only on a user event; CSS drives the shared ambient field. No package or redistribution permission was added or changed. The original audit decisions above remain the research record, not the current six-way preference.
+
+## V3 selection update
+
+V3 removes the original aviation scene from runtime following physical user feedback. Its V1/V2 audit statements remain historical. An original reusable SVG Landscape now uses three mountain layers, two cloud paths, a calm lake/reflections, twenty fixed stars and a sun/moon disc; palette tokens change lighting without duplicating geometry. Existing Grid Pattern/Magic Card reuse remains, and the four licensed source comparisons stay archival. Basic is promoted to a complete light/dark user choice. Source notices/hashes and redistribution decisions are unchanged; no new dependency or copied component is introduced.
+
+A cue adds two finite Landscape sky/water targets to the original five chrome/environment targets, retaining the bounded 1,180ms duration and cancellation architecture. Physical V2 passing behavior is user-reported and recorded separately; the new scene is not physically accepted yet.

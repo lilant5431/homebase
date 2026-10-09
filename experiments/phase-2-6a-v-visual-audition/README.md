@@ -1,10 +1,10 @@
-# Homebase · Visual Audition / Phase 2.6A-V2
+# Homebase · Visual Audition / Phase 2.6A-V3
 
-A working, isolated material lab for comparing light, glass and motion **around actual content**. This is a visual experiment, not Homebase integration or an approved final direction. Overview and Weekly Planner contain fixed illustrative records. No production modules, scheduling engines, persistence, editors or accounts are connected.
+An isolated interactive gallery: **three environments × two palettes**, around fixed illustrative Overview and Weekly Planner content. This is not the Homebase application, production integration or a finalized redesign. No real records, scheduling, editors, accounts or browser storage are connected.
 
 ## Run on Windows and iPhone
 
-Install Git and Node.js **24.19.0** (the verified version), then use PowerShell:
+Use Git and Node.js **24.19.0** (verified). For a new checkout, in PowerShell:
 
 ```powershell
 git clone --branch experiment/phase-2-6a-v-visual-audition https://github.com/lilant5431/homebase.git homebase-audition
@@ -13,40 +13,40 @@ npm ci
 npm run dev
 ```
 
-Open **http://localhost:5175/** on the PC. Vite listens on `0.0.0.0`, requires port **5175**, and prints the PC's Network URL. It does not change Homebase's normal server. Keep PowerShell running.
+For an existing experimental checkout, run `git pull --ff-only` on that branch, then `npm ci` and `npm run dev` in this directory. Keep the terminal running. Open **http://localhost:5175/** on the PC. This dedicated server listens on `0.0.0.0`, requires port **5175** and leaves Homebase's normal server alone.
 
-On an iPhone on the **same Wi-Fi**, open the printed Network URL, for example **http://192.168.1.42:5175/**. Use the PC's actual address, not this example or the cloud environment's address. If Windows asks, allow this Node server on your private network. A managed device/network may prohibit LAN access. This experiment requires no secure-context-only API or `crypto.randomUUID`, and does not disable pinch zoom.
+On an iPhone on the **same Wi-Fi**, open the Network URL printed by Vite, for example **http://192.168.1.42:5175/**. Use your PC's actual address, not that example or the cloud address. Allow this Node server on a private network if Windows prompts. Managed networks/devices may prohibit LAN access. No secure-context-only API, login or API key is needed; pinch zoom is preserved.
 
-The cloud development preview, while the server is running, is http://localhost:5175/ in the environment's browser/forwarded preview. It is not a public deployment or a URL reachable from your phone without forwarding. No hosting was configured.
+A running cloud preview can use http://localhost:5175/ through the environment browser/forwarding. It is not a public deployment or directly reachable by your phone without forwarding. No hosting is configured.
 
-## How to audition
+## Six appearances
 
-1. Choose **Daylight — Integrated Sunlit Lattice** or **Night Flight — Integrated Illuminated Horizon**. These are the two primary environments, each with shared reflective glass.
-2. Compare **Calm**, **Balanced** and **Cinematic**. Presets change intensity and speed; custom sliders clear the preset. Theme changes preserve tuning, pause, reductions and the selected composition.
-3. Open **Fine-tune & accessibility** (collapsed on a freshly loaded phone). Intensity affects atmosphere and decorative rims, never text opacity. Speed changes the shared CSS field's duration.
-4. **Pause** freezes ambient motion and clears pointer reflections; it cancels any running cue. Hidden/offscreen effects pause too. Resume never replays an old cue.
-5. **Reduce motion** stops nonessential movement and uses static cue confirmation. **Reduce visual effects** removes atmosphere, glow and blur and makes glass opaque; it also stops movement. Device reductions and forced colors take precedence and cannot be disabled by Reset.
-6. Switch **Overview / Weekly Planner**, inspect a record, and open **Preview notes** to see reflected menu glass around opaque text. These are real read-only interactions with illustrative content.
-7. **Play light cue** briefly illuminates environment → navigation → selected item → action holder → primary rim. Repeated taps restart five fixed decorative layers, not accumulating animations. The confirmation explicitly says no work was saved or scheduled. Pause, reductions, scene changes, hiding and unmount cancel the cue.
-8. **Sources & archived comparisons** retains library-default/adaptation comparisons. Border Beam and Shimmer are **rejected**, not primary design choices. Static CSS is only a performance/reduction reference. Return to integrated themes using the same selector. Source comparison selection is retained across theme changes.
-9. **Reset** restores Balanced tuning and clears manual reductions, pause and library defaults while retaining theme, selected reference and composition. Settings remain in memory only.
+| Environment               | Light                                                                      | Dark                                                                                  |
+| ------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Sunlit Lattice**        | Accepted cool-white/pale-blue architectural grid and flowing sunlight      | Same grid/geometry under deep-slate lighting, with cool reflected glass               |
+| **Atmospheric Landscape** | Soft sky, layered mountains, drifting clouds, warm sun and reflective lake | Same scene geometry: midnight sky, steady sparse stars, moonlit clouds and calm water |
+| **Basic**                 | Polished clear surfaces and shared chrome; no cinematic background         | Same UI in dark colors, with static reflective chrome; no cinematic background        |
 
-All settings reset on reload. The app never accesses localStorage, sessionStorage or the three Homebase persistence keys. No analytics, external runtime requests, user records, images, APIs or login. Official source links only navigate when you choose them.
+**Environment** and **Palette** are independent controls. The select uses the concise label **Landscape**; the heading names it Atmospheric Landscape. **System** (default) resolves Light/Dark from `prefers-color-scheme`, follows live OS changes, and does not use local time. It adds no extra visual design. Without `matchMedia`, System falls back to Light. Native `color-scheme` follows the resolved palette.
 
-## Two integrated environments; archived technical references
+Changing environment preserves palette, intensity, speed, preset, pause/reductions and composition. Selecting an environment returns from any technical source comparison to its integrated scene. Changing palette preserves environment and source comparison. Preferences live only in React state and reset on reload.
 
-| Environment     | Current lighting                                                                                                                 | Reuse                                                               |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Modern Daylight | Full-workspace sunlight and geometric reflections; shared moving glass/selected-control edges                                    | Attributed Magic UI Grid Pattern and Magic Card gradient techniques |
-| Night Flight    | Visible cyan runway and amber taxiway lights, bounded horizon, sparse stars and moving directional wash; shared reflected chrome | Original SVG/CSS horizon + attributed Magic Card gradient technique |
+## Controls and interaction
 
-A single inherited CSS light field drives background and chrome. This is visually coordinated lighting, **not physically accurate propagation**. Native **Preview notes** demonstrates menu glass without installing a menu library. Academic content stays opaque.
+1. Choose an environment and System/Light/Dark. Compare **Calm**, **Balanced**, **Cinematic**; custom sliders clear the preset. Intensity controls lighting/glass rather than academic text opacity. Speed controls atmospheric CSS motion; it is disabled in Basic or unsupported/reduced modes. Basic retains the speed value for the next atmospheric environment.
+2. Open **Fine-tune & accessibility** (collapsed on a freshly loaded phone). **Pause** freezes movement and clears pointer reflections. Hidden/offscreen scenes pause. **Reduce motion** stops nonessential movement. **Reduce visual effects** removes atmosphere/glow/blur and makes chrome opaque; it also stops motion. OS reductions/forced colors take precedence, including after Reset.
+3. Switch **Overview / Weekly Planner**, inspect illustrative records, and open **Preview notes** to see menu glass around solid text. No academic edits, saving or scheduling occurs.
+4. **Play light cue** sends bounded reflected light across existing decorative layers: five for Lattice/Basic, seven for Landscape (including sky/water). The maximum remains **1,180 ms**. Repeated taps replace animations/timer. Pause, reductions, appearance changes, hiding/offscreen and unmount cancel it before the next paint. Static confirmation explicitly says no work is saved/scheduled. Restoring motion never replays a cue.
+5. **Sources & archived comparisons** keeps four licensed technique comparisons. Beam/Shimmer remain rejected references, not active design choices. The former airport/runway/cockpit scene is removed from runtime. Basic is now a deliberate user choice, not merely an unfinished or rejected fallback.
+6. **Reset** restores Balanced tuning and clears manual reductions, pause and library defaults while retaining environment, palette, selected reference and composition. OS requests remain honored.
 
-The six original effect choices remain in the technical disclosure: lattice, horizon, glass, Border Beam, Shimmer and static baseline. They are references rather than an active six-way shortlist. Source-default comparisons remain available where applicable; no licensed source snapshots were replaced.
+## Shared materials and sources
 
-Copyright **Magic UI**, MIT. Full notice: [vendor/MAGIC-UI-LICENSE.txt](vendor/MAGIC-UI-LICENSE.txt). Pinned upstream snapshots and SHA-256 hashes: [vendor/source-manifest.json](vendor/source-manifest.json). Runtime adaptations: [LibraryEffects.tsx](src/components/LibraryEffects.tsx) and [styles.css](src/styles.css). Snapshot `.txt` files are evidence, not compiled modules.
+One inherited CSS light field drives the accepted lattice, landscape cloud/water drift and reflected chrome. Large lights use transforms; small rims use gradients. These are visually coordinated effects, not physical light propagation. One reusable original SVG landscape is styled by palette, not six duplicated component trees. The scenic strip keeps mountains/lake recognizable around opaque records at narrow sizes. Decorative stars remain steady, not flashing. No stock image, Canvas, WebGL, animation framework or perpetual JS rendering loop.
 
-**React Bits and Aceternity source is not included.** React Bits' actual license restricts component redistribution; Aceternity public registry redistribution permission could not be established. The [11-component audit](research/component-audit.md) links official demos, actual inspected source and license evidence. shadcn/ui informed semantics only. No paid components or animation libraries are installed. Lucide icons are from `lucide-react` (ISC); local Fontsource font files use the fonts' SIL Open Font License. Full notices for Magic UI and the five runtime packages are also copied to [public/third-party-notices.txt](public/third-party-notices.txt), which Vite includes in the built distribution at `/third-party-notices.txt`.
+Magic UI **Grid Pattern** and **Magic Card gradient-mode** adaptations are retained with attribution; Border Beam/Shimmer source comparisons remain archival. Copyright Magic UI, MIT: [full license](vendor/MAGIC-UI-LICENSE.txt), [pinned source snapshots/hashes](vendor/source-manifest.json), [runtime adapters](src/components/LibraryEffects.tsx). Original landscape/CSS lighting is not copied from excluded libraries. **No new dependencies.** Existing React Bits/Aceternity exclusions remain; see the [11-component audit](research/component-audit.md).
+
+Five runtime packages remain React, React DOM, Lucide (ISC), and local DM Sans/Manrope fonts (SIL OFL). Full upstream/runtime notices ship in [public/third-party-notices.txt](public/third-party-notices.txt). No analytics or external runtime requests. Official source links navigate only when selected.
 
 ## Verification
 
@@ -61,39 +61,36 @@ npm run build
 npm run format:check
 ```
 
-For browser checks, keep `npm run dev` running in another terminal:
+For browser tests, keep the independent dev server running in another terminal:
 
 ```powershell
 npx playwright install chromium webkit
 npm run test:browser
 ```
 
-`AUDITION_URL` can point the browser runner at an independently started built preview instead. Linux may need Playwright's browser OS dependencies. The runner fails if either engine is unavailable; it does not silently count a missing WebKit run as passing. Results go to ignored `test-results/`; reproducible screenshots go to `screenshots/`.
+`AUDITION_URL` may point to a separately started built preview. Linux may need browser OS libraries. Both engines are required; an unavailable engine is not reported as passing. Results go to ignored `test-results/`; screenshots go to `screenshots/`. `python3 tests/audit.py` verifies provenance, relative links, isolation and solid-role contrast.
 
-Tests use `src/**/*.audition.tsx`, explicitly included by this project's Vitest configuration, to avoid discovery by production Homebase's default `*.test.*` patterns. Type-aware Oxlint includes source, these tests and the typed browser runner with no suppressions. Dependency/configuration files are independent. Existing repository **CI / verify** checks production Homebase, not this experiment; the experimental verification evidence is recorded separately in [verification.md](research/verification.md).
+Unit tests deliberately use `src/**/*.audition.tsx` to avoid production test discovery. The project's existing type-aware Oxlint includes source, tests and browser runner, with no suppressions. Hosted **CI / verify** checks **production Homebase only**; experimental/browser checks are separate local evidence. [Verification and performance record](research/verification.md).
 
-## Visual evidence and recommendations
+## Current visual evidence
 
-- [Daylight Overview · desktop / Balanced](screenshots/v2-daylight-overview-desktop.png)
-- [Night Overview · desktop / Cinematic](screenshots/v2-night-overview-desktop.png)
-- [Daylight Weekly Planner · desktop](screenshots/v2-daylight-planner-desktop.png)
-- [Night Weekly Planner · desktop](screenshots/v2-night-planner-desktop.png)
-- [Daylight Overview · phone](screenshots/v2-daylight-overview-phone.png)
-- [Night Overview · phone](screenshots/v2-night-overview-phone.png)
-- [Daylight Weekly Planner · phone](screenshots/v2-daylight-planner-phone.png)
-- [Night Weekly Planner · phone](screenshots/v2-night-planner-phone.png)
-- [Daylight cue · desktop](screenshots/v2-daylight-cue-desktop.png)
-- [Night cue · desktop](screenshots/v2-night-cue-desktop.png)
-- [Candidate comparison and integration recommendations](research/homebase-visual-recommendations.md)
+All examples below use Balanced. Each combination also has a Weekly Planner screenshot named `v3-{environment}-{light|dark}-planner-{desktop|phone}.png`.
 
-Still screenshots cannot demonstrate fluidity, pointer response, performance or native Safari behavior. Use the running gallery to judge these. Screenshots were produced in Chromium, not physical iPhone Safari.
+| Appearance      | Desktop Overview                                               | Phone Overview                                             |
+| --------------- | -------------------------------------------------------------- | ---------------------------------------------------------- |
+| Lattice Light   | [Desktop](screenshots/v3-lattice-light-overview-desktop.png)   | [Phone](screenshots/v3-lattice-light-overview-phone.png)   |
+| Lattice Dark    | [Desktop](screenshots/v3-lattice-dark-overview-desktop.png)    | [Phone](screenshots/v3-lattice-dark-overview-phone.png)    |
+| Landscape Light | [Desktop](screenshots/v3-landscape-light-overview-desktop.png) | [Phone](screenshots/v3-landscape-light-overview-phone.png) |
+| Landscape Dark  | [Desktop](screenshots/v3-landscape-dark-overview-desktop.png)  | [Phone](screenshots/v3-landscape-dark-overview-phone.png)  |
+| Basic Light     | [Desktop](screenshots/v3-basic-light-overview-desktop.png)     | [Phone](screenshots/v3-basic-light-overview-phone.png)     |
+| Basic Dark      | [Desktop](screenshots/v3-basic-dark-overview-desktop.png)      | [Phone](screenshots/v3-basic-dark-overview-phone.png)      |
 
-## Boundaries and limitations
+Additional examples: [Landscape Light cue](screenshots/v3-landscape-light-cue-desktop.png), [Landscape Dark cue](screenshots/v3-landscape-dark-cue-desktop.png), [Light phone planner](screenshots/v3-landscape-light-planner-phone.png), [Dark desktop planner](screenshots/v3-landscape-dark-planner-desktop.png). V1/V2 screenshots remain **historical**, not the current shortlist. Still images cannot show fluidity, touch or physical Safari compositing. [Current recommendations](research/homebase-visual-recommendations.md).
 
-This does not resolve DT-01, redesign native inputs, implement theme persistence, alter PR #14, or implement the Homebase UI. The approved design branch is a read-only reference. Glass exterior opacity and atmosphere here are **experiments**, not replacements for approved semantic contrast roles.
+## Physical acceptance and limitations
 
-Safari's blur, motion-path masking, container units and GPU behavior vary by version/device. Blur and motion-path feature gates provide opaque/static fallbacks; browsers without CSS registered custom properties retain static coordinated reflections; old browsers without container units keep a usable opaque button. There is no Canvas/WebGL loop, unbounded particle count or animation framework. CSS backdrop-filter and animated gradients can still consume significant GPU/paint work. Desktop profiling and Playwright WebKit cannot prove iPhone battery, heat, sustained frame rate or physical Safari acceptance.
+The user physically tested V2 on iPhone Safari and reported passing Daylight animation, portrait/landscape scrolling and rotation, repeated cues, reduced-motion/effects, and sustained responsiveness/performance. Those accepted behaviors are protected. The aviation direction was rejected; V3 replaces it. These are user reports, not additional automated/physical observations invented here.
 
-Physical check: at portrait and both short-landscape sizes, reach every control, compare both integrated themes and presets, open Preview notes, retrigger the light cue three times, pause during it, use both reductions and inspect both compositions and verify page scrolling/pinch zoom. Report which light/glass combinations you prefer and any warmth, dropped frames, flicker or readability issue. **Visual selection remains pending user feedback.**
+V3 and its six combinations still need physical review: switch both dimensions/System, inspect Landscape sky/mountains/lake in portrait and landscape, compare presets, scroll/rotate both compositions, retrigger/pause cues, try reductions/pinch zoom and observe warmth/smoothness over several minutes. Desktop WebKit cannot establish physical iPhone acceptance. CSS gradients, promoted layers and bounded 18px chrome blur still have paint/memory costs. Unsupported registered properties or blur use static/opaque fallbacks; older motion-path/container-unit implementations retain usable controls.
 
-Previous V1 screenshots remain as historical comparison assets. The V2 links above are the current audition evidence. To update an existing Windows checkout, run `git pull --ff-only` on the experimental branch, then `npm ci` and `npm run dev` in this directory.
+No production schemas, keys, academic/scheduling behavior, PR #14 or DT-01 editor work is changed. No appearance persistence or production redesign is implemented. **Final design acceptance remains pending the user's V3 review.**
