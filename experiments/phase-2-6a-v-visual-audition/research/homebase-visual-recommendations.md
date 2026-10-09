@@ -1,59 +1,45 @@
-# Visual comparison and recommendations
+# Visual recommendations — Phase 2.6A-V2
 
-This is a provisional selection for user audition, not a finalized Homebase design. [Component audit](component-audit.md) records actual source and licensing. [Verification](verification.md) records measurements and their limits.
+This refines the existing audition using direct user feedback. It does not finalize a redesign or authorize production integration. [Component audit](component-audit.md) retains source/license evidence; [verification](verification.md) separates experimental tests from production CI.
 
-## Relationship to the approved design
+## Feedback and current shortlist
 
-Read-only reference: [Phase 2.6A design branch](https://github.com/lilant5431/homebase/tree/docs/phase-2-6a-design-spec/docs/design/phase-2-6), inspected at `02abb2097e184dc21fe102b349a9d43c2da1ad99`. This experiment starts separately from stable main `580b25f69a724a5e0c54e15927e05eafcda6d887`, which includes PR #13. It neither imports design assets nor modifies that branch.
+**Sunlit lattice was loved.** Its cool-white/pale-blue architectural grid and palette are retained. The sunlight now spans the illustrative workspace and responds on foreground glass, navigation, menus and selected-control edges. It has not been replaced with Aurora or another effect.
 
-The same hierarchy, solid records, top-to-bottom mobile content order and shared semantic palette support both themes. Night is a change of atmosphere, not a different navigation model. Date/Time DT-01 remains an unresolved product defect assigned to 2.6E; the audition contains no editor or native picker and provides no evidence about its resolution.
+**Airport horizon needed stronger visible lighting.** Its SVG is now bounded to a recognizable top horizon instead of stretching/cropping across a tall phone composition. Larger cyan runway lights, warm accents, perspective taxiway rows, sparse stars and an exposed lighting band make the scene readable around the header and metric panels. A slowly changing directional wash provides actual motion; runway points remain steady rather than flashing.
 
-### Content roles retained
+**Reflective glass and the temporary light cue were kept.** Both integrated environments use them. **Border Beam and Shimmer were rejected** and remain only in the closed technical-reference disclosure. **Static CSS was rejected aesthetically** and remains solely a performance/reduction comparison. None is promoted as a new preferred direction.
 
-| Role                   | Modern Daylight       | Night Flight          |
-| ---------------------- | --------------------- | --------------------- |
-| Canvas                 | `#F3F6FA`             | `#0B1220`             |
-| Solid content          | `#FFFFFF`             | `#121D2E`             |
-| Foreground             | `#172334`             | `#E8EEF6`             |
-| Muted                  | `#536477`             | `#A8B7CB`             |
-| Action / on-action     | `#1D4ED8` / `#FFFFFF` | `#8BDDFC` / `#0B1220` |
-| Essential control edge | `#64748B`             | `#71859E`             |
+## One coordinated light language
 
-Experimental chrome uses light glass `rgba(240,248,255,.70)` or dark glass `rgba(18,34,54,.72)`, static 18px backdrop blur and restrained edge reflections. The source-default comparison intentionally uses different upstream colors/cadence. These are audition values requiring approval, not silently revised design tokens. Main navigation actions and all academic cards keep opaque text-bearing plates. Reduced effects replace chrome with the solid content color. Contrast evidence for actual content roles is in the verification record; contrast of every possible mixed backdrop is not claimed.
+Four inherited, registered CSS properties describe a small shared field: primary X/Y, secondary X and wash angle. One eased, alternate animation on the preview drives transformed rays/night wash and position-sensitive small glass rims/selected borders. Large light-layer backgrounds stay fixed within their moving layers to avoid repeatedly repainting a full-workspace gradient. There is no animated React position state, WebGL or global JavaScript frame loop. These are coordinated visual gradients, not physical light propagation.
 
-## Effect comparison
+The Magic UI Magic Card gradient-mode adaptation is reused on navigation, the primary-action holder and the native Preview notes menu. Opaque inner plates keep labels readable. Pointer-capable devices add a scoped cursor-relative reflection; touch uses ambient, focus and pressed feedback without hover. Active navigation has `aria-current`, a border and a solid label. Academic cards, planner sessions and read-only detail panels stay solid.
 
-| Effect           | Daylight contribution                                                      | Night contribution                                                 | Motion/material value                                                | Integration risk                                                             |
-| ---------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Sunlit lattice   | Strongest structural identity: diagonal sunlight and coherent geometry     | Architectural grid with cooler reflected light                     | Three bounded CSS transforms around one static SVG pattern           | Low–medium; large gradient paints still need phone observation               |
-| Airport horizon  | Subtle distant blue/amber accents; less characteristic than sunlit lattice | Strongest atmosphere: sparse sky and distant horizon, no wallpaper | One slow CSS translation; 60 deterministic SVG circles               | Low–medium; no runtime dependency or particle loop                           |
-| Reflective glass | Clear edges and cool reflected light                                       | Richest layered navigation, restrained cyan/amber rim              | Scoped pointer response; centered lighting for keyboard/touch        | Medium; backdrop blur and radial repaint need real Safari performance review |
-| Border Beam      | Distinct active chrome, source orange/purple is less coherent              | Ice/amber tracing light is legible but can distract                | Continuous motion-path border; source technique retained with CSS    | Low–medium; modern mask/rect support required, static fallback supplied      |
-| Shimmer Action   | Crisp primary action with gentle reflection                                | Strong illuminated action without glowing text                     | Small bounded conic gradient + source translating/rotating keyframes | Low–medium; best used on one action or briefly after a real event            |
-| Static baseline  | Calm sunlight/reflection with no motion                                    | Quiet dimensional shading, less cinematic                          | No continuous motion; useful reduction/reference                     | Lowest risk; proves whether moving effects actually add value                |
+| Scene           | Identity                                                                                          | Motion                                                                    | Production caution                                                           |
+| --------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Modern Daylight | Original grid/palette, full-workspace diagonal sunlight and geometric outline                     | Shared sunlight positions reflected across chrome                         | Gradient changes can cause paint; check phone scrolling and thermal behavior |
+| Night Flight    | Abstract airport horizon, sparse sky, cyan/amber runway/taxiway points; restrained ticks/dividers | Directional sky wash and coordinated reflected edges; steady light points | Several-minute physical Safari compositing/performance remains unverified    |
+| Reduced effects | Same content hierarchy with opaque chrome, no atmosphere/glow/blur                                | No decorative movement; immediate cue confirmation                        | A functional fallback, not a preferred aesthetic                             |
 
-The six choices are distinct effect auditions, not six libraries to install. Magic UI supplies four verified MIT source techniques without a runtime effect package. The CSS sun rays and original horizon are expressly not ports of the excluded React Bits/Aceternity candidates.
+Precision ticks and divisions are decorative. There is no fabricated flight telemetry or unrelated aircraft control. Balanced is the recommended audition start; Calm and Cinematic are comparisons, not permanent Homebase preferences.
 
-## Small coherent collection to consider next
+## Temporary cue
 
-Subject to physical-phone/user feedback:
+Play light cue sends a bounded illumination across five existing decorative surfaces, with 0/100/170/230/280 ms offsets and 900 ms animations (latest finish 1,180 ms). Retrigger cancels the previous five animations and timer. Pause, scene/reference changes, hidden/offscreen state, reductions and unmount cancel it. Cancellation runs before the next paint. A check icon and explicit **no save/schedule** confirmation remain when motion is reduced or the animation API is unavailable; restoring movement never replays the cue.
 
-1. **One ambient scene per theme:** tuned sunlit lattice for Daylight, original sparse horizon for Night. Use Calm/Balanced bounds; leave Cinematic as an audition stress comparison rather than the planner default.
-2. **One shared chrome material:** bounded reflective glass for navigation/floating action exterior, opaque inner action plates. Reduce effects to solid material; centered static lighting for touch/keyboard, no pointer tracking requirement.
-3. **One restrained action accent:** tuned Shimmer technique on a deliberately chosen primary action, potentially time-limited to genuine successful feedback. Do not apply shimmer, beams and glass trails simultaneously to every card.
+The effect lives behind content or in masked control rims, so it does not sweep over academic text. It demonstrates decorative lighting, not future lock/save semantics. Real product success feedback must follow an actual successful domain operation.
 
-Keep Border Beam as a secondary experiment until the user decides whether a tracing rim helps navigation or competes with academic attention. Keep the static baseline as the fallback. Do not incorporate WebGL Aurora, React Three Fiber or GSAP merely to make the planner feel premium; this audition shows substantial lighting without them, and their licensing/performance work remains separate.
+## Protected references and cost
 
-## Fluidity and interaction interpretation
+Read-only design reference: [PR #14 branch](https://github.com/lilant5431/homebase/tree/docs/phase-2-6a-design-spec/docs/design/phase-2-6), inspected at `02abb2097e184dc21fe102b349a9d43c2da1ad99`. This separate experiment remains based on stable main `580b25f69a724a5e0c54e15927e05eafcda6d887`, which includes PR #13. No production code or design-branch change. DT-01 remains assigned to 2.6E; this gallery has no Date/Time editor and cannot verify that fix.
 
-Pause halts continuous CSS effects and clears pending pointer work. Speed changes duration, never layout. Intensity changes atmosphere/rims, never text opacity. Reduced motion removes animations rather than slowing them; reduced effects also removes blur and glow. Hidden/offscreen previews pause. No permanent ambient animation is required for integration: the static versions remain meaningful.
+The approved content roles remain unchanged: Daylight canvas `#F3F6FA`, surface `#FFFFFF`, text `#172334`, muted `#536477`, action `#1D4ED8`/white; Night canvas `#0B1220`, surface `#121D2E`, text `#E8EEF6`, muted `#A8B7CB`, action `#8BDDFC`/`#0B1220`. Chrome opacity/rays/glow are audition experiments, not silent replacements for approved tokens. Representative solid-role contrast is verified; arbitrary mixed glass pixels are not claimed audited.
 
-The cue button announces a real decorative action, **not** a fake save/lock operation. Future successful-action feedback must follow a real successful domain operation, with failure/cancellation states preserved. The specimen does not establish scheduling interaction semantics.
+Five existing runtime packages, zero new packages or effect/animation libraries. MIT Magic UI attribution, notices and SHA-pinned snapshots remain intact. The reused techniques are Grid Pattern and gradient-mode Magic Card; Beam/Shimmer adapters remain archival. React Bits/Aceternity source is still excluded. Registered-property animation has a static fallback; unavailable backdrop blur uses opaque chrome. No large blur animation, Canvas or particles loop.
 
-## Dependencies, cost and remaining questions
+## Remaining user decisions
 
-Five runtime packages are isolated: React, React DOM, Lucide and two local font packages. **Zero effect/animation packages**; no Tailwind/Next/Motion/OGL/Three/GSAP stack. The total gallery bundle includes all six effects and the read-only compositions, so it is not the incremental production cost of adopting one effect. Four adapter components measured separately with React externalized are about **1.29 kB gzip**, excluding CSS; see the measurement method in verification. This is a useful size bound, not proof of low paint cost.
+Compare both integrated scenes in Overview and Weekly Planner on physical iPhone Safari. Is expanded Daylight still the loved lattice? Are Night runway lights and the moving wash sufficiently visible without distracting from work? Do shared reflections and the cue feel connected on touch? Do Calm/Balanced/Cinematic remain smooth while scrolling, rotating and using the notes menu? Check pause, reductions, text clarity, pinch zoom, flicker and device warmth over several minutes.
 
-Questions for physical audition: Does Balanced light feel visible enough? Is Cinematic inviting or distracting? Does the glass read as dimensional in bright daylight? Does motion remain smooth in landscape while scrolling? Does iPhone Safari visibly render the Beam fallback rather than the moving rim? Does reduced mode preserve the same spatial hierarchy? Does the device become warm over several minutes?
-
-No visual direction is finalized until those observations and the user's preferences are returned. Future production integration belongs to a separately authorized milestone with existing persistence/scheduling/accessibility contracts protected.
+Most promising collection: **the loved lattice, refined original horizon, shared bounded glass and brief explicit light cue**. Do not restore rejected continuous Beam/Shimmer accents as the production lighting language. Selection remains pending V2 user feedback; integration requires a separate authorized milestone.

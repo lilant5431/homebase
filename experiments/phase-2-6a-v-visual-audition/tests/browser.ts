@@ -116,7 +116,7 @@ async function phase(page: Page, fraction: number) {
       action: style('.action-glass .ambient-gradient'),
       active: style('.nav-item.active', '::before'),
       control: style('.primary-action', '::before'),
-      sky: style('.sky-light'),
+      sky: getComputedStyle(document.querySelector('.sky-light')!).transform,
     }
   }, fraction)
 }
@@ -160,6 +160,16 @@ for (const [engineName, engine] of [
   await page.getByRole('button', { name: 'Night Flight', exact: true }).click()
   await page.locator('#preview').scrollIntoViewIfNeeded()
   await page.locator('.audition[data-inactive="false"]').waitFor()
+  for (const selector of ['.nav-item.active', '.primary-action']) {
+    const rim = await page.locator(selector).evaluate((element) => {
+      const style = getComputedStyle(element, '::before')
+      return { composite: style.maskComposite, legacy: style.getPropertyValue('-webkit-mask-composite') }
+    })
+    assert.ok(
+      rim.composite.includes('exclude') || rim.legacy.includes('xor'),
+      `${engineName}: ${selector} reflection is a rim, never an additive layer over text`,
+    )
+  }
   const before = await phase(page, 0.05)
   const after = await phase(page, 0.65)
   for (const role of ['x', 'nav', 'menu', 'action', 'active', 'control', 'sky'] as const)

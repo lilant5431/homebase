@@ -1,4 +1,4 @@
-# Component audit — Phase 2.6A-V
+# Component audit — Phase 2.6A-V / V2
 
 Research checked October 8, 2026. This is an independent, publicly reviewable experimental app, not Homebase product integration. Eleven specific components were inspected using their actual source, dependencies and official license evidence. No paid assets, login or subscription was used.
 
@@ -53,13 +53,13 @@ Public registry inspected without payment; source redistribution not cleared. De
 
 Verified MIT/free public source. React useId + local `cn`/Tailwind classes; no animation package, Canvas or WebGL. SVG pattern definition, path, full rect and optional highlighted squares. Actual pattern/square construction is reused in `src/components/LibraryEffects.tsx`; class utilities become plain CSS. Vite build/browser verified. Library-default comparison is static 40px gray geometry; Homebase tuning adds original CSS sunlight and bounded CSS shape motion. Static source has no movement to reduce; our added movement respects OS/manual reduction and pause. Low risk; one tiled pattern and four square accents, no per-frame JavaScript. Safari SVG/mask support requires physical review, but baseline grid remains visible without advanced masking.
 
-### 8. Magic UI Border Beam — minimal CSS adaptation with attribution
+### 8. Magic UI Border Beam — archival adaptation; rejected by user
 
 [Docs](https://magicui.design/docs/components/border-beam) · [source](https://github.com/magicuidesign/magicui/blob/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/registry/magicui/border-beam.tsx).
 
 Verified MIT/free. Original `motion/react` and `cn`/Tailwind; masked border layer + CSS offset-path/offsetDistance animation. The geometry/masked-gradient technique is reused; CSS keyframes replace Motion, removing runtime package need. Candidate mode keeps 50px/orange-purple/6-second source defaults; tuning changes palette, cadence and bounds. Original lacks pause/OS reduction; audition implements both. Offset-path rect and mask-composite support is capability-gated; static border fallback is explicit. Low/medium moving-edge paint risk. Useful for selected navigation/control chrome, not every task card. No claim that the CSS port is byte-identical Motion execution.
 
-### 9. Magic UI Shimmer Button — adapted source with attribution
+### 9. Magic UI Shimmer Button — archival adaptation; rejected by user
 
 [Docs](https://magicui.design/docs/components/shimmer-button) · [source](https://github.com/magicuidesign/magicui/blob/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/registry/magicui/shimmer-button.tsx) · [keyframes](https://github.com/magicuidesign/magicui/blob/cdb348cb4c72a9b54b554d8617801e479fbc8714/apps/www/styles/globals.css).
 
@@ -80,3 +80,9 @@ Verified MIT/free source. Radix dropdown primitives, Lucide, `cn` and Tailwind; 
 ## What is actually running
 
 Four licensed Magic UI adaptations: Grid Pattern, Border Beam, Shimmer Button and gradient-mode Magic Card. Two original effects: deterministic CSS/SVG horizon lighting and a static CSS-only baseline. Sunlight/reflections added around the grid and glass are **original Homebase audition work**, not unlicensed ports of React Bits/Aceternity. These exclusions are deliberate and visible in the gallery's credits. No restricted source/assets were copied into this repository.
+
+## V2 selection update
+
+October 9, 2026 refinement uses the same inspected sources and unchanged license notices/source hashes. Grid Pattern remains the loved Daylight foundation; Magic Card gradient-mode is now a shared chrome technique in both primary scenes (navigation, action holder and native Preview notes menu). Library defaults remain an archival technical comparison. Border Beam/Shimmer are not shortlisted following explicit user rejection; static CSS is only a performance/reduced-effects reference. Their retained source is clearly labeled archival, not newly endorsed.
+
+The new coordinated CSS light field, bounded SVG horizon (24 stars, 36 runway points and 20 taxiway points), exposed decorative lighting band and five-surface bounded cue are original audition code. They do not incorporate excluded library assets. The cue uses browser Web Animations only on a user event; CSS drives the shared ambient field. No package or redistribution permission was added or changed. The original audit decisions above remain the research record, not the current six-way preference.

@@ -1905,30 +1905,35 @@ html:has(.audition[data-reduced-motion='true']) {
 }
 .audition[data-integrated='true'] .sun-ray {
   animation: none;
-  left: calc(var(--scene-light-x) - 20%);
+  left: -20%;
   width: 62%;
   height: 190%;
   top: -45%;
-  transform: rotate(var(--scene-light-angle));
+  transform: translateX(var(--scene-light-x)) rotate(var(--scene-light-angle));
+  will-change: transform;
   opacity: 0.58;
 }
 .audition[data-integrated='true'] .ray-two {
-  left: var(--scene-secondary-x);
+  left: 30%;
+  transform: translateX(var(--scene-secondary-x)) rotate(var(--scene-light-angle));
   width: 24%;
   opacity: 0.3;
 }
 .audition[data-integrated='true'] .geometric-orbit {
   animation: none;
   width: 55%;
-  left: calc(var(--scene-secondary-x) - 28%);
-  top: calc(var(--scene-light-y) - 25%);
-  transform: rotate(calc(var(--scene-light-angle) + 70deg));
+  left: 5%;
+  top: -20%;
+  transform: translate(var(--scene-secondary-x), var(--scene-light-y))
+    rotate(calc(var(--scene-light-angle) + 70deg));
+  will-change: transform;
   opacity: 0.75;
 }
 .audition[data-integrated='true'] .reflection {
   background: linear-gradient(120deg, transparent 8%, var(--glass-highlight) 22%, transparent 52%);
-  background-position: var(--scene-light-x) 0;
-  background-size: 140% 100%;
+  inset: 0 -20%;
+  transform: translateX(calc(var(--scene-light-x) - 48%));
+  will-change: transform;
   opacity: 0.65;
 }
 /* Bounded top horizon: remains recognizable behind the header at every aspect ratio. */
@@ -1956,13 +1961,11 @@ html:has(.audition[data-reduced-motion='true']) {
   height: min(650px, 70%);
   opacity: 0.9;
   background:
-    conic-gradient(
-      from var(--scene-light-angle) at var(--scene-light-x) -5%,
-      transparent 0deg,
-      #8bddfc4d 15deg,
-      transparent 42deg
-    ),
-    radial-gradient(ellipse at var(--scene-secondary-x) 28%, #edaa3826, transparent 55%);
+    conic-gradient(from -32deg at 50% -5%, transparent 0deg, #8bddfc4d 15deg, transparent 42deg),
+    radial-gradient(ellipse at 72% 28%, #edaa3826, transparent 55%);
+  transform: translateX(calc((var(--scene-light-x) - 48%) / 3)) rotate(calc(var(--scene-light-angle) + 32deg));
+  transform-origin: 50% 0;
+  will-change: transform;
 }
 .audition[data-integrated='true'][data-theme='night'] .workspace-top {
   padding-bottom: 12px;
@@ -2078,14 +2081,16 @@ html:has(.audition[data-reduced-motion='true']) {
     background:
       radial-gradient(ellipse at var(--scene-light-x) var(--scene-light-y), var(--ice), transparent 65%),
       radial-gradient(ellipse at var(--scene-secondary-x) 100%, var(--warm), transparent 65%);
-    mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    mask-composite: exclude;
     -webkit-mask:
       linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
+    /* The standard shorthand must precede its composite; prefixed shorthand
+       later in the cascade otherwise resets modern Chromium to additive masks. */
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
     opacity: var(--intensity);
   }
   .control-cue {

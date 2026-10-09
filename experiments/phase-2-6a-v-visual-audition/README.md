@@ -1,4 +1,4 @@
-# Homebase · Visual Audition / Phase 2.6A-V
+# Homebase · Visual Audition / Phase 2.6A-V2
 
 A working, isolated material lab for comparing light, glass and motion **around actual content**. This is a visual experiment, not Homebase integration or an approved final direction. Overview and Weekly Planner contain fixed illustrative records. No production modules, scheduling engines, persistence, editors or accounts are connected.
 
@@ -21,27 +21,28 @@ The cloud development preview, while the server is running, is http://localhost:
 
 ## How to audition
 
-1. Choose **Daylight** or **Night Flight**, then select one of six live effects.
-2. Compare **Calm**, **Balanced** and **Cinematic**. Presets change intensity and speed; custom slider changes clear the selected preset.
-3. Open **Fine-tune & accessibility**. It starts collapsed on a freshly loaded phone. Intensity affects atmosphere/rims rather than text opacity. Speed affects moving candidates; it is disabled for static or direct-pointer effects.
-4. **Pause** freezes effect motion and pointer lighting. Resume restores it. Offscreen and hidden-tab effects also pause.
-5. **Reduce motion** stops continuous movement. **Reduce visual effects** removes atmosphere/glow and replaces glass with opaque surfaces; it also stops motion. OS reductions and forced colors take precedence over manual controls and cannot be disabled by Reset.
-6. **Library defaults** compares source palette/geometry/cadence against tuning for the four licensed adaptations. This is not a claim of an unmodified upstream demo. It is disabled for original effects. The untuned grid is static, so speed is disabled.
-7. Switch **Overview / Weekly Planner** in the illustrative navigation. Inspect an assignment or session to open a real read-only detail panel. **Play light cue** runs a decorative feedback cue and announces what happened; it never claims a save or lock.
-8. **Reset** restores Balanced tuning and clears manual reductions, pause and candidate mode, while retaining the selected theme/effect/composition. Device-requested reductions remain honored.
+1. Choose **Daylight — Integrated Sunlit Lattice** or **Night Flight — Integrated Illuminated Horizon**. These are the two primary environments, each with shared reflective glass.
+2. Compare **Calm**, **Balanced** and **Cinematic**. Presets change intensity and speed; custom sliders clear the preset. Theme changes preserve tuning, pause, reductions and the selected composition.
+3. Open **Fine-tune & accessibility** (collapsed on a freshly loaded phone). Intensity affects atmosphere and decorative rims, never text opacity. Speed changes the shared CSS field's duration.
+4. **Pause** freezes ambient motion and clears pointer reflections; it cancels any running cue. Hidden/offscreen effects pause too. Resume never replays an old cue.
+5. **Reduce motion** stops nonessential movement and uses static cue confirmation. **Reduce visual effects** removes atmosphere, glow and blur and makes glass opaque; it also stops movement. Device reductions and forced colors take precedence and cannot be disabled by Reset.
+6. Switch **Overview / Weekly Planner**, inspect a record, and open **Preview notes** to see reflected menu glass around opaque text. These are real read-only interactions with illustrative content.
+7. **Play light cue** briefly illuminates environment → navigation → selected item → action holder → primary rim. Repeated taps restart five fixed decorative layers, not accumulating animations. The confirmation explicitly says no work was saved or scheduled. Pause, reductions, scene changes, hiding and unmount cancel the cue.
+8. **Sources & archived comparisons** retains library-default/adaptation comparisons. Border Beam and Shimmer are **rejected**, not primary design choices. Static CSS is only a performance/reduction reference. Return to integrated themes using the same selector. Source comparison selection is retained across theme changes.
+9. **Reset** restores Balanced tuning and clears manual reductions, pause and library defaults while retaining theme, selected reference and composition. Settings remain in memory only.
 
 All settings reset on reload. The app never accesses localStorage, sessionStorage or the three Homebase persistence keys. No analytics, external runtime requests, user records, images, APIs or login. Official source links only navigate when you choose them.
 
-## Six running effects
+## Two integrated environments; archived technical references
 
-| Effect              | Reuse                                         | Live difference                                                      |
-| ------------------- | --------------------------------------------- | -------------------------------------------------------------------- |
-| Sunlit lattice      | Magic UI Grid Pattern + original sunlight     | SVG architectural grid, translating light and geometric reflection   |
-| Airport horizon     | Original bounded SVG/CSS                      | 24 sparse stars, 36 distant lights, soft drifting sky illumination   |
-| Reflective glass    | Magic UI Magic Card gradient-mode adaptation  | Pointer-relative illuminated rim and original translucent navigation |
-| Border Beam         | Magic UI masked border/motion-path adaptation | CSS moving light around navigation; static fallback when unsupported |
-| Shimmer Action      | Magic UI layered button + source keyframes    | Conic rim illumination behind an opaque actionable button face       |
-| Static CSS baseline | Original                                      | Static light and materials; no continuous animation                  |
+| Environment     | Current lighting                                                                                                                 | Reuse                                                               |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Modern Daylight | Full-workspace sunlight and geometric reflections; shared moving glass/selected-control edges                                    | Attributed Magic UI Grid Pattern and Magic Card gradient techniques |
+| Night Flight    | Visible cyan runway and amber taxiway lights, bounded horizon, sparse stars and moving directional wash; shared reflected chrome | Original SVG/CSS horizon + attributed Magic Card gradient technique |
+
+A single inherited CSS light field drives background and chrome. This is visually coordinated lighting, **not physically accurate propagation**. Native **Preview notes** demonstrates menu glass without installing a menu library. Academic content stays opaque.
+
+The six original effect choices remain in the technical disclosure: lattice, horizon, glass, Border Beam, Shimmer and static baseline. They are references rather than an active six-way shortlist. Source-default comparisons remain available where applicable; no licensed source snapshots were replaced.
 
 Copyright **Magic UI**, MIT. Full notice: [vendor/MAGIC-UI-LICENSE.txt](vendor/MAGIC-UI-LICENSE.txt). Pinned upstream snapshots and SHA-256 hashes: [vendor/source-manifest.json](vendor/source-manifest.json). Runtime adaptations: [LibraryEffects.tsx](src/components/LibraryEffects.tsx) and [styles.css](src/styles.css). Snapshot `.txt` files are evidence, not compiled modules.
 
@@ -73,12 +74,16 @@ Tests use `src/**/*.audition.tsx`, explicitly included by this project's Vitest 
 
 ## Visual evidence and recommendations
 
-- [Daylight desktop · Balanced](screenshots/daylight-desktop-balanced.png)
-- [Night desktop · Cinematic](screenshots/night-desktop-cinematic.png)
-- [Night Weekly Planner](screenshots/night-weekly-desktop.png)
-- [Daylight phone · Balanced](screenshots/daylight-phone-balanced.png)
-- [Night phone · Cinematic](screenshots/night-phone-cinematic.png)
-- [Night reflective glass · phone](screenshots/night-glass-phone.png)
+- [Daylight Overview · desktop / Balanced](screenshots/v2-daylight-overview-desktop.png)
+- [Night Overview · desktop / Cinematic](screenshots/v2-night-overview-desktop.png)
+- [Daylight Weekly Planner · desktop](screenshots/v2-daylight-planner-desktop.png)
+- [Night Weekly Planner · desktop](screenshots/v2-night-planner-desktop.png)
+- [Daylight Overview · phone](screenshots/v2-daylight-overview-phone.png)
+- [Night Overview · phone](screenshots/v2-night-overview-phone.png)
+- [Daylight Weekly Planner · phone](screenshots/v2-daylight-planner-phone.png)
+- [Night Weekly Planner · phone](screenshots/v2-night-planner-phone.png)
+- [Daylight cue · desktop](screenshots/v2-daylight-cue-desktop.png)
+- [Night cue · desktop](screenshots/v2-night-cue-desktop.png)
 - [Candidate comparison and integration recommendations](research/homebase-visual-recommendations.md)
 
 Still screenshots cannot demonstrate fluidity, pointer response, performance or native Safari behavior. Use the running gallery to judge these. Screenshots were produced in Chromium, not physical iPhone Safari.
@@ -87,6 +92,8 @@ Still screenshots cannot demonstrate fluidity, pointer response, performance or 
 
 This does not resolve DT-01, redesign native inputs, implement theme persistence, alter PR #14, or implement the Homebase UI. The approved design branch is a read-only reference. Glass exterior opacity and atmosphere here are **experiments**, not replacements for approved semantic contrast roles.
 
-Safari's blur, motion-path masking, container units and GPU behavior vary by version/device. Blur and motion-path feature gates provide opaque/static fallbacks; old browsers without container units keep a usable opaque button. There is no Canvas/WebGL loop, unbounded particle count or animation framework. CSS backdrop-filter and animated gradients can still consume significant GPU/paint work. Desktop profiling and Playwright WebKit cannot prove iPhone battery, heat, sustained frame rate or physical Safari acceptance.
+Safari's blur, motion-path masking, container units and GPU behavior vary by version/device. Blur and motion-path feature gates provide opaque/static fallbacks; browsers without CSS registered custom properties retain static coordinated reflections; old browsers without container units keep a usable opaque button. There is no Canvas/WebGL loop, unbounded particle count or animation framework. CSS backdrop-filter and animated gradients can still consume significant GPU/paint work. Desktop profiling and Playwright WebKit cannot prove iPhone battery, heat, sustained frame rate or physical Safari acceptance.
 
-Physical check: at portrait and both short-landscape sizes, reach every control, switch all effects/themes, compare presets, pause/resume, use both reductions, inspect content and verify page scrolling/pinch zoom. Report which light/glass combinations you prefer and any warmth, dropped frames, flicker or readability issue. **Visual selection remains pending user feedback.**
+Physical check: at portrait and both short-landscape sizes, reach every control, compare both integrated themes and presets, open Preview notes, retrigger the light cue three times, pause during it, use both reductions and inspect both compositions and verify page scrolling/pinch zoom. Report which light/glass combinations you prefer and any warmth, dropped frames, flicker or readability issue. **Visual selection remains pending user feedback.**
+
+Previous V1 screenshots remain as historical comparison assets. The V2 links above are the current audition evidence. To update an existing Windows checkout, run `git pull --ff-only` on the experimental branch, then `npm ci` and `npm run dev` in this directory.
