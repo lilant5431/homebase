@@ -155,7 +155,7 @@ export function Composition({
             <MagicGlass interactive={interactive} className="menu-glass">
               <div className="menu-plate">
                 <strong>Read-only workspace</strong>
-                <p>Illustrative academic records. Glass is limited to chrome; content stays solid.</p>
+                <p>Illustrative records. Content is Solid by default; optional materials protect text.</p>
               </div>
             </MagicGlass>
           </details>

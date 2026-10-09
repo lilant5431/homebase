@@ -101,6 +101,20 @@ describe('bounded coordinated lighting cue', () => {
     expect(vi.getTimerCount()).toBe(0)
     expect(animations).toHaveLength(7)
   })
+  it.each(['solid', 'frosted', 'clearer'])(
+    'keeps an in-flight cue and navigation under %s material',
+    (material) => {
+      const { container } = render(<App />)
+      fireEvent.change(screen.getByLabelText('Environment'), { target: { value: 'landscape' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Play light cue' }))
+      fireEvent.change(screen.getByLabelText('Content material'), { target: { value: material } })
+      fireEvent.click(screen.getByRole('button', { name: /Weekly Planner/ }))
+      expect(container.firstChild).toHaveAttribute('data-cue-active', 'true')
+      expect(animations).toHaveLength(7)
+      expect(animations.every((animation) => animation.cancel.mock.calls.length === 0)).toBe(true)
+      expect(vi.getTimerCount()).toBe(1)
+    },
+  )
   it('uses static confirmation when reduced and does not replay on restoration', () => {
     const { container } = render(<App />)
     fireEvent.click(screen.getByLabelText(/Reduce motion/))

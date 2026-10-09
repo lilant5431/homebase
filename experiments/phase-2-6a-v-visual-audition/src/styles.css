@@ -2358,3 +2358,128 @@ html:has(.audition[data-reduced-motion='true']) {
   pointer-events: none;
   opacity: var(--intensity);
 }
+
+/* V5 gallery-only content materials. Never fade the card/text subtree. */
+.audition {
+  --content-rgb: 255 255 255;
+  --content-alpha: 1;
+  --content-blur: 0px;
+  --content-muted: #536477;
+  --content-edge: var(--line);
+}
+.audition[data-theme='night'] {
+  --content-rgb: 18 29 46;
+  --content-muted: #a8b7cb;
+}
+.audition[data-effective-material='frosted'] {
+  --content-alpha: 0.72;
+  --content-blur: 4px;
+  --content-muted: #35465a;
+  --content-edge: #42556d;
+}
+.audition[data-effective-material='frosted'][data-theme='night'] {
+  --content-muted: #d0dcea;
+  --content-edge: #b6c9df;
+}
+.audition[data-effective-material='clearer'] {
+  --content-alpha: 0.26;
+  --content-blur: 1px;
+  --content-edge: #42556d;
+}
+.audition[data-effective-material='clearer'][data-theme='night'] {
+  --content-alpha: 0.24;
+  --content-edge: #b6c9df;
+}
+.content-card,
+.metrics article {
+  background: rgb(var(--content-rgb) / var(--content-alpha));
+  border-color: var(--content-edge);
+  --muted: var(--content-muted);
+}
+.audition:not([data-effective-material='solid']) :is(.content-card, .metrics article) {
+  backdrop-filter: blur(var(--content-blur));
+  -webkit-backdrop-filter: blur(var(--content-blur));
+}
+/* Keep action text and the highlighted day on approved solid plates in both
+   translucent modes; the other Clearer text plates hug existing line boxes. */
+.audition:not([data-effective-material='solid']) :is(.text-action, .today-column .day-heading strong) {
+  background: var(--surface);
+  border-radius: 4px;
+}
+.audition[data-effective-material='clearer']
+  :is(
+    .metrics article > span,
+    .metrics strong,
+    .metrics small,
+    .content-card .eyebrow,
+    .content-card h3,
+    .content-card h4,
+    .record-meta,
+    .session-time,
+    .session-summary p,
+    .breathing-room,
+    .legend,
+    .day-heading,
+    .open-time,
+    .week-footnote
+  ) {
+  background: var(--surface);
+  border-radius: 4px;
+  box-shadow: 0 0 0 3px var(--surface);
+  width: fit-content;
+  max-width: 100%;
+}
+.audition[data-effective-material='clearer'] .day-heading {
+  width: 100%;
+}
+.material-picker {
+  grid-column: 1 / -1;
+  margin-bottom: 18px;
+}
+.material-picker .control-help {
+  margin-top: 8px;
+}
+/* Moonlit is the existing lattice/dark combination, not another environment.
+   Keep geometry, transforms and duration intact; change its material recipe. */
+.audition[data-effect='lattice'][data-theme='night'][data-coordinated='true'] {
+  --ambient: #253e5a;
+  --pattern: #526f8e;
+  --ice: #a5c7dc;
+  --warm: #b4becd;
+  --glass-bg: rgba(7, 16, 30, 0.94);
+  --glass-edge: rgba(129, 155, 184, 0.42);
+  --glass-highlight: rgba(199, 215, 233, 0.08);
+}
+.audition[data-effect='lattice'][data-theme='night'][data-coordinated='true'] .sun-ray {
+  background: linear-gradient(90deg, transparent, #bfcede30, #6b87a21c, transparent);
+}
+.audition[data-effect='lattice'][data-theme='night'][data-coordinated='true'] .geometric-orbit {
+  box-shadow: inset 0 0 50px #9bb4d00c;
+  border-color: #6e8eaa66;
+}
+.audition[data-effect='lattice'][data-theme='night'][data-coordinated='true'] .navigation {
+  box-shadow:
+    inset 0 1px 0 #c7d7e91c,
+    inset 0 -28px 48px #03081399,
+    0 16px 32px #03081355;
+}
+.audition[data-effect='lattice'][data-theme='night'][data-coordinated='true'] .brand {
+  background: #080f1b;
+  border: 1px solid #3e536b;
+  border-radius: 10px;
+  padding: 6px 4px;
+  box-shadow: inset 0 1px 0 #b7c9dc1f;
+}
+.audition[data-effect='lattice'][data-theme='night'][data-coordinated='true'] .brand-mark {
+  color: #c7d7e9;
+}
+.audition[data-effect='lattice'][data-theme='night'][data-coordinated='true'] .nav-item.active {
+  box-shadow:
+    inset 3px 0 0 var(--action),
+    0 0 14px #a5c7dc12;
+}
+@media (max-width: 600px) {
+  .audition[data-effective-material='frosted'] {
+    --content-blur: 3px;
+  }
+}

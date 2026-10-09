@@ -17,6 +17,8 @@ import { useLightingCue } from './lighting'
 import {
   effects,
   environments,
+  contentMaterials,
+  type ContentMaterial,
   presets,
   useMedia,
   type EffectId,
@@ -27,6 +29,7 @@ import {
 
 export function App() {
   const [environment, setEnvironment] = useState<Environment>('lattice')
+  const [material, setMaterial] = useState<ContentMaterial>('solid')
   const [mode, setMode] = useState<AppearanceMode>('system')
   const systemDark = useMedia('(prefers-color-scheme: dark)')
   const effectiveMode = mode === 'system' ? (systemDark ? 'dark' : 'light') : mode
@@ -62,7 +65,10 @@ export function App() {
     typeof CSS !== 'undefined' &&
     (CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)'))
   const fieldSupported = typeof CSS !== 'undefined' && typeof CSS.registerProperty === 'function'
+  const effectiveMaterial = reduceEffects || !blurSupported ? 'solid' : material
   const integrated = archiveEffect === null
+  const appearanceName =
+    environment === 'lattice' && effectiveMode === 'dark' ? 'Moonlit Lattice' : selectedEnvironment.name
   const coordinated = integrated || effect === 'landscape-legacy'
   const effectiveCandidate = candidate && !integrated && selected.comparison
   const cue = useLightingCue(stage, !inactive && !reduceMotion, `${theme}:${effect}:${effectiveCandidate}`)
@@ -100,6 +106,8 @@ export function App() {
       data-mode={effectiveMode}
       data-preference={mode}
       data-effect={effect}
+      data-content-material={material}
+      data-effective-material={effectiveMaterial}
       data-integrated={integrated}
       data-coordinated={coordinated}
       data-cue-active={cue.active}
@@ -122,7 +130,7 @@ export function App() {
         <a href="#preview" className="lab-brand">
           <Compass size={24} />
           <span>
-            homebase<span>VISUAL AUDITION / 2.6A-V4</span>
+            homebase<span>VISUAL AUDITION / 2.6A-V5</span>
           </span>
         </a>
         <div className="lab-tag">An experiment in light & space</div>
@@ -152,7 +160,7 @@ export function App() {
             >
               {environments.map((item) => (
                 <option key={item.id} value={item.id}>
-                  {item.id === 'landscape' ? 'Landscape' : item.name}
+                  {item.id === 'landscape' ? 'Landscape' : item.id === 'lattice' ? 'Lattice' : item.name}
                 </option>
               ))}
             </select>
@@ -173,13 +181,38 @@ export function App() {
               {effectiveMode === 'light' ? 'Light' : 'Dark'}
             </p>
           </fieldset>
+          <div className="material-picker">
+            <label className="control-label" htmlFor="content-material">
+              Content material
+            </label>
+            <select
+              id="content-material"
+              value={material}
+              onChange={(event) => setMaterial(event.target.value as ContentMaterial)}
+            >
+              {contentMaterials.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+            <p className="control-help" role="status">
+              {effectiveMaterial !== material
+                ? 'Opaque panels required by reduced effects or unavailable backdrop blur. Your selection is retained.'
+                : material === 'clearer'
+                  ? 'More scenery; opaque text backing keeps records readable.'
+                  : material === 'frosted'
+                    ? 'Translucent panels with bounded blur and stronger text contrast.'
+                    : 'Original opaque panels. No scenery shows through records.'}
+            </p>
+          </div>
           <div className="scene-label">
             <span className="eyebrow">
               {integrated ? 'COORDINATED ENVIRONMENT' : 'ARCHIVAL COMPARISON · NOT SHORTLISTED'}
             </span>
             <h2>
               {integrated
-                ? `${selectedEnvironment.name} — ${effectiveMode === 'light' ? 'Light' : 'Dark'}`
+                ? `${appearanceName} — ${effectiveMode === 'light' ? 'Light' : 'Dark'}`
                 : selected.name}
             </h2>
           </div>
@@ -341,7 +374,7 @@ export function App() {
               <span className="status-dot" />
               {effectiveMode === 'dark' ? 'Dark palette' : 'Light palette'}
               <span className="caption-separator">/</span>
-              {selected.name}
+              {integrated ? appearanceName : selected.name}
             </span>
             <span>
               {reduceEffects
