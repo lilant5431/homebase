@@ -96,3 +96,7 @@ A cue adds two finite Landscape sky/water targets to the original five chrome/en
 ## V4 reference-only landscape refinement
 
 [Targeted reference study](landscape-v4-references.md) covers colored minimal line-art, mountain outlines, atmospheric depth and contour UI backdrops. These illustration sources are reference-only; no paid artwork/code/path geometry is copied or redistributed. The new full-page drawing and retained V3 band are original SVG/CSS. Magic UI adapters, five pinned source hashes, MIT notices and dependencies are unchanged. No new license or runtime dependency burden is introduced. Previous audition recommendations and V3 measurements above are historical where explicitly labeled; current results are in [verification](verification.md).
+
+## V5 source continuity
+
+Moonlit Lattice and content material recipes are original scoped CSS/React changes, not new copied effects. The five pinned Magic UI snapshots/adapters and license/attribution remain unchanged. No dependency or source license changes. Landscape V4 linework remains original and unchanged; V3/V4 review assets are retained. V5 is a focused material audition, not a new component-library research phase.

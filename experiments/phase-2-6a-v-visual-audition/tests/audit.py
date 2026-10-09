@@ -54,3 +54,40 @@ output = root / "test-results"
 output.mkdir(exist_ok=True)
 (output / "contrast-report.json").write_text(json.dumps(results, indent=2) + "\n")
 print(f"PASS: 5 source hashes; local Markdown links; storage/import/clock isolation scan; {len(results)} solid-role contrast checks")
+
+# New material recipes also check extremes, so blurred averaging or a brighter
+# light cue cannot invalidate the sampled-scene text bounds.
+def rgb_luminance(values):
+    linear = [v / 255 / 12.92 if v / 255 <= .04045 else ((v / 255 + .055) / 1.055) ** 2.4 for v in values]
+    return sum(v * w for v, w in zip(linear, [.2126, .7152, .0722]))
+
+
+def rgb_contrast(a, b):
+    low, high = sorted([rgb_luminance(a), rgb_luminance(b)])
+    return (high + .05) / (low + .05)
+
+
+material_bounds = []
+for theme, fill, foregrounds in [
+    ('Light', [255, 255, 255], ['#172334', '#35465a']),
+    ('Dark', [18, 29, 46], ['#e8eef6', '#d0dcea']),
+]:
+    for backdrop in ([0, 0, 0], [255, 255, 255]):
+        blended = [a * .72 + b * .28 for a, b in zip(fill, backdrop)]
+        for foreground in foregrounds:
+            fg = [int(foreground[i:i+2], 16) for i in (1, 3, 5)]
+            ratio = rgb_contrast(fg, blended)
+            assert ratio >= 4.5, (theme, foreground, backdrop, ratio)
+            material_bounds.append({'theme': theme, 'foreground': foreground, 'backdrop': backdrop, 'blended': blended, 'ratio': round(ratio, 2)})
+(output / 'material-envelope.json').write_text(json.dumps(material_bounds, indent=2) + '\n')
+print(f'PASS: {len(material_bounds)} Frosted black/white blended-envelope text checks (Clearer uses audited solid local plates)')
+for engine in ['chromium', 'webkit']:
+    file = output / f'material-{engine}.json'
+    if not file.exists():
+        print(f'NOT RUN: {engine} actual scene sampling; run test:browser first')
+        continue
+    evidence = json.loads(file.read_text())['records']
+    assert len(evidence) == 24, (engine, len(evidence))
+    roles = [role for record in evidence for panel in record['evidence'] for role in panel['roles']]
+    assert all(role['minimumSceneRatio'] >= 4.5 and role['minimumEnvelopeRatio'] >= 4.5 for role in roles)
+    print(f'PASS: {engine} {len(evidence)} material/scene/view/width samples; {len(roles)} computed text roles; minimum scene {min(role["minimumSceneRatio"] for role in roles):.2f}:1')

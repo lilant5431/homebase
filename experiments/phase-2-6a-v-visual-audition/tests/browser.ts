@@ -105,7 +105,11 @@ async function geometry(page: Page, label: string) {
     assert.equal(panel.filter, 'none')
   } else {
     assert.match(panel.background, /^rgba\(/, `${label}: real alpha background`)
-    assert.equal(panel.filter, `blur(${panel.material === 'clearer' ? 1 : result.viewport <= 600 ? 3 : 4}px)`)
+    assert.equal(
+      panel.filter,
+      `blur(${panel.material === 'clearer' ? 1 : result.viewport <= 600 ? 3 : 4}px)`,
+      `${label}: active bounded blur`,
+    )
     if (panel.material === 'clearer')
       assert.match(
         await page
@@ -194,6 +198,11 @@ for (const [engineName, engine] of [
       external.push(request.url())
   })
   await open(page)
+  assert.match(
+    await page.locator('.navigation').evaluate((el) => getComputedStyle(el).backdropFilter),
+    /blur\(18px\)/,
+    `${engineName}: built shared glass blur active`,
+  )
   for (const [width, height] of sizes) {
     await page.setViewportSize({ width, height })
     for (const environment of ['lattice', 'landscape', 'basic']) {
@@ -700,6 +709,7 @@ for (const [engineName, engine] of [
   assert.deepEqual(errors, [], `${engineName}: browser exceptions`)
   assert.deepEqual(external, [], `${engineName}: unexpected runtime external requests`)
   await browser.close()
+  console.log(`${engineName}: geometry, cues, sampled materials and fallbacks passed`)
   report.engines.push(`${engineName}: passed (simulation, not physical iPhone acceptance)`)
 }
 await fs.writeFile('test-results/browser-report.json', JSON.stringify(report, null, 2) + '\n')

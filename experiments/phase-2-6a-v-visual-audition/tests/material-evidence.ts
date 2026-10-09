@@ -5,6 +5,8 @@ import type { Page } from 'playwright'
 // Screenshot sampling is test-only: no runtime Canvas, clock or storage added.
 export async function materialEvidence(page: Page, engine: string) {
   const records = []
+  const controls = page.locator('.lab-controls > details:not(.technical-references)')
+  if ((await controls.getAttribute('open')) === null) await controls.locator('summary').click()
   await page.getByRole('button', { name: 'Reset recommended values' }).click()
   await page.getByRole('button', { name: 'Pause', exact: true }).click()
   for (const width of [1440, 390]) {
@@ -19,8 +21,9 @@ export async function materialEvidence(page: Page, engine: string) {
         await hide.evaluate((element) => element.parentNode?.removeChild(element))
         for (const material of ['solid', 'frosted', 'clearer']) {
           await page.getByLabel('Content material', { exact: true }).selectOption(material)
+          const rendered = (await page.screenshot({ fullPage: true })).toString('base64')
           const evidence = await page.evaluate(
-            async ({ backdrop, material }) => {
+            async ({ backdrop, rendered, material }) => {
               const image = new Image()
               image.src = `data:image/png;base64,${backdrop}`
               await image.decode()
@@ -30,6 +33,13 @@ export async function materialEvidence(page: Page, engine: string) {
               const context = canvas.getContext('2d')!
               context.drawImage(image, 0, 0)
               const pixels = context.getImageData(0, 0, image.width, image.height).data
+              const front = new Image()
+              front.src = `data:image/png;base64,${rendered}`
+              await front.decode()
+              context.clearRect(0, 0, canvas.width, canvas.height)
+              context.drawImage(front, 0, 0)
+              const painted = context.getImageData(0, 0, canvas.width, canvas.height).data
+
               const rgb = (value: string) => value.match(/[\d.]+/g)!.map(Number)
               const luminance = (values: number[]) => {
                 const linear = values.slice(0, 3).map((n) => {
@@ -104,6 +114,11 @@ export async function materialEvidence(page: Page, engine: string) {
                   background: style.backgroundColor,
                   filter: style.backdropFilter,
                   opacity: style.opacity,
+                  paintedSwatches: [0.25, 0.5, 0.75].map((portion) => {
+                    const x = Math.round(rect.right + scrollX - 10)
+                    const y = Math.round(rect.top + scrollY + rect.height * portion)
+                    return [...painted.slice((y * image.width + x) * 4, (y * image.width + x) * 4 + 3)]
+                  }),
                   sampleCount: samples.length,
                   darkest: sorted[0],
                   brightest: sorted.at(-1),
@@ -111,11 +126,19 @@ export async function materialEvidence(page: Page, engine: string) {
                 }
               })
             },
-            { backdrop, material },
+            { backdrop, rendered, material },
           )
           for (const panel of evidence) {
             assert.ok(panel.sampleCount > 0)
             assert.equal(panel.opacity, '1')
+            if (material !== 'solid')
+              assert.ok(
+                panel.background.endsWith(
+                  `, ${material === 'frosted' ? 0.72 : mode === 'Light' ? 0.26 : 0.24})`,
+                ),
+                `${engine}: material uses intended alpha`,
+              )
+
             for (const role of panel.roles) {
               assert.ok(
                 role.minimumSceneRatio >= 4.5,
@@ -133,6 +156,13 @@ export async function materialEvidence(page: Page, engine: string) {
         }
       }
     }
+  }
+  for (let index = 0; index < records.length; index += 3) {
+    const swatches = records
+      .slice(index, index + 3)
+      .map((record) => record.evidence.map((panel) => panel.paintedSwatches))
+    assert.notDeepEqual(swatches[0], swatches[1], `${engine}: Solid/Frosted actual pixels differ`)
+    assert.notDeepEqual(swatches[1], swatches[2], `${engine}: Frosted/Clearer actual pixels differ`)
   }
   // Retention, reduction/restoration, cue and navigation are real controls.
   for (const material of ['solid', 'frosted', 'clearer']) {
@@ -170,6 +200,17 @@ export async function materialEvidence(page: Page, engine: string) {
   assert.equal(moonlit.glass, 'rgba(7, 16, 30, 0.94)')
   assert.equal(moonlit.brand, 'rgb(8, 15, 27)')
   assert.notDeepEqual(daylight, moonlit)
+  await page.getByLabel('Reduce visual effects', { exact: true }).check()
+  assert.equal(await page.locator('.navigation').evaluate((el) => getComputedStyle(el).boxShadow), 'none')
+  assert.equal(await page.locator('.brand').evaluate((el) => getComputedStyle(el).boxShadow), 'none')
+  assert.ok(
+    !(await page
+      .locator('.nav-item.active')
+      .evaluate((el) => getComputedStyle(el).boxShadow)
+      .then((value) => value.includes('14px'))),
+  )
+  await page.getByLabel('Reduce visual effects', { exact: true }).uncheck()
+
   await page.getByRole('heading', { name: 'Moonlit Lattice — Dark', exact: true }).waitFor()
   // Long phone composition: inspect upper, middle and lower real panel bounds.
   const stage = (await page.locator('#preview').boundingBox())!
