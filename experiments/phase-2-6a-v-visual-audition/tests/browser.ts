@@ -13,7 +13,7 @@ const sizes = [
   [667, 375],
   [320, 640],
 ]
-const materials = ['solid', 'frosted', 'clearer']
+const materials = ['solid', 'frosted']
 const effects = ['lattice', 'glass', 'beam', 'shimmer', 'landscape-legacy']
 type Sample = { frames: number; medianMs: number; p95Ms: number; activeAnimations: number }
 const report: {
@@ -21,6 +21,7 @@ const report: {
   engines: string[]
   geometryCases: number
   fullPageCases: number
+  accentCases: number
   cueCoverageCases: number
   screenshots: string[]
   performance: (Sample & { effect: string })[]
@@ -29,6 +30,7 @@ const report: {
   engines: [],
   geometryCases: 0,
   fullPageCases: 0,
+  accentCases: 0,
   cueCoverageCases: 0,
   screenshots: [],
   performance: [],
@@ -105,20 +107,61 @@ async function geometry(page: Page, label: string) {
     assert.equal(panel.filter, 'none')
   } else {
     assert.match(panel.background, /^rgba\(/, `${label}: real alpha background`)
-    assert.equal(
-      panel.filter,
-      `blur(${panel.material === 'clearer' ? 1 : result.viewport <= 600 ? 3 : 4}px)`,
-      `${label}: active bounded blur`,
+    assert.equal(panel.filter, `blur(${result.viewport <= 600 ? 3 : 4}px)`, `${label}: active bounded blur`)
+  }
+  if (await page.locator('.lattice-capsule').isVisible()) {
+    const accent = await page.locator('.lattice-capsule').evaluate((element) => {
+      const rect = (el: Element) => {
+        const r = el.getBoundingClientRect()
+        return {
+          left: r.left,
+          right: r.right,
+          top: r.top,
+          bottom: r.bottom,
+          width: r.width,
+          height: r.height,
+        }
+      }
+      const slot = element.parentElement!
+      const style = getComputedStyle(element)
+      return {
+        capsule: rect(element),
+        slot: rect(slot),
+        content: rect(document.querySelector('.content-card')!),
+        hidden: slot.getAttribute('aria-hidden'),
+        hit: style.pointerEvents,
+        radius: style.borderRadius,
+        shadow: style.boxShadow,
+        paint: style.backgroundImage,
+        sheen: getComputedStyle(element, '::after').backgroundImage,
+        extraAnimations: element.getAnimations().length,
+        focusables: slot.querySelectorAll('button,a,input,[tabindex]').length,
+      }
+    })
+    assert.equal(accent.slot.height, 26, `${label}: preserve layout slot`)
+    assert.equal(accent.capsule.height, 8, `${label}: slim accent`)
+    assert.ok(
+      accent.capsule.width <= 112 && accent.capsule.width > 0 && accent.capsule.width < accent.slot.width,
+      `${label}: short capsule, never full-width bar`,
     )
-    if (panel.material === 'clearer')
-      assert.match(
-        await page
-          .locator('.content-card h3')
-          .first()
-          .evaluate((el) => getComputedStyle(el).backgroundColor),
-        /^rgb\(/,
-        `${label}: opaque text backing`,
-      )
+    assert.ok(
+      accent.capsule.left >= accent.slot.left && accent.capsule.right <= accent.slot.right,
+      `${label}: fits available width`,
+    )
+    assert.ok(
+      accent.capsule.top >= accent.slot.top && accent.capsule.bottom <= accent.slot.bottom,
+      `${label}: contained in preserved slot`,
+    )
+    assert.ok(accent.slot.bottom < accent.content.top, `${label}: does not cover content/text`)
+    assert.equal(accent.radius, '999px')
+    assert.equal(accent.hidden, 'true')
+    assert.equal(accent.hit, 'none')
+    assert.equal(accent.focusables, 0)
+    assert.equal(accent.extraAnimations, 0, `${label}: no new animation loop`)
+    assert.notEqual(accent.shadow, 'none')
+    assert.match(accent.paint, /gradient/)
+    assert.match(accent.sheen, /gradient/)
+    report.accentCases++
   }
   report.geometryCases++
   if (await page.locator('.landscape-sketch').count()) {
@@ -198,6 +241,14 @@ for (const [engineName, engine] of [
       external.push(request.url())
   })
   await open(page)
+  assert.deepEqual(
+    await page
+      .getByLabel('Content material', { exact: true })
+      .locator('option')
+      .evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value)),
+    ['solid', 'frosted'],
+  )
+  assert.equal(await page.getByLabel('Content material', { exact: true }).inputValue(), 'solid')
   assert.match(
     await page.locator('.navigation').evaluate((el) => getComputedStyle(el).backdropFilter),
     /blur\(18px\)/,
@@ -581,7 +632,7 @@ for (const [engineName, engine] of [
               await page.getByRole('button', { name: view, exact: false }).click()
               await screenShot(
                 page,
-                `v5-${environment}-${mode.toLowerCase()}-${view === 'Overview' ? 'overview' : 'planner'}-${device}-${material}`,
+                `v6-${environment}-${mode.toLowerCase()}-${view === 'Overview' ? 'overview' : 'planner'}-${device}-${material}`,
               )
             }
           }
@@ -602,7 +653,7 @@ for (const [engineName, engine] of [
           animation.currentTime = Number(animation.effect!.getTiming().delay) + 360
         }
       })
-      const file = `screenshots/v5-landscape-${mode.toLowerCase()}-cue-desktop.png`
+      const file = `screenshots/v6-landscape-${mode.toLowerCase()}-cue-desktop.png`
       await page.screenshot({ path: file, fullPage: true, animations: 'allow' })
       report.screenshots.push(file)
       await page.locator('.audition[data-cue-active="false"]').waitFor()
@@ -618,7 +669,7 @@ for (const [engineName, engine] of [
         await page.getByRole('button', { name: mode, exact: true }).click()
         tiles.push((await page.locator('#preview').screenshot({ animations: 'disabled' })).toString('base64'))
         if (mode === 'Dark') {
-          const file = `screenshots/v5-moonlit-branding-${width}.png`
+          const file = `screenshots/v6-moonlit-branding-${width}.png`
           await page.locator('.navigation').screenshot({ path: file, animations: 'disabled' })
           report.screenshots.push(file)
         }
@@ -626,13 +677,23 @@ for (const [engineName, engine] of [
       const comparison = await context.newPage()
       await comparison.setViewportSize({ width: width === 390 ? 800 : 1600, height: 900 })
       await comparison.setContent(
-        `<body style="margin:0;padding:16px;background:#101827;color:white;font:16px sans-serif"><h1>V5 · Sunlit Lattice / Moonlit Lattice · actual browser renders</h1><div style="display:flex;align-items:start;gap:16px">${tiles.map((tile, i) => `<section style="width:50%;min-width:0"><h2>${i === 0 ? 'Sunlit · Light' : 'Moonlit · Dark'}</h2><img style="width:100%;display:block" src="data:image/png;base64,${tile}"></section>`).join('')}</div></body>`,
+        `<body style="margin:0;padding:16px;background:#101827;color:white;font:16px sans-serif"><h1>V6 · Sunlit Lattice / Moonlit Lattice · actual browser renders</h1><div style="display:flex;align-items:start;gap:16px">${tiles.map((tile, i) => `<section style="width:50%;min-width:0"><h2>${i === 0 ? 'Sunlit · Light' : 'Moonlit · Dark'}</h2><img style="width:100%;display:block" src="data:image/png;base64,${tile}"></section>`).join('')}</div></body>`,
       )
       await comparison.evaluate(async () => Promise.all([...document.images].map((image) => image.decode())))
-      const file = `screenshots/v5-lattice-comparison-${width}.png`
+      const file = `screenshots/v6-lattice-comparison-${width}.png`
       await comparison.screenshot({ path: file, fullPage: true })
       report.screenshots.push(file)
       await comparison.close()
+    }
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: width === 390 ? 844 : 900 })
+      await page.getByRole('button', { name: 'Weekly Planner', exact: false }).click()
+      for (const mode of ['Light', 'Dark']) {
+        await page.getByRole('button', { name: mode, exact: true }).click()
+        const file = `screenshots/v6-lattice-${mode.toLowerCase()}-accent-${width}.png`
+        await page.locator('.workspace').screenshot({ path: file, animations: 'disabled' })
+        report.screenshots.push(file)
+      }
     }
     await page.getByRole('button', { name: 'Resume', exact: true }).click()
     await page.getByLabel('Environment', { exact: true }).selectOption('landscape')
@@ -644,7 +705,7 @@ for (const [engineName, engine] of [
       await page.setViewportSize({ width, height })
       for (const mode of ['Light', 'Dark']) {
         await page.getByRole('button', { name: mode, exact: true }).click()
-        await screenShot(page, `v5-archived-v3-landscape-${mode.toLowerCase()}-${device}`)
+        await screenShot(page, `v6-archived-v3-landscape-${mode.toLowerCase()}-${device}`)
       }
     }
     await reference(page, 'integrated')
@@ -652,6 +713,24 @@ for (const [engineName, engine] of [
     await page.locator('.audition[data-reduced-effects="true"]').waitFor()
     assert.equal((await allAnimations(page)).length, 0)
     await page.emulateMedia({ forcedColors: 'none' })
+  }
+  await page.getByLabel('Environment', { exact: true }).selectOption('lattice')
+  await expandedControls(page)
+  for (const mode of ['Light', 'Dark']) {
+    await page.getByRole('button', { name: mode, exact: true }).click()
+    await page.getByLabel('Reduce motion', { exact: true }).check()
+    assert.equal((await allAnimations(page)).length, 0)
+    assert.ok(
+      await page.locator('.lattice-capsule').isVisible(),
+      `${engineName}: reduced motion keeps static decorative capsule`,
+    )
+    await page.getByLabel('Reduce visual effects', { exact: true }).check()
+    assert.ok(
+      !(await page.locator('.lattice-capsule').isVisible()),
+      `${engineName}: reduced effects remove the capsule`,
+    )
+    await page.getByLabel('Reduce visual effects', { exact: true }).uncheck()
+    await page.getByLabel('Reduce motion', { exact: true }).uncheck()
   }
   await materialEvidence(page, engineName)
   const fallbackPage = await context.newPage()

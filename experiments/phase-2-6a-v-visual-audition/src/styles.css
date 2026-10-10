@@ -2359,7 +2359,7 @@ html:has(.audition[data-reduced-motion='true']) {
   opacity: var(--intensity);
 }
 
-/* V5 gallery-only content materials. Never fade the card/text subtree. */
+/* Gallery-only content materials. Never fade the card/text subtree. */
 .audition {
   --content-rgb: 255 255 255;
   --content-alpha: 1;
@@ -2381,15 +2381,6 @@ html:has(.audition[data-reduced-motion='true']) {
   --content-muted: #d0dcea;
   --content-edge: #b6c9df;
 }
-.audition[data-effective-material='clearer'] {
-  --content-alpha: 0.26;
-  --content-blur: 1px;
-  --content-edge: #42556d;
-}
-.audition[data-effective-material='clearer'][data-theme='night'] {
-  --content-alpha: 0.24;
-  --content-edge: #b6c9df;
-}
 .content-card,
 .metrics article {
   background: rgb(var(--content-rgb) / var(--content-alpha));
@@ -2400,37 +2391,10 @@ html:has(.audition[data-reduced-motion='true']) {
   -webkit-backdrop-filter: blur(var(--content-blur));
   backdrop-filter: blur(var(--content-blur));
 }
-/* Keep action text and the highlighted day on approved solid plates in both
-   translucent modes; the other Clearer text plates hug existing line boxes. */
-.audition:not([data-effective-material='solid']) :is(.text-action, .today-column .day-heading strong) {
+/* Keep action text and the highlighted day on their approved solid plates. */
+.audition[data-effective-material='frosted'] :is(.text-action, .today-column .day-heading strong) {
   background: var(--surface);
   border-radius: 4px;
-}
-.audition[data-effective-material='clearer']
-  :is(
-    .metrics article > span,
-    .metrics strong,
-    .metrics small,
-    .content-card .eyebrow,
-    .content-card h3,
-    .content-card h4,
-    .record-meta,
-    .session-time,
-    .session-summary p,
-    .breathing-room,
-    .legend,
-    .day-heading,
-    .open-time,
-    .week-footnote
-  ) {
-  background: var(--surface);
-  border-radius: 4px;
-  box-shadow: 0 0 0 3px var(--surface);
-  width: fit-content;
-  max-width: 100%;
-}
-.audition[data-effective-material='clearer'] .day-heading {
-  width: 100%;
 }
 .material-picker {
   grid-column: 1 / -1;
@@ -2496,4 +2460,39 @@ html:has(.audition[data-reduced-motion='true']) {
 .audition[data-effect='lattice'][data-theme='night'][data-coordinated='true'][data-reduced-effects='true']
   .nav-item.active {
   box-shadow: inset 3px 0 0 var(--action);
+}
+
+/* V6 decorative lattice capsule. Preserve the existing 26px layout slot,
+   but paint only a short pill. No hit target, pointer handler or new animation. */
+.lattice-accent {
+  display: flex;
+  align-items: center;
+  border: 0;
+  background: none;
+  pointer-events: none;
+}
+.lattice-capsule {
+  position: relative;
+  flex: 0 1 112px;
+  max-width: 100%;
+  height: 8px;
+  border: 1px solid color-mix(in srgb, var(--ice) 60%, var(--line));
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    var(--glass-highlight),
+    color-mix(in srgb, var(--ambient) 45%, var(--surface))
+  );
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    0 0 8px color-mix(in srgb, var(--ice) calc(var(--intensity) * 22%), transparent);
+}
+.lattice-capsule::after {
+  content: '';
+  position: absolute;
+  inset: 1px 4px;
+  border-radius: inherit;
+  background: radial-gradient(ellipse at var(--scene-light-x) 50%, var(--ice), transparent 75%);
+  opacity: calc(var(--intensity) * 0.55);
 }

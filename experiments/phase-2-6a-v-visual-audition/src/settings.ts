@@ -74,7 +74,6 @@ export type AppearanceMode = 'system' | 'light' | 'dark'
 export const contentMaterials = [
   { id: 'solid', name: 'Solid' },
   { id: 'frosted', name: 'Frosted' },
-  { id: 'clearer', name: 'Clearer glass' },
 ] as const
 export type ContentMaterial = (typeof contentMaterials)[number]['id']
 export const environments: { id: Environment; name: string; effect: EffectId }[] = [

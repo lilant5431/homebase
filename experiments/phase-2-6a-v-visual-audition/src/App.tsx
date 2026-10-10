@@ -130,7 +130,7 @@ export function App() {
         <a href="#preview" className="lab-brand">
           <Compass size={24} />
           <span>
-            homebase<span>VISUAL AUDITION / 2.6A-V5</span>
+            homebase<span>VISUAL AUDITION / 2.6A-V6</span>
           </span>
         </a>
         <div className="lab-tag">An experiment in light & space</div>
@@ -199,11 +199,9 @@ export function App() {
             <p className="control-help" role="status">
               {effectiveMaterial !== material
                 ? 'Opaque panels required by reduced effects or unavailable backdrop blur. Your selection is retained.'
-                : material === 'clearer'
-                  ? 'More scenery; opaque text backing keeps records readable.'
-                  : material === 'frosted'
-                    ? 'Translucent panels with bounded blur and stronger text contrast.'
-                    : 'Original opaque panels. No scenery shows through records.'}
+                : material === 'frosted'
+                  ? 'Translucent panels with bounded blur and stronger text contrast.'
+                  : 'Original opaque panels. No scenery shows through records.'}
             </p>
           </div>
           <div className="scene-label">

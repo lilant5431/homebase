@@ -19,7 +19,7 @@ export async function materialEvidence(page: Page, engine: string) {
         const hide = await page.addStyleTag({ content: '.composition { visibility:hidden!important }' })
         const backdrop = (await page.screenshot({ fullPage: true })).toString('base64')
         await hide.evaluate((element) => element.parentNode?.removeChild(element))
-        for (const material of ['solid', 'frosted', 'clearer']) {
+        for (const material of ['solid', 'frosted']) {
           await page.getByLabel('Content material', { exact: true }).selectOption(material)
           const rendered = (await page.screenshot({ fullPage: true })).toString('base64')
           const evidence = await page.evaluate(
@@ -132,12 +132,7 @@ export async function materialEvidence(page: Page, engine: string) {
             assert.ok(panel.sampleCount > 0)
             assert.equal(panel.opacity, '1')
             if (material !== 'solid')
-              assert.ok(
-                panel.background.endsWith(
-                  `, ${material === 'frosted' ? 0.72 : mode === 'Light' ? 0.26 : 0.24})`,
-                ),
-                `${engine}: material uses intended alpha`,
-              )
+              assert.ok(panel.background.endsWith(`, ${0.72})`), `${engine}: material uses intended alpha`)
 
             for (const role of panel.roles) {
               assert.ok(
@@ -148,8 +143,6 @@ export async function materialEvidence(page: Page, engine: string) {
                 role.minimumEnvelopeRatio >= 4.5,
                 `${engine} ${material} ${role.selector}: full black/white envelope ${role.minimumEnvelopeRatio}`,
               )
-              if (material === 'clearer')
-                assert.ok(role.backing, `${engine}: Clearer local text protection ${role.selector}`)
             }
           }
           records.push({ engine, width, mode, view, material, evidence })
@@ -157,15 +150,14 @@ export async function materialEvidence(page: Page, engine: string) {
       }
     }
   }
-  for (let index = 0; index < records.length; index += 3) {
+  for (let index = 0; index < records.length; index += 2) {
     const swatches = records
-      .slice(index, index + 3)
+      .slice(index, index + 2)
       .map((record) => record.evidence.map((panel) => panel.paintedSwatches))
     assert.notDeepEqual(swatches[0], swatches[1], `${engine}: Solid/Frosted actual pixels differ`)
-    assert.notDeepEqual(swatches[1], swatches[2], `${engine}: Frosted/Clearer actual pixels differ`)
   }
   // Retention, reduction/restoration, cue and navigation are real controls.
-  for (const material of ['solid', 'frosted', 'clearer']) {
+  for (const material of ['solid', 'frosted']) {
     await page.getByLabel('Content material', { exact: true }).selectOption(material)
     await page.getByLabel('Reduce visual effects', { exact: true }).check()
     assert.equal(
@@ -220,7 +212,7 @@ export async function materialEvidence(page: Page, engine: string) {
   }
   await fs.writeFile(
     `test-results/material-${engine.toLowerCase()}.json`,
-    JSON.stringify({ records, daylight, moonlit }, null, 2) + '\n',
+    JSON.stringify({ revision: 'V6', records, daylight, moonlit }, null, 2) + '\n',
   )
   await page.getByRole('button', { name: 'Resume', exact: true }).click()
 }

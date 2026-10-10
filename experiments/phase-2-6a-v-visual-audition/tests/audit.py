@@ -9,7 +9,7 @@ root = Path(__file__).resolve().parents[1]
 for item in json.loads((root / "vendor/source-manifest.json").read_text()):
     assert hashlib.sha256((root / item["local"]).read_bytes()).hexdigest() == item["sha256"], item["component"]
 
-for doc in [root / "README.md", *root.glob("research/*.md")]:
+for doc in [root / "README.md", *root.glob("research/**/*.md")]:
     for target in re.findall(r"\]\(([^)]+)\)", doc.read_text()):
         if target.startswith(("http:", "https:", "#")):
             continue
@@ -80,14 +80,16 @@ for theme, fill, foregrounds in [
             assert ratio >= 4.5, (theme, foreground, backdrop, ratio)
             material_bounds.append({'theme': theme, 'foreground': foreground, 'backdrop': backdrop, 'blended': blended, 'ratio': round(ratio, 2)})
 (output / 'material-envelope.json').write_text(json.dumps(material_bounds, indent=2) + '\n')
-print(f'PASS: {len(material_bounds)} Frosted black/white blended-envelope text checks (Clearer uses audited solid local plates)')
+print(f'PASS: {len(material_bounds)} Frosted black/white blended-envelope text checks')
 for engine in ['chromium', 'webkit']:
     file = output / f'material-{engine}.json'
     if not file.exists():
         print(f'NOT RUN: {engine} actual scene sampling; run test:browser first')
         continue
-    evidence = json.loads(file.read_text())['records']
-    assert len(evidence) == 24, (engine, len(evidence))
+    data = json.loads(file.read_text())
+    assert data['revision'] == 'V6', 'stale material evidence: rerun browser checks'
+    evidence = data['records']
+    assert len(evidence) == 16, (engine, len(evidence))
     roles = [role for record in evidence for panel in record['evidence'] for role in panel['roles']]
     assert all(role['minimumSceneRatio'] >= 4.5 and role['minimumEnvelopeRatio'] >= 4.5 for role in roles)
     print(f'PASS: {engine} {len(evidence)} material/scene/view/width samples; {len(roles)} computed text roles; minimum scene {min(role["minimumSceneRatio"] for role in roles):.2f}:1')

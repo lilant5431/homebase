@@ -210,9 +210,14 @@ export function Composition({
           {cueConfirmed && <Check size={13} />}
           {cueMessage}
         </div>
-        <div className="environment-band" aria-hidden="true">
+        <div
+          className={effect === 'lattice' ? 'environment-band lattice-accent' : 'environment-band'}
+          aria-hidden="true"
+        >
           {effect === 'landscape-legacy' ? (
             <LandscapeLegacy />
+          ) : effect === 'lattice' ? (
+            <span className="lattice-capsule" />
           ) : (
             <>
               <span className="band-light" />

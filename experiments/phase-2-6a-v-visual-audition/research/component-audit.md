@@ -100,3 +100,7 @@ A cue adds two finite Landscape sky/water targets to the original five chrome/en
 ## V5 source continuity
 
 Moonlit Lattice and content material recipes are original scoped CSS/React changes, not new copied effects. The five pinned Magic UI snapshots/adapters and license/attribution remain unchanged. No dependency or source license changes. Landscape V4 linework remains original and unchanged; V3/V4 review assets are retained. V5 is a focused material audition, not a new component-library research phase.
+
+## V6 final polish
+
+The user fixes the approved direction. Two current materials remain; the lattice capsule is original scoped CSS in the existing layout slot, not an additional copied library effect. All pinned source hashes, notices, dependencies, Landscape art, shared cue and Moonlit recipe remain unchanged. No further visual experimentation is planned absent a regression. Historical V5 numerical evidence is explicitly archived.
