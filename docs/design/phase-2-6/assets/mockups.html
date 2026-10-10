@@ -1,0 +1,2877 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Homebase 2.6A · Concept atlas</title>
+    <link rel="stylesheet" href="atlas.css" />
+    <link rel="stylesheet" href="materials-motion.css" />
+  </head>
+  <body>
+    <header class="atlas-header">
+      <p>HOMEBASE / PHASE 2.6A / DESIGN STUDY</p>
+      <h1>Historical layout and material atlas</h1>
+      <p>
+        Superseded two-theme visual study; retained for layout anatomy and interaction storyboards. The final
+        V6 reference is linked below. These boards are not the final six appearances or a working redesign.
+        All data is illustrative. Native Date/Time specimens can open pickers but nothing is saved. Large
+        boards are intentionally scrollable for review. Product reflow and tablet/short-landscape behavior are
+        specified in the documents.
+      </p>
+      <nav class="index">
+        <a href="v6-reference.html">Final V6 visual reference</a>
+        <a href="#materials-motion">Materials &amp; Motion</a>
+        <a href="../01-design-vision.md">Design rationale</a><a href="#daylight">Modern Daylight</a
+        ><a href="#night">Night Flight</a><a href="../05-technical-handoff.md">Date/Time contract</a>
+      </nav>
+    </header>
+    <section class="material-showcase" id="materials-motion">
+      <h2>Materials &amp; Motion Showcase</h2>
+      <p>
+        Review-only visual specimens, isolated from Homebase. Buttons expose native hover/focus/press styling
+        but do not navigate, save, or access storage. Fixed state samples and storyboards are labeled. No
+        animation library or ongoing ambient animation.
+      </p>
+      <article class="material-theme" data-theme="daylight" id="materials-daylight">
+        <p class="study-kicker">HOMEBASE / MATERIAL STUDY</p>
+        <h2>Modern Daylight</h2>
+        <p class="study-caption">
+          Cool-white layers · steel-blue precision · light on a quiet work surface. Status and actionable
+          content stay solid; reflections belong only behind navigation chrome.
+        </p>
+        <div class="effects-pair">
+          <div class="effects-column effects-normal">
+            <h3>Normal visual effects</h3>
+            <p class="study-caption">
+              Static reflected light, bounded translucency, fine edges. Readable opaque actions.
+            </p>
+            <div class="material-scene">
+              <span class="specimen-label">Navigation · four explicit states</span>
+              <div class="chrome-glass">
+                <div class="chrome-brand"><span>h /</span> Homebase</div>
+                <button type="button" class="material-nav" aria-label="Overview, Default visual specimen">
+                  <span class="nav-glyph" aria-hidden="true">□</span>Overview<span class="state-name"
+                    >Default</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-hover"
+                  aria-label="Assignments, Hover visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">✓</span>Assignments<span class="state-name"
+                    >Hover</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-active"
+                  aria-label="Weekly Planner, Active visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">▤</span>Weekly Planner<span class="state-name"
+                    >Active</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-focused"
+                  aria-label="Assessments, Focus visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">◇</span>Assessments<span class="state-name"
+                    >Focus</span
+                  >
+                </button>
+              </div>
+              <span class="specimen-label">Menu · open and selected</span>
+              <div class="chrome-glass popup-glass">
+                <div class="menu-heading">APPEARANCE · OPEN MENU</div>
+                <div role="group" aria-label="Appearance visual state specimens">
+                  <button type="button" class="material-menu-item is-selected">
+                    <span>System</span><span class="selected-mark">✓ Selected</span></button
+                  ><button type="button" class="material-menu-item">Light <span>Modern Daylight</span></button
+                  ><button type="button" class="material-menu-item">Dark <span>Night Flight</span></button>
+                </div>
+                <hr class="menu-divider" />
+                <p class="menu-foot">Drawn states; does not change or save appearance.</p>
+              </div>
+              <span class="specimen-label">Primary action · four explicit states</span>
+              <div class="action-grid">
+                <div>
+                  <span class="specimen-label">Default</span
+                  ><button type="button" class="material-button">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Focus</span
+                  ><button type="button" class="material-button is-focused">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Pressed</span
+                  ><button type="button" class="material-button is-pressed">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Disabled</span
+                  ><button type="button" class="material-button" disabled>Lock session</button
+                  ><span class="disabled-note">Select a feasible session first.</span>
+                </div>
+              </div>
+              <span class="specimen-label">Floating holder · never a mobile form save bar</span>
+              <div class="chrome-glass floating-glass">
+                <div class="holder-content">Study plan actions</div>
+                <button type="button" class="material-button">Refresh plan</button>
+              </div>
+              <div class="indicator-specimen">
+                <span class="indicator-dot" aria-hidden="true"></span>Active destination · solid marker ·
+                Night halo belongs only to active navigation
+              </div>
+              <span class="material-warning">△ Unscheduled work · 30 min — solid warning specimen</span>
+            </div>
+          </div>
+          <div class="effects-column effects-reduced">
+            <h3>Reduced effects / unsupported blur</h3>
+            <p class="study-caption">Opaque layers, visible boundaries, no reflected light or halo.</p>
+            <div class="material-scene">
+              <span class="specimen-label">Navigation · four explicit states</span>
+              <div class="chrome-glass">
+                <div class="chrome-brand"><span>h /</span> Homebase</div>
+                <button type="button" class="material-nav" aria-label="Overview, Default visual specimen">
+                  <span class="nav-glyph" aria-hidden="true">□</span>Overview<span class="state-name"
+                    >Default</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-hover"
+                  aria-label="Assignments, Hover visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">✓</span>Assignments<span class="state-name"
+                    >Hover</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-active"
+                  aria-label="Weekly Planner, Active visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">▤</span>Weekly Planner<span class="state-name"
+                    >Active</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-focused"
+                  aria-label="Assessments, Focus visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">◇</span>Assessments<span class="state-name"
+                    >Focus</span
+                  >
+                </button>
+              </div>
+              <span class="specimen-label">Menu · open and selected</span>
+              <div class="chrome-glass popup-glass">
+                <div class="menu-heading">APPEARANCE · OPAQUE FALLBACK</div>
+                <div role="group" aria-label="Appearance visual state specimens">
+                  <button type="button" class="material-menu-item is-selected">
+                    <span>System</span><span class="selected-mark">✓ Selected</span></button
+                  ><button type="button" class="material-menu-item">Light <span>Modern Daylight</span></button
+                  ><button type="button" class="material-menu-item">Dark <span>Night Flight</span></button>
+                </div>
+                <hr class="menu-divider" />
+                <p class="menu-foot">Drawn states; does not change or save appearance.</p>
+              </div>
+              <span class="specimen-label">Primary action · four explicit states</span>
+              <div class="action-grid">
+                <div>
+                  <span class="specimen-label">Default</span
+                  ><button type="button" class="material-button">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Focus</span
+                  ><button type="button" class="material-button is-focused">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Pressed</span
+                  ><button type="button" class="material-button is-pressed">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Disabled</span
+                  ><button type="button" class="material-button" disabled>Lock session</button
+                  ><span class="disabled-note">Select a feasible session first.</span>
+                </div>
+              </div>
+              <span class="specimen-label">Floating holder · never a mobile form save bar</span>
+              <div class="chrome-glass floating-glass">
+                <div class="holder-content">Study plan actions</div>
+                <button type="button" class="material-button">Refresh plan</button>
+              </div>
+              <div class="indicator-specimen">
+                <span class="indicator-dot" aria-hidden="true"></span>Active destination · solid marker · halo
+                removed
+              </div>
+              <span class="material-warning">△ Unscheduled work · 30 min — solid warning specimen</span>
+            </div>
+          </div>
+        </div>
+        <div class="motion-studies">
+          <h3>Three motion studies · static storyboards</h3>
+          <p class="study-caption">
+            Frames specify a transition; they do not run a timer, save a record or lock a session. Semantic
+            state changes are immediate.
+          </p>
+          <section class="motion-study">
+            <h3>01 / Navigation selection</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · before click</span>
+                <div class="frame-nav before">□ Overview · current</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · 90ms</span>
+                <div class="frame-nav transitioning">▤ Weekly Planner · current</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 180ms</span>
+                <div class="frame-nav">▤ Weekly Planner · current</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              180ms standard easing: cubic-bezier(.2,0,0,1). The label and current destination update
+              immediately; only marker emphasis settles. New selection replaces the transition; no page slide
+              or focus delay. Reduced motion: jump directly to final. Purpose: retain orientation.
+            </p>
+          </section>
+          <section class="motion-study">
+            <h3>02 / Menu entry and exit</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · closed</span>
+                <div class="frame-nav before">Appearance ▾</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · 80ms</span>
+                <div class="frame-menu ghost">Edge silhouette only; no half-opacity text claim.</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 160ms</span>
+                <div class="frame-menu">✓ System — selected<br />Light · Dark</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              Enter 160ms standard; exit 120ms cubic-bezier(.4,0,1,1). Desktop menu opacity and at most 8px
+              travel; text and its required baseplate stay fully readable throughout. Closing removes
+              interaction immediately and restores opener focus. Reopening reverses current progress without
+              queued exits. Reduced motion: immediate show/hide. Purpose: connect the menu to its trigger. No
+              mobile editor transform.
+            </p>
+          </section>
+          <section class="motion-study">
+            <h3>03 / Successful session lock</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · before adoption</span>
+                <div class="frame-lock">
+                  <span class="source-tag">◇ Recommended</span>4:00–4:30 PM · 30 min
+                </div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · adopted, 60ms</span>
+                <div class="frame-lock">
+                  <span class="source-tag"><span class="soft-check" aria-hidden="true">✓</span> ▣ Manual</span
+                  >4:00–4:30 PM · 30 min
+                </div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 120ms</span>
+                <div class="frame-lock"><span class="source-tag">✓ ▣ Manual</span>4:00–4:30 PM · 30 min</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              120ms standard easing after successful persistence/source adoption. Manual label and lock icon
+              appear synchronously; only a decorative check settles in opacity. Invalid intent, failed save or
+              cancel stays in the original state with its real error; never show temporary success. Reduced
+              motion: immediate final state. No session movement or completion credit. Purpose: distinguish
+              user intent from a recommendation.
+            </p>
+          </section>
+        </div>
+      </article>
+      <article class="material-theme" data-theme="night" id="materials-night">
+        <p class="study-kicker">HOMEBASE / MATERIAL STUDY</p>
+        <h2>Night Flight</h2>
+        <p class="study-caption">
+          Midnight layers · ice-blue edges · restrained evening atmosphere. Status and actionable content stay
+          solid; reflections belong only behind navigation chrome.
+        </p>
+        <div class="effects-pair">
+          <div class="effects-column effects-normal">
+            <h3>Normal visual effects</h3>
+            <p class="study-caption">
+              Static reflected light, bounded translucency, fine edges. Readable opaque actions.
+            </p>
+            <div class="material-scene">
+              <span class="specimen-label">Navigation · four explicit states</span>
+              <div class="chrome-glass">
+                <div class="chrome-brand"><span>h /</span> Homebase</div>
+                <button type="button" class="material-nav" aria-label="Overview, Default visual specimen">
+                  <span class="nav-glyph" aria-hidden="true">□</span>Overview<span class="state-name"
+                    >Default</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-hover"
+                  aria-label="Assignments, Hover visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">✓</span>Assignments<span class="state-name"
+                    >Hover</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-active"
+                  aria-label="Weekly Planner, Active visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">▤</span>Weekly Planner<span class="state-name"
+                    >Active</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-focused"
+                  aria-label="Assessments, Focus visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">◇</span>Assessments<span class="state-name"
+                    >Focus</span
+                  >
+                </button>
+              </div>
+              <span class="specimen-label">Menu · open and selected</span>
+              <div class="chrome-glass popup-glass">
+                <div class="menu-heading">APPEARANCE · OPEN MENU</div>
+                <div role="group" aria-label="Appearance visual state specimens">
+                  <button type="button" class="material-menu-item is-selected">
+                    <span>System</span><span class="selected-mark">✓ Selected</span></button
+                  ><button type="button" class="material-menu-item">Light <span>Modern Daylight</span></button
+                  ><button type="button" class="material-menu-item">Dark <span>Night Flight</span></button>
+                </div>
+                <hr class="menu-divider" />
+                <p class="menu-foot">Drawn states; does not change or save appearance.</p>
+              </div>
+              <span class="specimen-label">Primary action · four explicit states</span>
+              <div class="action-grid">
+                <div>
+                  <span class="specimen-label">Default</span
+                  ><button type="button" class="material-button">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Focus</span
+                  ><button type="button" class="material-button is-focused">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Pressed</span
+                  ><button type="button" class="material-button is-pressed">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Disabled</span
+                  ><button type="button" class="material-button" disabled>Lock session</button
+                  ><span class="disabled-note">Select a feasible session first.</span>
+                </div>
+              </div>
+              <span class="specimen-label">Floating holder · never a mobile form save bar</span>
+              <div class="chrome-glass floating-glass">
+                <div class="holder-content">Study plan actions</div>
+                <button type="button" class="material-button">Refresh plan</button>
+              </div>
+              <div class="indicator-specimen">
+                <span class="indicator-dot" aria-hidden="true"></span>Active destination · solid marker ·
+                Night halo belongs only to active navigation
+              </div>
+              <span class="material-warning">△ Unscheduled work · 30 min — solid warning specimen</span>
+            </div>
+          </div>
+          <div class="effects-column effects-reduced">
+            <h3>Reduced effects / unsupported blur</h3>
+            <p class="study-caption">Opaque layers, visible boundaries, no reflected light or halo.</p>
+            <div class="material-scene">
+              <span class="specimen-label">Navigation · four explicit states</span>
+              <div class="chrome-glass">
+                <div class="chrome-brand"><span>h /</span> Homebase</div>
+                <button type="button" class="material-nav" aria-label="Overview, Default visual specimen">
+                  <span class="nav-glyph" aria-hidden="true">□</span>Overview<span class="state-name"
+                    >Default</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-hover"
+                  aria-label="Assignments, Hover visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">✓</span>Assignments<span class="state-name"
+                    >Hover</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-active"
+                  aria-label="Weekly Planner, Active visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">▤</span>Weekly Planner<span class="state-name"
+                    >Active</span
+                  ></button
+                ><button
+                  type="button"
+                  class="material-nav is-focused"
+                  aria-label="Assessments, Focus visual specimen"
+                >
+                  <span class="nav-glyph" aria-hidden="true">◇</span>Assessments<span class="state-name"
+                    >Focus</span
+                  >
+                </button>
+              </div>
+              <span class="specimen-label">Menu · open and selected</span>
+              <div class="chrome-glass popup-glass">
+                <div class="menu-heading">APPEARANCE · OPAQUE FALLBACK</div>
+                <div role="group" aria-label="Appearance visual state specimens">
+                  <button type="button" class="material-menu-item is-selected">
+                    <span>System</span><span class="selected-mark">✓ Selected</span></button
+                  ><button type="button" class="material-menu-item">Light <span>Modern Daylight</span></button
+                  ><button type="button" class="material-menu-item">Dark <span>Night Flight</span></button>
+                </div>
+                <hr class="menu-divider" />
+                <p class="menu-foot">Drawn states; does not change or save appearance.</p>
+              </div>
+              <span class="specimen-label">Primary action · four explicit states</span>
+              <div class="action-grid">
+                <div>
+                  <span class="specimen-label">Default</span
+                  ><button type="button" class="material-button">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Focus</span
+                  ><button type="button" class="material-button is-focused">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Pressed</span
+                  ><button type="button" class="material-button is-pressed">Lock session</button>
+                </div>
+                <div>
+                  <span class="specimen-label">Disabled</span
+                  ><button type="button" class="material-button" disabled>Lock session</button
+                  ><span class="disabled-note">Select a feasible session first.</span>
+                </div>
+              </div>
+              <span class="specimen-label">Floating holder · never a mobile form save bar</span>
+              <div class="chrome-glass floating-glass">
+                <div class="holder-content">Study plan actions</div>
+                <button type="button" class="material-button">Refresh plan</button>
+              </div>
+              <div class="indicator-specimen">
+                <span class="indicator-dot" aria-hidden="true"></span>Active destination · solid marker · halo
+                removed
+              </div>
+              <span class="material-warning">△ Unscheduled work · 30 min — solid warning specimen</span>
+            </div>
+          </div>
+        </div>
+        <div class="motion-studies">
+          <h3>Three motion studies · static storyboards</h3>
+          <p class="study-caption">
+            Frames specify a transition; they do not run a timer, save a record or lock a session. Semantic
+            state changes are immediate.
+          </p>
+          <section class="motion-study">
+            <h3>01 / Navigation selection</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · before click</span>
+                <div class="frame-nav before">□ Overview · current</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · 90ms</span>
+                <div class="frame-nav transitioning">▤ Weekly Planner · current</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 180ms</span>
+                <div class="frame-nav">▤ Weekly Planner · current</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              180ms standard easing: cubic-bezier(.2,0,0,1). The label and current destination update
+              immediately; only marker emphasis settles. New selection replaces the transition; no page slide
+              or focus delay. Reduced motion: jump directly to final. Purpose: retain orientation.
+            </p>
+          </section>
+          <section class="motion-study">
+            <h3>02 / Menu entry and exit</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · closed</span>
+                <div class="frame-nav before">Appearance ▾</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · 80ms</span>
+                <div class="frame-menu ghost">Edge silhouette only; no half-opacity text claim.</div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 160ms</span>
+                <div class="frame-menu">✓ System — selected<br />Light · Dark</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              Enter 160ms standard; exit 120ms cubic-bezier(.4,0,1,1). Desktop menu opacity and at most 8px
+              travel; text and its required baseplate stay fully readable throughout. Closing removes
+              interaction immediately and restores opener focus. Reopening reverses current progress without
+              queued exits. Reduced motion: immediate show/hide. Purpose: connect the menu to its trigger. No
+              mobile editor transform.
+            </p>
+          </section>
+          <section class="motion-study">
+            <h3>03 / Successful session lock</h3>
+            <div class="motion-frames">
+              <div class="motion-frame">
+                <span class="frame-time">Initial · before adoption</span>
+                <div class="frame-lock">
+                  <span class="source-tag">◇ Recommended</span>4:00–4:30 PM · 30 min
+                </div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Intermediate · adopted, 60ms</span>
+                <div class="frame-lock">
+                  <span class="source-tag"><span class="soft-check" aria-hidden="true">✓</span> ▣ Manual</span
+                  >4:00–4:30 PM · 30 min
+                </div>
+              </div>
+              <div class="motion-frame">
+                <span class="frame-time">Final · 120ms</span>
+                <div class="frame-lock"><span class="source-tag">✓ ▣ Manual</span>4:00–4:30 PM · 30 min</div>
+              </div>
+            </div>
+            <p class="story-rule">
+              120ms standard easing after successful persistence/source adoption. Manual label and lock icon
+              appear synchronously; only a decorative check settles in opacity. Invalid intent, failed save or
+              cancel stays in the original state with its real error; never show temporary success. Reduced
+              motion: immediate final state. No session movement or completion credit. Purpose: distinguish
+              user intent from a recommendation.
+            </p>
+          </section>
+        </div>
+      </article>
+      <p>
+        Exact recipes, interruptions, fallbacks and verification limits:
+        <a href="../02-design-system.md">material system</a> and
+        <a href="../04-motion-and-interaction.md">motion handoff</a>. The Date/Time issue remains DT-01 for
+        2.6E, not a fix demonstrated here.
+      </p>
+    </section>
+    <section id="daylight">
+      <h2 class="theme-title">Modern Daylight</h2>
+      <section class="plate" id="daylight-overview">
+        <h3>Overview</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="daylight-overview-desktop"
+              class="board"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Overview, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item active"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Overview</h1>
+                    <p class="subtitle">Monday, October 12 · A clear view of your schoolwork</p>
+                  </div>
+                  <span class="button primary">New assignment</span>
+                </div>
+                <div class="stats">
+                  <div class="stat">
+                    <span>Open assignments</span><strong>4</strong><span>work to complete</span>
+                  </div>
+                  <div class="stat"><span>Due soon</span><strong>3</strong><span>7 days + overdue</span></div>
+                  <div class="stat"><span>Assessments</span><strong>2</strong><span>coming up</span></div>
+                  <div class="stat">
+                    <span>Known estimates</span><strong>3h 45m</strong><span>open work only</span>
+                  </div>
+                </div>
+                <div class="split">
+                  <div class="panel">
+                    <div class="panel-header">
+                      <h2>Assignments ahead</h2>
+                      <span class="section-link">View all →</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Cell division review</strong>
+                        <div class="meta">Biology · Due tomorrow, 8:00 PM · 90 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Argument essay</strong>
+                        <div class="meta">English · Wed, 5:00 PM · 60 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Quadratic equations</strong>
+                        <div class="meta">Math · Thu · 45 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Reaction notes</strong>
+                        <div class="meta">Chemistry · Oct 23 · 30 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="panel">
+                      <h2>On the horizon</h2>
+                      <div class="row">
+                        <div>
+                          <span class="tag">◇ TEST · FRI 16</span>
+                          <h3>History assessment</h3>
+                          <p class="meta">History · 10:00 AM</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div>
+                          <span class="tag">◷ COMMITMENT · TODAY</span>
+                          <h3>Practice</h3>
+                          <p class="meta">5:00–5:30 PM</p>
+                        </div>
+                      </div>
+                      <span class="section-link">Open Weekly Planner →</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel">
+                  <h2>Quick add</h2>
+                  <div class="quick">
+                    <span class="button">Class</span><span class="button">Assignment</span
+                    ><span class="button">Assessment</span><span class="button">Commitment</span>
+                  </div>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="daylight-overview-phone"
+              class="board mobile"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Overview, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Overview<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Overview</h1>
+                    <p class="subtitle">Monday, October 12 · A clear view of your schoolwork</p>
+                  </div>
+                  <span class="button primary">New assignment</span>
+                </div>
+                <div class="stats">
+                  <div class="stat">
+                    <span>Open assignments</span><strong>4</strong><span>work to complete</span>
+                  </div>
+                  <div class="stat"><span>Due soon</span><strong>3</strong><span>7 days + overdue</span></div>
+                  <div class="stat"><span>Assessments</span><strong>2</strong><span>coming up</span></div>
+                  <div class="stat">
+                    <span>Known estimates</span><strong>3h 45m</strong><span>open work only</span>
+                  </div>
+                </div>
+                <div class="split">
+                  <div class="panel">
+                    <div class="panel-header">
+                      <h2>Assignments ahead</h2>
+                      <span class="section-link">View all →</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Cell division review</strong>
+                        <div class="meta">Biology · Due tomorrow, 8:00 PM · 90 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Argument essay</strong>
+                        <div class="meta">English · Wed, 5:00 PM · 60 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Quadratic equations</strong>
+                        <div class="meta">Math · Thu · 45 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Reaction notes</strong>
+                        <div class="meta">Chemistry · Oct 23 · 30 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="panel">
+                      <h2>On the horizon</h2>
+                      <div class="row">
+                        <div>
+                          <span class="tag">◇ TEST · FRI 16</span>
+                          <h3>History assessment</h3>
+                          <p class="meta">History · 10:00 AM</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div>
+                          <span class="tag">◷ COMMITMENT · TODAY</span>
+                          <h3>Practice</h3>
+                          <p class="meta">5:00–5:30 PM</p>
+                        </div>
+                      </div>
+                      <span class="section-link">Open Weekly Planner →</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel">
+                  <h2>Quick add</h2>
+                  <div class="quick">
+                    <span class="button">Class</span><span class="button">Assignment</span
+                    ><span class="button">Assessment</span><span class="button">Commitment</span>
+                  </div>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="daylight-week">
+        <h3>Weekly Planner</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="daylight-week-desktop"
+              class="board"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Weekly Planner, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Weekly Planner</h1>
+                    <p class="subtitle">Your deadlines, fixed plans and recommended study</p>
+                  </div>
+                  <span class="button primary">Add commitment</span>
+                </div>
+                <div class="toolbar">
+                  <strong>October 12–18, 2026</strong>
+                  <div class="actions">
+                    <span class="button">← Previous</span><span class="button">Today</span
+                    ><span class="button">Next →</span>
+                  </div>
+                </div>
+                <div class="toolbar">
+                  <span class="meta">Plan reference · Oct 12, 3:00 PM</span
+                  ><span class="button">Refresh plan</span>
+                </div>
+                <div class="notice">
+                  <strong>△ Unscheduled work · 30 minutes</strong>
+                  <p>Reaction notes needs more study availability.</p>
+                  <span class="section-link">Edit assignment →</span>
+                </div>
+                <div class="week">
+                  <section class="day today">
+                    <div class="day-title">Mon<b>12</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Cell division</strong>
+                      <div class="time">4:00–5:00 PM</div>
+                      <div class="meta">Biology · 60 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <div class="session">
+                      <span class="tag neutral">◷ Commitment</span><strong>Practice</strong>
+                      <div class="time">5:00–5:30 PM</div>
+                      <div class="meta">Fixed time</div>
+                      <span class="section-link">Edit</span>
+                    </div>
+                    <div class="session">
+                      <span class="tag manual">▣ Manual</span><strong>Cell division</strong>
+                      <div class="time">5:30–6:00 PM</div>
+                      <div class="meta">Biology · 30 min</div>
+                      <span class="section-link">Edit · Unlock</span>
+                    </div>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Tue<b>13</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Argument essay</strong>
+                      <div class="time">4:00–5:00 PM</div>
+                      <div class="meta">English · 60 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <p class="meta"><strong>□ Assignment due</strong><br />Cell division review · 8:00 PM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Wed<b>14</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Quadratics</strong>
+                      <div class="time">4:00–4:45 PM</div>
+                      <div class="meta">Math · 45 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <p class="meta"><strong>□ Assignment due</strong><br />Argument essay · 5:00 PM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Thu<b>15</b></div>
+                    <p class="meta">
+                      <strong>□ Assignment due</strong><br />Quadratic equations · End of day
+                    </p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Fri<b>16</b></div>
+                    <span class="tag">◇ TEST</span>
+                    <h3>History assessment</h3>
+                    <p class="meta">10:00 AM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Sat<b>17</b></div>
+                    <p class="meta">Nothing planned</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Sun<b>18</b></div>
+                    <p class="meta">Nothing planned</p>
+                  </section>
+                </div>
+                <div class="panel" style="margin-top: 20px">
+                  <div class="panel-header">
+                    <h2>Study availability</h2>
+                    <span class="section-link">Add study time</span>
+                  </div>
+                  <div class="availability">
+                    <span>Mon 4:00–6:00 PM</span><span>Tue 4:00–5:00 PM</span><span>Wed 4:00–4:45 PM</span>
+                  </div>
+                  <p class="meta" style="margin: 12px 0 0">
+                    Commitments are subtracted. Availability is not a guarantee that all work fits.
+                  </p>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="daylight-week-phone"
+              class="board mobile"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Weekly Planner, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Weekly Planner<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Weekly Planner</h1>
+                    <p class="subtitle">Your deadlines, fixed plans and recommended study</p>
+                  </div>
+                  <span class="button primary">Add commitment</span>
+                </div>
+                <div class="toolbar">
+                  <strong>October 12–18, 2026</strong>
+                  <div class="actions">
+                    <span class="button">← Previous</span><span class="button">Today</span
+                    ><span class="button">Next →</span>
+                  </div>
+                </div>
+                <div class="toolbar">
+                  <span class="meta">Plan reference · Oct 12, 3:00 PM</span
+                  ><span class="button">Refresh plan</span>
+                </div>
+                <div class="notice">
+                  <strong>△ Unscheduled work · 30 minutes</strong>
+                  <p>Reaction notes needs more study availability.</p>
+                  <span class="section-link">Edit assignment →</span>
+                </div>
+                <div class="week">
+                  <section class="day today">
+                    <div class="day-title">Mon<b>12</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Cell division</strong>
+                      <div class="time">4:00–5:00 PM</div>
+                      <div class="meta">Biology · 60 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <div class="session">
+                      <span class="tag neutral">◷ Commitment</span><strong>Practice</strong>
+                      <div class="time">5:00–5:30 PM</div>
+                      <div class="meta">Fixed time</div>
+                      <span class="section-link">Edit</span>
+                    </div>
+                    <div class="session">
+                      <span class="tag manual">▣ Manual</span><strong>Cell division</strong>
+                      <div class="time">5:30–6:00 PM</div>
+                      <div class="meta">Biology · 30 min</div>
+                      <span class="section-link">Edit · Unlock</span>
+                    </div>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Tue<b>13</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Argument essay</strong>
+                      <div class="time">4:00–5:00 PM</div>
+                      <div class="meta">English · 60 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <p class="meta"><strong>□ Assignment due</strong><br />Cell division review · 8:00 PM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Wed<b>14</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Quadratics</strong>
+                      <div class="time">4:00–4:45 PM</div>
+                      <div class="meta">Math · 45 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <p class="meta"><strong>□ Assignment due</strong><br />Argument essay · 5:00 PM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Thu<b>15</b></div>
+                    <p class="meta">
+                      <strong>□ Assignment due</strong><br />Quadratic equations · End of day
+                    </p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Fri<b>16</b></div>
+                    <span class="tag">◇ TEST</span>
+                    <h3>History assessment</h3>
+                    <p class="meta">10:00 AM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Sat<b>17</b></div>
+                    <p class="meta">Nothing planned</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Sun<b>18</b></div>
+                    <p class="meta">Nothing planned</p>
+                  </section>
+                </div>
+                <div class="panel" style="margin-top: 20px">
+                  <div class="panel-header">
+                    <h2>Study availability</h2>
+                    <span class="section-link">Add study time</span>
+                  </div>
+                  <div class="availability">
+                    <span>Mon 4:00–6:00 PM</span><span>Tue 4:00–5:00 PM</span><span>Wed 4:00–4:45 PM</span>
+                  </div>
+                  <p class="meta" style="margin: 12px 0 0">
+                    Commitments are subtracted. Availability is not a guarantee that all work fits.
+                  </p>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="daylight-academic">
+        <h3>Academic list / detail</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="daylight-academic-desktop"
+              class="board"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Academic list / detail, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">✓</span>Assignments
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Assignments</h1>
+                    <p class="subtitle">Deadlines and known workload, in one place</p>
+                  </div>
+                  <span class="button primary">New assignment</span>
+                </div>
+                <div class="panel">
+                  <h2>To do · 4</h2>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Cell division review</strong>
+                      <div class="meta">Biology · Due Oct 13, 8:00 PM · 90 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Argument essay</strong>
+                      <div class="meta">English · Due Oct 14, 5:00 PM · 60 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Quadratic equations</strong>
+                      <div class="meta">Math · Due Oct 15 · 45 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Reaction notes</strong>
+                      <div class="meta">Chemistry · Due Oct 23 · 30 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                </div>
+                <div class="panel">
+                  <h2>Completed · 1</h2>
+                  <div class="row">
+                    <span class="check done" aria-hidden="true">✓</span>
+                    <div class="row-copy">
+                      <strong>Reading response</strong>
+                      <div class="meta">English · Completed</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                </div>
+                <p class="meta">
+                  Edit opens the existing record form, including notes. No new detail route or priority order
+                  is implied.
+                </p>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="daylight-academic-phone"
+              class="board mobile"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Academic list / detail, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Assignments<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Assignments</h1>
+                    <p class="subtitle">Deadlines and known workload, in one place</p>
+                  </div>
+                  <span class="button primary">New assignment</span>
+                </div>
+                <div class="panel">
+                  <h2>To do · 4</h2>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Cell division review</strong>
+                      <div class="meta">Biology · Due Oct 13, 8:00 PM · 90 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Argument essay</strong>
+                      <div class="meta">English · Due Oct 14, 5:00 PM · 60 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Quadratic equations</strong>
+                      <div class="meta">Math · Due Oct 15 · 45 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Reaction notes</strong>
+                      <div class="meta">Chemistry · Due Oct 23 · 30 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                </div>
+                <div class="panel">
+                  <h2>Completed · 1</h2>
+                  <div class="row">
+                    <span class="check done" aria-hidden="true">✓</span>
+                    <div class="row-copy">
+                      <strong>Reading response</strong>
+                      <div class="meta">English · Completed</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                </div>
+                <p class="meta">
+                  Edit opens the existing record form, including notes. No new detail route or priority order
+                  is implied.
+                </p>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="daylight-editor">
+        <h3>Create / Edit assignment</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="daylight-editor-desktop"
+              class="board"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Create / Edit assignment, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">✓</span>Assignments
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <div class="main">
+                <div class="editor">
+                  <div class="editor-header">
+                    <div>
+                      <div class="meta">ASSIGNMENT</div>
+                      <h1>Edit assignment</h1>
+                    </div>
+                    <span class="menu-mark">×</span>
+                  </div>
+                  <div class="field">
+                    <span class="field-label">Title</span>
+                    <div class="mock-input">Cell division review</div>
+                  </div>
+                  <div class="field">
+                    <span class="field-label">Class</span>
+                    <div class="mock-input">Biology <span style="margin-left: auto">⌄</span></div>
+                  </div>
+                  <div class="dt-host">
+                    <span class="dt-legend">Deadline</span>
+                    <div class="dt-group" role="group" aria-label="Deadline specimen">
+                      <div class="dt-cell">
+                        <label for="daylight-editor-desktop-date">Date</label
+                        ><input id="daylight-editor-desktop-date" type="date" value="2026-10-13" />
+                      </div>
+                      <div class="dt-cell">
+                        <label for="daylight-editor-desktop-time"
+                          >Time <span class="optional">(optional)</span></label
+                        ><input id="daylight-editor-desktop-time" type="time" value="20:00" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <span class="field-label">Estimated work <span class="optional">(optional)</span></span>
+                    <div class="mock-input">
+                      90 <span class="meta" style="margin-left: auto">minutes</span>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <span class="field-label">Notes <span class="optional">(optional)</span></span>
+                    <div class="mock-input note">Review mitosis and meiosis. Bring the worksheet.</div>
+                  </div>
+                  <p class="form-help">
+                    Without a time, the deadline is treated as end of day. Your original record is not altered
+                    by this design specimen.
+                  </p>
+                  <div class="form-footer">
+                    <span class="button">Cancel</span><span class="button primary">Save changes</span>
+                  </div>
+                  <p class="concept-note">
+                    DT-01 concept: native pickers are inspectable; this specimen does not save. Below 400px
+                    group width, use the paired vertical fallback.
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="daylight-editor-phone"
+              class="board mobile"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Create / Edit assignment, phone"
+            >
+              <div class="editor">
+                <div class="editor-header">
+                  <div>
+                    <div class="meta">ASSIGNMENT</div>
+                    <h1>Edit assignment</h1>
+                  </div>
+                  <span class="menu-mark">×</span>
+                </div>
+                <div class="field">
+                  <span class="field-label">Title</span>
+                  <div class="mock-input">Cell division review</div>
+                </div>
+                <div class="field">
+                  <span class="field-label">Class</span>
+                  <div class="mock-input">Biology <span style="margin-left: auto">⌄</span></div>
+                </div>
+                <div class="dt-host">
+                  <span class="dt-legend">Deadline</span>
+                  <div class="dt-group" role="group" aria-label="Deadline specimen">
+                    <div class="dt-cell">
+                      <label for="daylight-editor-phone-date">Date</label
+                      ><input id="daylight-editor-phone-date" type="date" value="2026-10-13" />
+                    </div>
+                    <div class="dt-cell">
+                      <label for="daylight-editor-phone-time"
+                        >Time <span class="optional">(optional)</span></label
+                      ><input id="daylight-editor-phone-time" type="time" value="20:00" />
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <span class="field-label">Estimated work <span class="optional">(optional)</span></span>
+                  <div class="mock-input">90 <span class="meta" style="margin-left: auto">minutes</span></div>
+                </div>
+                <div class="field">
+                  <span class="field-label">Notes <span class="optional">(optional)</span></span>
+                  <div class="mock-input note">Review mitosis and meiosis. Bring the worksheet.</div>
+                </div>
+                <p class="form-help">
+                  Without a time, the deadline is treated as end of day. Your original record is not altered
+                  by this design specimen.
+                </p>
+                <div class="form-footer">
+                  <span class="button">Cancel</span><span class="button primary">Save changes</span>
+                </div>
+                <p class="concept-note">
+                  DT-01 concept: native pickers are inspectable; this specimen does not save. Below 400px
+                  group width, use the paired vertical fallback.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="daylight-navigation">
+        <h3>Mobile navigation</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="daylight-navigation-desktop"
+              class="board"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Mobile navigation, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <div class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Compact navigation</h1>
+                    <p class="subtitle">Menu anatomy at a large review scale; not a second desktop rail</p>
+                  </div>
+                </div>
+                <div class="drawer">
+                  <div class="drawer-head"><strong>Navigation</strong><span class="menu-mark">×</span></div>
+                  <div class="brand"><i>h</i> / Homebase</div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                  <div class="nav-item active">
+                    <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                  </div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                  <div class="nav-foot">
+                    <div class="nav-item">◐ &nbsp; Appearance</div>
+                    <div class="local">Browser-local workspace</div>
+                  </div>
+                  <p class="concept-note">
+                    Full labeled menu. All entries scroll within short heights; Appearance is a proposed
+                    utility.
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="daylight-navigation-phone"
+              class="board mobile"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Mobile navigation, phone"
+            >
+              <div class="drawer">
+                <div class="drawer-head"><strong>Navigation</strong><span class="menu-mark">×</span></div>
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+                <p class="concept-note">
+                  Full labeled menu. All entries scroll within short heights; Appearance is a proposed
+                  utility.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="daylight-conflict">
+        <h3>Conflict state</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="daylight-conflict-desktop"
+              class="board"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Conflict state, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Weekly Planner</h1>
+                    <p class="subtitle">October 12–18 · Resolve locked intent before customizing</p>
+                  </div>
+                </div>
+                <div class="notice danger">
+                  <h2>! Schedule needs attention</h2>
+                  <p><strong>No study schedule has been generated.</strong></p>
+                  <p>A locked session is outside available study time or overlaps a commitment.</p>
+                </div>
+                <div class="panel">
+                  <span class="tag manual">▣ Manual</span>
+                  <h2 style="margin-top: 12px">Cell division review</h2>
+                  <p class="time">Mon, Oct 12 · 5:00–5:30 PM · 30 min</p>
+                  <p class="meta">
+                    This alternative-state specimen overlaps Practice. Unlocking returns work to automatic
+                    scheduling; it does not complete the assignment.
+                  </p>
+                  <div class="actions">
+                    <span class="button primary">Unlock session</span
+                    ><span class="button">Review commitments</span>
+                  </div>
+                </div>
+                <div class="panel">
+                  <span class="tag">◷ Commitment</span>
+                  <h3 style="margin-top: 12px">Practice · 5:00–5:30 PM</h3>
+                  <p class="meta">
+                    Academic deadlines and fixed plans remain available while the study schedule is blocked.
+                  </p>
+                </div>
+                <p class="meta">
+                  No hidden partial study schedule. Preserve sources until the user takes a repair action.
+                </p>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="daylight-conflict-phone"
+              class="board mobile"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Conflict state, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Weekly Planner<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Weekly Planner</h1>
+                    <p class="subtitle">October 12–18 · Resolve locked intent before customizing</p>
+                  </div>
+                </div>
+                <div class="notice danger">
+                  <h2>! Schedule needs attention</h2>
+                  <p><strong>No study schedule has been generated.</strong></p>
+                  <p>A locked session is outside available study time or overlaps a commitment.</p>
+                </div>
+                <div class="panel">
+                  <span class="tag manual">▣ Manual</span>
+                  <h2 style="margin-top: 12px">Cell division review</h2>
+                  <p class="time">Mon, Oct 12 · 5:00–5:30 PM · 30 min</p>
+                  <p class="meta">
+                    This alternative-state specimen overlaps Practice. Unlocking returns work to automatic
+                    scheduling; it does not complete the assignment.
+                  </p>
+                  <div class="actions">
+                    <span class="button primary">Unlock session</span
+                    ><span class="button">Review commitments</span>
+                  </div>
+                </div>
+                <div class="panel">
+                  <span class="tag">◷ Commitment</span>
+                  <h3 style="margin-top: 12px">Practice · 5:00–5:30 PM</h3>
+                  <p class="meta">
+                    Academic deadlines and fixed plans remain available while the study schedule is blocked.
+                  </p>
+                </div>
+                <p class="meta">
+                  No hidden partial study schedule. Preserve sources until the user takes a repair action.
+                </p>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="daylight-appearance">
+        <h3>Appearance settings</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="daylight-appearance-desktop"
+              class="board"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Appearance settings, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item active">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Appearance</h1>
+                    <p class="subtitle">Make Homebase comfortable for your screen</p>
+                  </div>
+                </div>
+                <div class="settings">
+                  <div class="panel">
+                    <h2>Color theme</h2>
+                    <div class="choice selected">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>System</strong><span class="meta">Follow your device appearance</span>
+                      </div>
+                    </div>
+                    <div class="choice">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>Light · Modern Daylight</strong
+                        ><span class="meta">Cool surfaces and a clear blue accent</span>
+                      </div>
+                    </div>
+                    <div class="choice">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>Dark · Night Flight</strong
+                        ><span class="meta">Midnight layers and ice-blue indicators</span>
+                      </div>
+                    </div>
+                    <div class="mini-swatches">
+                      <span style="background: var(--canvas)"></span
+                      ><span style="background: var(--surface)"></span
+                      ><span style="background: var(--action)"></span
+                      ><span style="background: var(--warning-surface)"></span>
+                    </div>
+                  </div>
+                  <div class="panel">
+                    <h2>Comfort</h2>
+                    <div class="row">
+                      <div class="row-copy">
+                        <strong>Reduce visual effects</strong>
+                        <p class="meta">Use opaque surfaces without blur or glow.</p>
+                      </div>
+                      <span class="switch"></span>
+                    </div>
+                    <div class="row">
+                      <div class="row-copy">
+                        <strong>Reduce motion</strong>
+                        <p class="meta">
+                          Show state changes immediately. System reductions are always respected.
+                        </p>
+                      </div>
+                      <span class="switch"></span>
+                    </div>
+                  </div>
+                  <p class="meta">
+                    Preferences apply immediately. Academic records and your study plan stay unchanged.
+                  </p>
+                  <p class="concept-note">
+                    Proposed settings surface. These drawn choices are not implemented controls.
+                  </p>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="daylight-appearance-phone"
+              class="board mobile"
+              data-theme="daylight"
+              aria-label="Modern Daylight: Appearance settings, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Appearance<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Appearance</h1>
+                    <p class="subtitle">Make Homebase comfortable for your screen</p>
+                  </div>
+                </div>
+                <div class="settings">
+                  <div class="panel">
+                    <h2>Color theme</h2>
+                    <div class="choice selected">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>System</strong><span class="meta">Follow your device appearance</span>
+                      </div>
+                    </div>
+                    <div class="choice">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>Light · Modern Daylight</strong
+                        ><span class="meta">Cool surfaces and a clear blue accent</span>
+                      </div>
+                    </div>
+                    <div class="choice">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>Dark · Night Flight</strong
+                        ><span class="meta">Midnight layers and ice-blue indicators</span>
+                      </div>
+                    </div>
+                    <div class="mini-swatches">
+                      <span style="background: var(--canvas)"></span
+                      ><span style="background: var(--surface)"></span
+                      ><span style="background: var(--action)"></span
+                      ><span style="background: var(--warning-surface)"></span>
+                    </div>
+                  </div>
+                  <div class="panel">
+                    <h2>Comfort</h2>
+                    <div class="row">
+                      <div class="row-copy">
+                        <strong>Reduce visual effects</strong>
+                        <p class="meta">Use opaque surfaces without blur or glow.</p>
+                      </div>
+                      <span class="switch"></span>
+                    </div>
+                    <div class="row">
+                      <div class="row-copy">
+                        <strong>Reduce motion</strong>
+                        <p class="meta">
+                          Show state changes immediately. System reductions are always respected.
+                        </p>
+                      </div>
+                      <span class="switch"></span>
+                    </div>
+                  </div>
+                  <p class="meta">
+                    Preferences apply immediately. Academic records and your study plan stay unchanged.
+                  </p>
+                  <p class="concept-note">
+                    Proposed settings surface. These drawn choices are not implemented controls.
+                  </p>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+    </section>
+    <section id="night">
+      <h2 class="theme-title">Night Flight</h2>
+      <section class="plate" id="night-overview">
+        <h3>Overview</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="night-overview-desktop"
+              class="board"
+              data-theme="night"
+              aria-label="Night Flight: Overview, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item active"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Overview</h1>
+                    <p class="subtitle">Monday, October 12 · A clear view of your schoolwork</p>
+                  </div>
+                  <span class="button primary">New assignment</span>
+                </div>
+                <div class="stats">
+                  <div class="stat">
+                    <span>Open assignments</span><strong>4</strong><span>work to complete</span>
+                  </div>
+                  <div class="stat"><span>Due soon</span><strong>3</strong><span>7 days + overdue</span></div>
+                  <div class="stat"><span>Assessments</span><strong>2</strong><span>coming up</span></div>
+                  <div class="stat">
+                    <span>Known estimates</span><strong>3h 45m</strong><span>open work only</span>
+                  </div>
+                </div>
+                <div class="split">
+                  <div class="panel">
+                    <div class="panel-header">
+                      <h2>Assignments ahead</h2>
+                      <span class="section-link">View all →</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Cell division review</strong>
+                        <div class="meta">Biology · Due tomorrow, 8:00 PM · 90 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Argument essay</strong>
+                        <div class="meta">English · Wed, 5:00 PM · 60 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Quadratic equations</strong>
+                        <div class="meta">Math · Thu · 45 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Reaction notes</strong>
+                        <div class="meta">Chemistry · Oct 23 · 30 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="panel">
+                      <h2>On the horizon</h2>
+                      <div class="row">
+                        <div>
+                          <span class="tag">◇ TEST · FRI 16</span>
+                          <h3>History assessment</h3>
+                          <p class="meta">History · 10:00 AM</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div>
+                          <span class="tag">◷ COMMITMENT · TODAY</span>
+                          <h3>Practice</h3>
+                          <p class="meta">5:00–5:30 PM</p>
+                        </div>
+                      </div>
+                      <span class="section-link">Open Weekly Planner →</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel">
+                  <h2>Quick add</h2>
+                  <div class="quick">
+                    <span class="button">Class</span><span class="button">Assignment</span
+                    ><span class="button">Assessment</span><span class="button">Commitment</span>
+                  </div>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="night-overview-phone"
+              class="board mobile"
+              data-theme="night"
+              aria-label="Night Flight: Overview, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Overview<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Overview</h1>
+                    <p class="subtitle">Monday, October 12 · A clear view of your schoolwork</p>
+                  </div>
+                  <span class="button primary">New assignment</span>
+                </div>
+                <div class="stats">
+                  <div class="stat">
+                    <span>Open assignments</span><strong>4</strong><span>work to complete</span>
+                  </div>
+                  <div class="stat"><span>Due soon</span><strong>3</strong><span>7 days + overdue</span></div>
+                  <div class="stat"><span>Assessments</span><strong>2</strong><span>coming up</span></div>
+                  <div class="stat">
+                    <span>Known estimates</span><strong>3h 45m</strong><span>open work only</span>
+                  </div>
+                </div>
+                <div class="split">
+                  <div class="panel">
+                    <div class="panel-header">
+                      <h2>Assignments ahead</h2>
+                      <span class="section-link">View all →</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Cell division review</strong>
+                        <div class="meta">Biology · Due tomorrow, 8:00 PM · 90 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Argument essay</strong>
+                        <div class="meta">English · Wed, 5:00 PM · 60 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Quadratic equations</strong>
+                        <div class="meta">Math · Thu · 45 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                    <div class="row">
+                      <span class="check" aria-hidden="true"></span>
+                      <div class="row-copy">
+                        <strong>Reaction notes</strong>
+                        <div class="meta">Chemistry · Oct 23 · 30 min</div>
+                      </div>
+                      <span class="row-end">Edit</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="panel">
+                      <h2>On the horizon</h2>
+                      <div class="row">
+                        <div>
+                          <span class="tag">◇ TEST · FRI 16</span>
+                          <h3>History assessment</h3>
+                          <p class="meta">History · 10:00 AM</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div>
+                          <span class="tag">◷ COMMITMENT · TODAY</span>
+                          <h3>Practice</h3>
+                          <p class="meta">5:00–5:30 PM</p>
+                        </div>
+                      </div>
+                      <span class="section-link">Open Weekly Planner →</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel">
+                  <h2>Quick add</h2>
+                  <div class="quick">
+                    <span class="button">Class</span><span class="button">Assignment</span
+                    ><span class="button">Assessment</span><span class="button">Commitment</span>
+                  </div>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="night-week">
+        <h3>Weekly Planner</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="night-week-desktop"
+              class="board"
+              data-theme="night"
+              aria-label="Night Flight: Weekly Planner, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Weekly Planner</h1>
+                    <p class="subtitle">Your deadlines, fixed plans and recommended study</p>
+                  </div>
+                  <span class="button primary">Add commitment</span>
+                </div>
+                <div class="toolbar">
+                  <strong>October 12–18, 2026</strong>
+                  <div class="actions">
+                    <span class="button">← Previous</span><span class="button">Today</span
+                    ><span class="button">Next →</span>
+                  </div>
+                </div>
+                <div class="toolbar">
+                  <span class="meta">Plan reference · Oct 12, 3:00 PM</span
+                  ><span class="button">Refresh plan</span>
+                </div>
+                <div class="notice">
+                  <strong>△ Unscheduled work · 30 minutes</strong>
+                  <p>Reaction notes needs more study availability.</p>
+                  <span class="section-link">Edit assignment →</span>
+                </div>
+                <div class="week">
+                  <section class="day today">
+                    <div class="day-title">Mon<b>12</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Cell division</strong>
+                      <div class="time">4:00–5:00 PM</div>
+                      <div class="meta">Biology · 60 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <div class="session">
+                      <span class="tag neutral">◷ Commitment</span><strong>Practice</strong>
+                      <div class="time">5:00–5:30 PM</div>
+                      <div class="meta">Fixed time</div>
+                      <span class="section-link">Edit</span>
+                    </div>
+                    <div class="session">
+                      <span class="tag manual">▣ Manual</span><strong>Cell division</strong>
+                      <div class="time">5:30–6:00 PM</div>
+                      <div class="meta">Biology · 30 min</div>
+                      <span class="section-link">Edit · Unlock</span>
+                    </div>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Tue<b>13</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Argument essay</strong>
+                      <div class="time">4:00–5:00 PM</div>
+                      <div class="meta">English · 60 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <p class="meta"><strong>□ Assignment due</strong><br />Cell division review · 8:00 PM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Wed<b>14</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Quadratics</strong>
+                      <div class="time">4:00–4:45 PM</div>
+                      <div class="meta">Math · 45 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <p class="meta"><strong>□ Assignment due</strong><br />Argument essay · 5:00 PM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Thu<b>15</b></div>
+                    <p class="meta">
+                      <strong>□ Assignment due</strong><br />Quadratic equations · End of day
+                    </p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Fri<b>16</b></div>
+                    <span class="tag">◇ TEST</span>
+                    <h3>History assessment</h3>
+                    <p class="meta">10:00 AM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Sat<b>17</b></div>
+                    <p class="meta">Nothing planned</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Sun<b>18</b></div>
+                    <p class="meta">Nothing planned</p>
+                  </section>
+                </div>
+                <div class="panel" style="margin-top: 20px">
+                  <div class="panel-header">
+                    <h2>Study availability</h2>
+                    <span class="section-link">Add study time</span>
+                  </div>
+                  <div class="availability">
+                    <span>Mon 4:00–6:00 PM</span><span>Tue 4:00–5:00 PM</span><span>Wed 4:00–4:45 PM</span>
+                  </div>
+                  <p class="meta" style="margin: 12px 0 0">
+                    Commitments are subtracted. Availability is not a guarantee that all work fits.
+                  </p>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="night-week-phone"
+              class="board mobile"
+              data-theme="night"
+              aria-label="Night Flight: Weekly Planner, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Weekly Planner<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Weekly Planner</h1>
+                    <p class="subtitle">Your deadlines, fixed plans and recommended study</p>
+                  </div>
+                  <span class="button primary">Add commitment</span>
+                </div>
+                <div class="toolbar">
+                  <strong>October 12–18, 2026</strong>
+                  <div class="actions">
+                    <span class="button">← Previous</span><span class="button">Today</span
+                    ><span class="button">Next →</span>
+                  </div>
+                </div>
+                <div class="toolbar">
+                  <span class="meta">Plan reference · Oct 12, 3:00 PM</span
+                  ><span class="button">Refresh plan</span>
+                </div>
+                <div class="notice">
+                  <strong>△ Unscheduled work · 30 minutes</strong>
+                  <p>Reaction notes needs more study availability.</p>
+                  <span class="section-link">Edit assignment →</span>
+                </div>
+                <div class="week">
+                  <section class="day today">
+                    <div class="day-title">Mon<b>12</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Cell division</strong>
+                      <div class="time">4:00–5:00 PM</div>
+                      <div class="meta">Biology · 60 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <div class="session">
+                      <span class="tag neutral">◷ Commitment</span><strong>Practice</strong>
+                      <div class="time">5:00–5:30 PM</div>
+                      <div class="meta">Fixed time</div>
+                      <span class="section-link">Edit</span>
+                    </div>
+                    <div class="session">
+                      <span class="tag manual">▣ Manual</span><strong>Cell division</strong>
+                      <div class="time">5:30–6:00 PM</div>
+                      <div class="meta">Biology · 30 min</div>
+                      <span class="section-link">Edit · Unlock</span>
+                    </div>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Tue<b>13</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Argument essay</strong>
+                      <div class="time">4:00–5:00 PM</div>
+                      <div class="meta">English · 60 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <p class="meta"><strong>□ Assignment due</strong><br />Cell division review · 8:00 PM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Wed<b>14</b></div>
+                    <div class="session">
+                      <span class="tag recommended">◇ Recommended</span><strong>Quadratics</strong>
+                      <div class="time">4:00–4:45 PM</div>
+                      <div class="meta">Math · 45 min</div>
+                      <span class="section-link">Customize</span>
+                    </div>
+                    <p class="meta"><strong>□ Assignment due</strong><br />Argument essay · 5:00 PM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Thu<b>15</b></div>
+                    <p class="meta">
+                      <strong>□ Assignment due</strong><br />Quadratic equations · End of day
+                    </p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Fri<b>16</b></div>
+                    <span class="tag">◇ TEST</span>
+                    <h3>History assessment</h3>
+                    <p class="meta">10:00 AM</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Sat<b>17</b></div>
+                    <p class="meta">Nothing planned</p>
+                  </section>
+                  <section class="day">
+                    <div class="day-title">Sun<b>18</b></div>
+                    <p class="meta">Nothing planned</p>
+                  </section>
+                </div>
+                <div class="panel" style="margin-top: 20px">
+                  <div class="panel-header">
+                    <h2>Study availability</h2>
+                    <span class="section-link">Add study time</span>
+                  </div>
+                  <div class="availability">
+                    <span>Mon 4:00–6:00 PM</span><span>Tue 4:00–5:00 PM</span><span>Wed 4:00–4:45 PM</span>
+                  </div>
+                  <p class="meta" style="margin: 12px 0 0">
+                    Commitments are subtracted. Availability is not a guarantee that all work fits.
+                  </p>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="night-academic">
+        <h3>Academic list / detail</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="night-academic-desktop"
+              class="board"
+              data-theme="night"
+              aria-label="Night Flight: Academic list / detail, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">✓</span>Assignments
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Assignments</h1>
+                    <p class="subtitle">Deadlines and known workload, in one place</p>
+                  </div>
+                  <span class="button primary">New assignment</span>
+                </div>
+                <div class="panel">
+                  <h2>To do · 4</h2>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Cell division review</strong>
+                      <div class="meta">Biology · Due Oct 13, 8:00 PM · 90 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Argument essay</strong>
+                      <div class="meta">English · Due Oct 14, 5:00 PM · 60 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Quadratic equations</strong>
+                      <div class="meta">Math · Due Oct 15 · 45 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Reaction notes</strong>
+                      <div class="meta">Chemistry · Due Oct 23 · 30 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                </div>
+                <div class="panel">
+                  <h2>Completed · 1</h2>
+                  <div class="row">
+                    <span class="check done" aria-hidden="true">✓</span>
+                    <div class="row-copy">
+                      <strong>Reading response</strong>
+                      <div class="meta">English · Completed</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                </div>
+                <p class="meta">
+                  Edit opens the existing record form, including notes. No new detail route or priority order
+                  is implied.
+                </p>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="night-academic-phone"
+              class="board mobile"
+              data-theme="night"
+              aria-label="Night Flight: Academic list / detail, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Assignments<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Assignments</h1>
+                    <p class="subtitle">Deadlines and known workload, in one place</p>
+                  </div>
+                  <span class="button primary">New assignment</span>
+                </div>
+                <div class="panel">
+                  <h2>To do · 4</h2>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Cell division review</strong>
+                      <div class="meta">Biology · Due Oct 13, 8:00 PM · 90 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Argument essay</strong>
+                      <div class="meta">English · Due Oct 14, 5:00 PM · 60 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Quadratic equations</strong>
+                      <div class="meta">Math · Due Oct 15 · 45 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                  <div class="row">
+                    <span class="check" aria-hidden="true"></span>
+                    <div class="row-copy">
+                      <strong>Reaction notes</strong>
+                      <div class="meta">Chemistry · Due Oct 23 · 30 min</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                </div>
+                <div class="panel">
+                  <h2>Completed · 1</h2>
+                  <div class="row">
+                    <span class="check done" aria-hidden="true">✓</span>
+                    <div class="row-copy">
+                      <strong>Reading response</strong>
+                      <div class="meta">English · Completed</div>
+                    </div>
+                    <span class="row-end">Edit · Delete</span>
+                  </div>
+                </div>
+                <p class="meta">
+                  Edit opens the existing record form, including notes. No new detail route or priority order
+                  is implied.
+                </p>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="night-editor">
+        <h3>Create / Edit assignment</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="night-editor-desktop"
+              class="board"
+              data-theme="night"
+              aria-label="Night Flight: Create / Edit assignment, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">✓</span>Assignments
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <div class="main">
+                <div class="editor">
+                  <div class="editor-header">
+                    <div>
+                      <div class="meta">ASSIGNMENT</div>
+                      <h1>Edit assignment</h1>
+                    </div>
+                    <span class="menu-mark">×</span>
+                  </div>
+                  <div class="field">
+                    <span class="field-label">Title</span>
+                    <div class="mock-input">Cell division review</div>
+                  </div>
+                  <div class="field">
+                    <span class="field-label">Class</span>
+                    <div class="mock-input">Biology <span style="margin-left: auto">⌄</span></div>
+                  </div>
+                  <div class="dt-host">
+                    <span class="dt-legend">Deadline</span>
+                    <div class="dt-group" role="group" aria-label="Deadline specimen">
+                      <div class="dt-cell">
+                        <label for="night-editor-desktop-date">Date</label
+                        ><input id="night-editor-desktop-date" type="date" value="2026-10-13" />
+                      </div>
+                      <div class="dt-cell">
+                        <label for="night-editor-desktop-time"
+                          >Time <span class="optional">(optional)</span></label
+                        ><input id="night-editor-desktop-time" type="time" value="20:00" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <span class="field-label">Estimated work <span class="optional">(optional)</span></span>
+                    <div class="mock-input">
+                      90 <span class="meta" style="margin-left: auto">minutes</span>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <span class="field-label">Notes <span class="optional">(optional)</span></span>
+                    <div class="mock-input note">Review mitosis and meiosis. Bring the worksheet.</div>
+                  </div>
+                  <p class="form-help">
+                    Without a time, the deadline is treated as end of day. Your original record is not altered
+                    by this design specimen.
+                  </p>
+                  <div class="form-footer">
+                    <span class="button">Cancel</span><span class="button primary">Save changes</span>
+                  </div>
+                  <p class="concept-note">
+                    DT-01 concept: native pickers are inspectable; this specimen does not save. Below 400px
+                    group width, use the paired vertical fallback.
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="night-editor-phone"
+              class="board mobile"
+              data-theme="night"
+              aria-label="Night Flight: Create / Edit assignment, phone"
+            >
+              <div class="editor">
+                <div class="editor-header">
+                  <div>
+                    <div class="meta">ASSIGNMENT</div>
+                    <h1>Edit assignment</h1>
+                  </div>
+                  <span class="menu-mark">×</span>
+                </div>
+                <div class="field">
+                  <span class="field-label">Title</span>
+                  <div class="mock-input">Cell division review</div>
+                </div>
+                <div class="field">
+                  <span class="field-label">Class</span>
+                  <div class="mock-input">Biology <span style="margin-left: auto">⌄</span></div>
+                </div>
+                <div class="dt-host">
+                  <span class="dt-legend">Deadline</span>
+                  <div class="dt-group" role="group" aria-label="Deadline specimen">
+                    <div class="dt-cell">
+                      <label for="night-editor-phone-date">Date</label
+                      ><input id="night-editor-phone-date" type="date" value="2026-10-13" />
+                    </div>
+                    <div class="dt-cell">
+                      <label for="night-editor-phone-time"
+                        >Time <span class="optional">(optional)</span></label
+                      ><input id="night-editor-phone-time" type="time" value="20:00" />
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <span class="field-label">Estimated work <span class="optional">(optional)</span></span>
+                  <div class="mock-input">90 <span class="meta" style="margin-left: auto">minutes</span></div>
+                </div>
+                <div class="field">
+                  <span class="field-label">Notes <span class="optional">(optional)</span></span>
+                  <div class="mock-input note">Review mitosis and meiosis. Bring the worksheet.</div>
+                </div>
+                <p class="form-help">
+                  Without a time, the deadline is treated as end of day. Your original record is not altered
+                  by this design specimen.
+                </p>
+                <div class="form-footer">
+                  <span class="button">Cancel</span><span class="button primary">Save changes</span>
+                </div>
+                <p class="concept-note">
+                  DT-01 concept: native pickers are inspectable; this specimen does not save. Below 400px
+                  group width, use the paired vertical fallback.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="night-navigation">
+        <h3>Mobile navigation</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="night-navigation-desktop"
+              class="board"
+              data-theme="night"
+              aria-label="Night Flight: Mobile navigation, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <div class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Compact navigation</h1>
+                    <p class="subtitle">Menu anatomy at a large review scale; not a second desktop rail</p>
+                  </div>
+                </div>
+                <div class="drawer">
+                  <div class="drawer-head"><strong>Navigation</strong><span class="menu-mark">×</span></div>
+                  <div class="brand"><i>h</i> / Homebase</div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                  <div class="nav-item active">
+                    <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                  </div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                  <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                  <div class="nav-foot">
+                    <div class="nav-item">◐ &nbsp; Appearance</div>
+                    <div class="local">Browser-local workspace</div>
+                  </div>
+                  <p class="concept-note">
+                    Full labeled menu. All entries scroll within short heights; Appearance is a proposed
+                    utility.
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="night-navigation-phone"
+              class="board mobile"
+              data-theme="night"
+              aria-label="Night Flight: Mobile navigation, phone"
+            >
+              <div class="drawer">
+                <div class="drawer-head"><strong>Navigation</strong><span class="menu-mark">×</span></div>
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+                <p class="concept-note">
+                  Full labeled menu. All entries scroll within short heights; Appearance is a proposed
+                  utility.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="night-conflict">
+        <h3>Conflict state</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="night-conflict-desktop"
+              class="board"
+              data-theme="night"
+              aria-label="Night Flight: Conflict state, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item active">
+                  <span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner
+                </div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Weekly Planner</h1>
+                    <p class="subtitle">October 12–18 · Resolve locked intent before customizing</p>
+                  </div>
+                </div>
+                <div class="notice danger">
+                  <h2>! Schedule needs attention</h2>
+                  <p><strong>No study schedule has been generated.</strong></p>
+                  <p>A locked session is outside available study time or overlaps a commitment.</p>
+                </div>
+                <div class="panel">
+                  <span class="tag manual">▣ Manual</span>
+                  <h2 style="margin-top: 12px">Cell division review</h2>
+                  <p class="time">Mon, Oct 12 · 5:00–5:30 PM · 30 min</p>
+                  <p class="meta">
+                    This alternative-state specimen overlaps Practice. Unlocking returns work to automatic
+                    scheduling; it does not complete the assignment.
+                  </p>
+                  <div class="actions">
+                    <span class="button primary">Unlock session</span
+                    ><span class="button">Review commitments</span>
+                  </div>
+                </div>
+                <div class="panel">
+                  <span class="tag">◷ Commitment</span>
+                  <h3 style="margin-top: 12px">Practice · 5:00–5:30 PM</h3>
+                  <p class="meta">
+                    Academic deadlines and fixed plans remain available while the study schedule is blocked.
+                  </p>
+                </div>
+                <p class="meta">
+                  No hidden partial study schedule. Preserve sources until the user takes a repair action.
+                </p>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="night-conflict-phone"
+              class="board mobile"
+              data-theme="night"
+              aria-label="Night Flight: Conflict state, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Weekly Planner<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Weekly Planner</h1>
+                    <p class="subtitle">October 12–18 · Resolve locked intent before customizing</p>
+                  </div>
+                </div>
+                <div class="notice danger">
+                  <h2>! Schedule needs attention</h2>
+                  <p><strong>No study schedule has been generated.</strong></p>
+                  <p>A locked session is outside available study time or overlaps a commitment.</p>
+                </div>
+                <div class="panel">
+                  <span class="tag manual">▣ Manual</span>
+                  <h2 style="margin-top: 12px">Cell division review</h2>
+                  <p class="time">Mon, Oct 12 · 5:00–5:30 PM · 30 min</p>
+                  <p class="meta">
+                    This alternative-state specimen overlaps Practice. Unlocking returns work to automatic
+                    scheduling; it does not complete the assignment.
+                  </p>
+                  <div class="actions">
+                    <span class="button primary">Unlock session</span
+                    ><span class="button">Review commitments</span>
+                  </div>
+                </div>
+                <div class="panel">
+                  <span class="tag">◷ Commitment</span>
+                  <h3 style="margin-top: 12px">Practice · 5:00–5:30 PM</h3>
+                  <p class="meta">
+                    Academic deadlines and fixed plans remain available while the study schedule is blocked.
+                  </p>
+                </div>
+                <p class="meta">
+                  No hidden partial study schedule. Preserve sources until the user takes a repair action.
+                </p>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="plate" id="night-appearance">
+        <h3>Appearance settings</h3>
+        <div class="pair">
+          <div>
+            <p class="caption">Desktop · 1440px reference</p>
+            <article
+              id="night-appearance-desktop"
+              class="board"
+              data-theme="night"
+              aria-label="Night Flight: Appearance settings, desktop"
+            >
+              <aside class="rail">
+                <div class="brand"><i>h</i> / Homebase</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◻</span>Overview</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span>Weekly Planner</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Assignments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◇</span>Assessments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Commitments</div>
+                <div class="nav-item"><span class="nav-icon" aria-hidden="true">▱</span>Classes</div>
+                <div class="nav-foot">
+                  <div class="nav-item active">◐ &nbsp; Appearance</div>
+                  <div class="local">Browser-local workspace</div>
+                </div>
+              </aside>
+              <main class="main">
+                <div class="topline">
+                  <span>HOMEBASE / LOCAL WORKSPACE</span><span>Monday, October 12</span>
+                </div>
+                <div class="page-head">
+                  <div>
+                    <h1>Appearance</h1>
+                    <p class="subtitle">Make Homebase comfortable for your screen</p>
+                  </div>
+                </div>
+                <div class="settings">
+                  <div class="panel">
+                    <h2>Color theme</h2>
+                    <div class="choice selected">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>System</strong><span class="meta">Follow your device appearance</span>
+                      </div>
+                    </div>
+                    <div class="choice">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>Light · Modern Daylight</strong
+                        ><span class="meta">Cool surfaces and a clear blue accent</span>
+                      </div>
+                    </div>
+                    <div class="choice">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>Dark · Night Flight</strong
+                        ><span class="meta">Midnight layers and ice-blue indicators</span>
+                      </div>
+                    </div>
+                    <div class="mini-swatches">
+                      <span style="background: var(--canvas)"></span
+                      ><span style="background: var(--surface)"></span
+                      ><span style="background: var(--action)"></span
+                      ><span style="background: var(--warning-surface)"></span>
+                    </div>
+                  </div>
+                  <div class="panel">
+                    <h2>Comfort</h2>
+                    <div class="row">
+                      <div class="row-copy">
+                        <strong>Reduce visual effects</strong>
+                        <p class="meta">Use opaque surfaces without blur or glow.</p>
+                      </div>
+                      <span class="switch"></span>
+                    </div>
+                    <div class="row">
+                      <div class="row-copy">
+                        <strong>Reduce motion</strong>
+                        <p class="meta">
+                          Show state changes immediately. System reductions are always respected.
+                        </p>
+                      </div>
+                      <span class="switch"></span>
+                    </div>
+                  </div>
+                  <p class="meta">
+                    Preferences apply immediately. Academic records and your study plan stay unchanged.
+                  </p>
+                  <p class="concept-note">
+                    Proposed settings surface. These drawn choices are not implemented controls.
+                  </p>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+          <div>
+            <p class="caption">Phone · 390px reference</p>
+            <article
+              id="night-appearance-phone"
+              class="board mobile"
+              data-theme="night"
+              aria-label="Night Flight: Appearance settings, phone"
+            >
+              <div class="mobile-head">
+                <span class="menu-mark">☰</span>Appearance<span class="menu-mark">＋</span>
+              </div>
+              <main class="main">
+                <div class="page-head">
+                  <div>
+                    <h1>Appearance</h1>
+                    <p class="subtitle">Make Homebase comfortable for your screen</p>
+                  </div>
+                </div>
+                <div class="settings">
+                  <div class="panel">
+                    <h2>Color theme</h2>
+                    <div class="choice selected">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>System</strong><span class="meta">Follow your device appearance</span>
+                      </div>
+                    </div>
+                    <div class="choice">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>Light · Modern Daylight</strong
+                        ><span class="meta">Cool surfaces and a clear blue accent</span>
+                      </div>
+                    </div>
+                    <div class="choice">
+                      <span class="radio"></span>
+                      <div>
+                        <strong>Dark · Night Flight</strong
+                        ><span class="meta">Midnight layers and ice-blue indicators</span>
+                      </div>
+                    </div>
+                    <div class="mini-swatches">
+                      <span style="background: var(--canvas)"></span
+                      ><span style="background: var(--surface)"></span
+                      ><span style="background: var(--action)"></span
+                      ><span style="background: var(--warning-surface)"></span>
+                    </div>
+                  </div>
+                  <div class="panel">
+                    <h2>Comfort</h2>
+                    <div class="row">
+                      <div class="row-copy">
+                        <strong>Reduce visual effects</strong>
+                        <p class="meta">Use opaque surfaces without blur or glow.</p>
+                      </div>
+                      <span class="switch"></span>
+                    </div>
+                    <div class="row">
+                      <div class="row-copy">
+                        <strong>Reduce motion</strong>
+                        <p class="meta">
+                          Show state changes immediately. System reductions are always respected.
+                        </p>
+                      </div>
+                      <span class="switch"></span>
+                    </div>
+                  </div>
+                  <p class="meta">
+                    Preferences apply immediately. Academic records and your study plan stay unchanged.
+                  </p>
+                  <p class="concept-note">
+                    Proposed settings surface. These drawn choices are not implemented controls.
+                  </p>
+                </div>
+                <p class="concept-note">CONCEPT · Sample content · No application state or storage</p>
+              </main>
+            </article>
+          </div>
+        </div>
+      </section>
+    </section>
+  </body>
+</html>

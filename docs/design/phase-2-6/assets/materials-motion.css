@@ -1,0 +1,539 @@
+/* Documentation-only material specimens. Semantic colors come from atlas.css. */
+.material-showcase {
+  margin: 24px 32px 56px;
+  max-width: 1440px;
+}
+.material-theme {
+  --glass-base: 255, 255, 255;
+  --glass-alpha: 0.92;
+  --edge: rgb(255 255 255 / 65%);
+  --shadow-1: 0 1px 2px rgb(11 18 32 / 8%);
+  --shadow-2: 0 8px 24px rgb(11 18 32 / 12%);
+  --scene-light: #bbdfff;
+  background: var(--canvas);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.material-theme[data-theme='night'] {
+  --glass-base: 18, 29, 46;
+  --glass-alpha: 0.94;
+  --edge: rgb(255 255 255 / 8%);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 24%);
+  --shadow-2: 0 8px 24px rgb(0 0 0 / 32%);
+  --scene-light: #236e91;
+}
+.material-theme h2,
+.material-theme h3,
+.material-theme p {
+  margin-top: 0;
+}
+.material-theme h2 {
+  font-size: 28px;
+  letter-spacing: -0.6px;
+}
+.material-theme h3 {
+  font-size: 20px;
+}
+.material-theme .study-kicker {
+  color: var(--action);
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+.material-theme .study-caption {
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 85ch;
+}
+.effects-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.effects-column {
+  min-width: 0;
+}
+.effects-column > h3 {
+  margin-bottom: 8px;
+}
+.material-scene {
+  position: relative;
+  isolation: isolate;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 24px;
+  background: var(--quiet);
+}
+.material-scene::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  /* Static reflected light behind chrome, not behind academic content. */
+  background:
+    radial-gradient(ellipse at 10% 0, var(--scene-light), transparent 55%),
+    repeating-linear-gradient(115deg, transparent 0 80px, var(--canvas) 81px 83px, transparent 84px 160px);
+  opacity: 0.3;
+}
+.material-theme[data-theme='night'] .material-scene::before {
+  opacity: 0.4;
+}
+.specimen-label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 8px;
+  font-weight: 650;
+}
+.specimen-label:not(:first-child) {
+  margin-top: 24px;
+}
+.chrome-glass {
+  background: var(--elevated);
+  border: 1px solid var(--control-border);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px var(--edge),
+    var(--shadow-1);
+  padding: 12px;
+  position: relative;
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .chrome-glass {
+    background: rgba(var(--glass-base), var(--glass-alpha));
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+  .popup-glass,
+  .floating-glass {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}
+.chrome-glass::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  height: 1px;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  background: linear-gradient(90deg, transparent, var(--edge), transparent);
+}
+.chrome-brand {
+  padding: 4px 12px 12px;
+  font-size: 16px;
+  font-weight: 750;
+}
+.chrome-brand span {
+  color: var(--action);
+}
+.material-nav,
+.material-menu-item,
+.material-button {
+  font: inherit;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text);
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 9px 12px;
+  transition:
+    background-color 120ms cubic-bezier(0.2, 0, 0, 1),
+    color 120ms cubic-bezier(0.2, 0, 0, 1);
+}
+.material-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  position: relative;
+  margin: 4px 0;
+}
+.material-nav .nav-glyph {
+  color: var(--action);
+  width: 20px;
+  text-align: center;
+}
+.material-nav .state-name {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+.material-nav.is-hover {
+  background: var(--quiet);
+}
+.material-nav.is-active {
+  background: var(--selection);
+  font-weight: 650;
+}
+.material-nav.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--action);
+}
+.material-theme[data-theme='night'] .material-nav.is-active::after {
+  box-shadow: 0 0 16px rgb(35 110 145 / 14%);
+}
+.material-nav.is-focused,
+.material-button.is-focused,
+.material-nav:focus-visible,
+.material-menu-item:focus-visible,
+.material-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+.popup-glass {
+  box-shadow:
+    inset 0 1px var(--edge),
+    var(--shadow-2);
+}
+.menu-heading {
+  color: var(--muted);
+  padding: 4px 12px 8px;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+}
+.material-menu-item {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  background: var(--elevated);
+  width: 100%;
+  text-align: left;
+  margin: 2px 0;
+}
+.material-menu-item.is-selected {
+  background: var(--selection);
+  font-weight: 650;
+}
+.material-menu-item .selected-mark {
+  color: var(--action);
+}
+.menu-divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 8px 12px;
+}
+.menu-foot {
+  font-size: 14px;
+  color: var(--muted);
+  padding: 4px 12px;
+  margin: 0;
+}
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.action-grid > div {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 0;
+}
+.action-grid .specimen-label {
+  margin: 0 0 8px;
+}
+.material-button {
+  background: var(--action);
+  color: var(--on-action);
+  font-weight: 650;
+  width: 100%;
+  cursor: pointer;
+  transition-duration: 80ms;
+}
+.material-button.is-pressed {
+  background: var(--action-pressed);
+}
+.material-button:active {
+  background: var(--action-pressed);
+}
+.material-button:disabled {
+  background: var(--quiet);
+  color: var(--muted);
+  border-color: var(--control-border);
+  opacity: 1;
+  cursor: default;
+}
+.disabled-note {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
+.floating-glass {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow:
+    inset 0 1px var(--edge),
+    var(--shadow-2);
+}
+.floating-glass .holder-content {
+  background: var(--surface);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 650;
+  flex: 1;
+}
+.floating-glass .material-button {
+  width: auto;
+  flex-shrink: 0;
+}
+.indicator-specimen {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 14px;
+}
+.indicator-dot {
+  display: inline-block;
+  width: 6px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--action);
+  vertical-align: middle;
+  margin-right: 8px;
+}
+.effects-reduced .material-scene::before,
+.effects-reduced .chrome-glass::before {
+  display: none;
+}
+.effects-reduced .chrome-glass {
+  background: var(--elevated);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.effects-reduced .material-nav.is-active::after {
+  box-shadow: none;
+}
+.effects-reduced .is-focused {
+  box-shadow: 0 0 0 2px var(--surface);
+}
+.effects-reduced .material-scene {
+  background: var(--canvas);
+}
+.motion-studies {
+  margin-top: 32px;
+}
+.motion-study {
+  background: var(--surface);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-top: 16px;
+}
+.motion-study h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+.motion-frames {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.motion-frame {
+  min-height: 140px;
+  padding: 12px;
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.frame-time {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 12px;
+  display: block;
+}
+.frame-nav {
+  background: var(--selection);
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 2px solid var(--action);
+  font-size: 14px;
+  font-weight: 650;
+}
+.frame-nav.transitioning {
+  border-left-color: transparent;
+  box-shadow: inset 2px 0 color-mix(in srgb, var(--action) 50%, transparent);
+}
+.frame-nav.before {
+  background: var(--quiet);
+}
+.frame-menu {
+  background: var(--elevated);
+  border: 1px solid var(--control-border);
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.frame-menu.ghost {
+  min-height: 56px;
+  background: var(--surface);
+  border-style: dashed;
+}
+.frame-lock {
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+}
+.frame-lock .source-tag {
+  display: block;
+  color: var(--action);
+  font-weight: 650;
+  margin-bottom: 4px;
+}
+.frame-lock .soft-check {
+  opacity: 0.5;
+}
+.story-rule {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 12px 0 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .material-nav:hover {
+    background: var(--quiet);
+  }
+  .material-nav.is-active:hover,
+  .material-menu-item:hover {
+    background: var(--selection);
+  }
+  .material-button:not(:disabled):hover {
+    background: var(--action-hover);
+  }
+  .material-button:not(:disabled):active {
+    background: var(--action-pressed);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .material-nav,
+  .material-menu-item,
+  .material-button {
+    transition: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .chrome-glass {
+    background: var(--elevated);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+  }
+  .material-scene::before,
+  .chrome-glass::before {
+    display: none;
+  }
+  .material-theme[data-theme='night'] .material-nav.is-active::after {
+    box-shadow: none;
+  }
+}
+@media (forced-colors: active) {
+  .material-theme,
+  .material-scene,
+  .chrome-glass,
+  .material-menu-item,
+  .material-button,
+  .motion-study,
+  .motion-frame,
+  .frame-lock {
+    background: Canvas;
+    color: CanvasText;
+    border-color: ButtonText;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+  .material-scene::before,
+  .chrome-glass::before {
+    display: none;
+  }
+  .material-nav,
+  .material-nav .nav-glyph,
+  .material-nav .state-name,
+  .material-theme .study-caption,
+  .specimen-label,
+  .menu-heading,
+  .menu-foot,
+  .disabled-note,
+  .story-rule,
+  .frame-time {
+    color: CanvasText;
+  }
+  .material-nav.is-focused,
+  .material-button.is-focused,
+  .material-nav:focus-visible,
+  .material-menu-item:focus-visible,
+  .material-button:focus-visible {
+    outline-color: Highlight;
+  }
+  .material-nav.is-active::after,
+  .indicator-dot {
+    background: Highlight;
+    box-shadow: none;
+  }
+}
+@media (max-width: 850px) {
+  .material-showcase {
+    margin: 24px 16px;
+  }
+  .material-theme {
+    padding: 16px;
+  }
+  .effects-pair,
+  .motion-frames {
+    grid-template-columns: 1fr;
+  }
+  .material-scene {
+    padding: 16px;
+  }
+}
+@media (max-width: 420px) {
+  .action-grid {
+    grid-template-columns: 1fr;
+  }
+  .floating-glass {
+    flex-wrap: wrap;
+  }
+  .floating-glass .material-button {
+    width: 100%;
+  }
+}
+
+.material-warning {
+  display: block;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: var(--warning-surface);
+  color: var(--warning);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 650;
+}
+@media (forced-colors: active) {
+  .material-warning {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+}

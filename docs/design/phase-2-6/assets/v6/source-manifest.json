@@ -1,0 +1,63 @@
+{
+  "sourceCommit": "0593c853596f47a5fbc4370b92f4e455bdef1a66",
+  "sourcePR": 15,
+  "purpose": "Read-only V6 screenshot reference; not production/native-Safari acceptance",
+  "assets": [
+    {
+      "file": "v6-lattice-light-overview-desktop-solid.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-lattice-light-overview-desktop-solid.png",
+      "sha256": "d1af406bc91abffa0ab3b4af869171cf23d4d5be8c93eb12f5e7186990a8029a"
+    },
+    {
+      "file": "v6-lattice-dark-overview-desktop-solid.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-lattice-dark-overview-desktop-solid.png",
+      "sha256": "5199f26ead149aa431bce8c331efc36686847314fa15add331fe1df537cc53fa"
+    },
+    {
+      "file": "v6-landscape-light-overview-desktop-solid.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-landscape-light-overview-desktop-solid.png",
+      "sha256": "21471d142f92e1296fae8fdcd6b944a2eb204f4c9cac351e99966ba9e3153eee"
+    },
+    {
+      "file": "v6-landscape-dark-overview-desktop-solid.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-landscape-dark-overview-desktop-solid.png",
+      "sha256": "86f96025558b10b0f017bdfa8a966c5acb75393ceb22ab6606eaa9cf04f3188d"
+    },
+    {
+      "file": "v6-basic-light-overview-desktop-solid.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-basic-light-overview-desktop-solid.png",
+      "sha256": "502a8f30f174fa8af8c84582722af6a493b21e3ed15c426957126137f16bb3e3"
+    },
+    {
+      "file": "v6-basic-dark-overview-desktop-solid.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-basic-dark-overview-desktop-solid.png",
+      "sha256": "e7613c37a885feba3e84c14fcd136394820fbedaa28c5d35811c7c87aac3b900"
+    },
+    {
+      "file": "v6-landscape-dark-overview-desktop-frosted.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-landscape-dark-overview-desktop-frosted.png",
+      "sha256": "b5d79380485459b16444071f2b0604ccc011501e0338caef265b045702330806"
+    },
+    {
+      "file": "v6-lattice-dark-overview-phone-solid.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-lattice-dark-overview-phone-solid.png",
+      "sha256": "8c0eba1069be94e2b79ff6a04b0e4488f2b8d4cc73f9efbb63c1dcea0a3f1324"
+    },
+    {
+      "file": "v6-landscape-light-planner-phone-frosted.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-landscape-light-planner-phone-frosted.png",
+      "sha256": "ca58a9ad163ed8110b159de1575eb33a82355fbb4c97f9d8a2381f48bcb92587"
+    },
+    {
+      "file": "v6-lattice-light-accent-1440.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-lattice-light-accent-1440.png",
+      "sha256": "a8d1e5ce6c6cc2d9f2e18e2eb87e8a50115266eb84b86bbbf48394f9a49019e6"
+    },
+    {
+      "file": "v6-lattice-dark-accent-390.png",
+      "sourcePath": "experiments/phase-2-6a-v-visual-audition/screenshots/v6-lattice-dark-accent-390.png",
+      "sha256": "6dbdb7f1743627bb6d797bed8d1286a2dfeb3044ee8f82d7868d987d520bfa49"
+    }
+  ],
+  "noticesSha256": "64a8be09928dce100294c2494ccab16d839d13f35870f0ba3ff4722690275002"
+}
