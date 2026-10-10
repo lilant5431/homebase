@@ -1,0 +1,112 @@
+/* A static, inert presentation seam. Complete scenery is deliberately deferred. */
+.visual-effects-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: var(--hb-canvas);
+}
+.appearance-settings {
+  margin: 16px 6px 0;
+  min-width: 0;
+  color: var(--hb-text);
+}
+.appearance-settings summary {
+  min-height: 44px;
+  padding: 12px 8px;
+  cursor: pointer;
+  font-weight: 700;
+  border-radius: var(--hb-radius-control);
+}
+.appearance-settings summary:focus-visible {
+  outline: 3px solid var(--hb-focus);
+  outline-offset: 2px;
+}
+.appearance-controls {
+  display: grid;
+  gap: 12px;
+  padding: 8px;
+}
+.appearance-field {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 0;
+}
+.appearance-controls select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  font-size: 16px;
+  padding: 8px;
+  color: var(--hb-text);
+  background: var(--hb-surface);
+  border: 1px solid var(--hb-control-border);
+  border-radius: var(--hb-radius-control);
+}
+.appearance-controls p {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.appearance-controls button {
+  min-height: 44px;
+  white-space: normal;
+}
+.appearance-warning {
+  color: var(--hb-warning);
+  background: var(--hb-warning-surface);
+  padding: 12px;
+  border-radius: var(--hb-radius-control);
+}
+/* Named noncritical content backplates only. Editors/errors/sessions are always opaque. */
+.panel:not(.availability-panel, .unplaced-panel),
+.content-panel,
+.stat-card,
+.class-card {
+  background: var(--hb-content-surface);
+  border-color: var(--hb-content-edge);
+  -webkit-backdrop-filter: blur(var(--hb-content-blur));
+  backdrop-filter: blur(var(--hb-content-blur));
+}
+.panel:not(.availability-panel, .unplaced-panel),
+.content-panel,
+.stat-card,
+.class-card {
+  --hb-muted: var(--hb-content-muted);
+}
+.top-add:active,
+.primary-button:active {
+  background: var(--hb-action-pressed);
+}
+button:disabled {
+  cursor: not-allowed;
+}
+/* Match OS/manual reductions for existing feedback; do not affect layout/focus. */
+:root[data-motion='reduced'] *,
+:root[data-motion='reduced'] *::before,
+:root[data-motion='reduced'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (forced-colors: active) {
+  .appearance-controls select,
+  button {
+    border: 1px solid ButtonText;
+  }
+  .visual-effects-layer {
+    display: none;
+  }
+}

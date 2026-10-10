@@ -33,6 +33,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the Definition of Done, regression-fi
 
 See the [Phase 2 acceptance record](docs/acceptance/phase-2.md) for reproducible production-build browser checks, evidence boundaries, and the outstanding physical Safari checklist. Automated readiness does not mark Phase 2 officially accepted.
 
+## Appearance foundations (Phase 2.6B)
+
+Open **Appearance** in the existing sidebar (mobile: Open menu). Choose Lattice/Landscape/Basic, System/Light/Dark, Solid/Frosted, and System/Reduced effects and motion. Preferences use the independent `homebase.appearance.v1` key; academic and scheduling records are untouched. System follows live OS appearance; accessibility reductions and unsupported blur force safe rendering while preserving your selection. Failed writes keep a tab-only preference with an explicit warning.
+
+This milestone provides shared semantic palettes, immediate/first-paint preferences and settings. The three environments currently share a static canvas; full scenery, navigation glass and screen redesign arrive in their scoped milestones. See [implementation and browser evidence](docs/implementation/phase-2-6b.md). DT-01 remains unresolved for 2.6E.
+
 ## Structure
 
 - `src/domain.ts`: academic entities, dates, and data operations.
