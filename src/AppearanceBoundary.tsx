@@ -1,4 +1,4 @@
-import { createContext, useContext, useLayoutEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import {
   APPEARANCE_KEY,
   DEFAULT_APPEARANCE,
@@ -33,6 +33,8 @@ export default function AppearanceBoundary({ children }: { children: ReactNode }
     () => window.__homebaseAppearance ?? initializeAppearance(window, document.documentElement),
   )
   const [warning, setWarning] = useState('')
+  const reconciled = useRef(false)
+  const selectionRevision = useRef(0)
   useLayoutEffect(() => {
     applyAppearance(document.documentElement, snapshot)
     window.__homebaseAppearance = snapshot
@@ -59,11 +61,32 @@ export default function AppearanceBoundary({ children }: { children: ReactNode }
       }
       const selected = event.newValue === null ? { ...DEFAULT_APPEARANCE } : parseAppearance(event.newValue)
       if (!selected) return
+      selectionRevision.current += 1
       setSnapshot({ selected, effective: resolveAppearance(selected, browserCapabilities(window)) })
       setWarning('')
     }
     window.addEventListener('storage', synchronize)
-    // Close the bootstrap → listener-install race without another preference read/write.
+    // Subscribe first, then close the bootstrap gap once. Child layout effects can
+    // already have made a tab-only choice; StrictMode replay must not replace it.
+    if (!reconciled.current) {
+      reconciled.current = true
+      if (selectionRevision.current === 0) {
+        const revision = selectionRevision.current
+        try {
+          const raw = window.localStorage.getItem(APPEARANCE_KEY)
+          const selected = raw === null ? { ...DEFAULT_APPEARANCE } : parseAppearance(raw)
+          if (selected) {
+            setSnapshot((current) =>
+              selectionRevision.current === revision
+                ? { selected, effective: resolveAppearance(selected, browserCapabilities(window)) }
+                : current,
+            )
+          }
+        } catch {
+          // Blocked reads retain the bootstrap or current tab preference; never write back.
+        }
+      }
+    }
     updateCapabilities()
     return () => {
       for (const { media } of queries) {
@@ -74,6 +97,7 @@ export default function AppearanceBoundary({ children }: { children: ReactNode }
     }
   }, [])
   function choose(selected: AppearancePreferences) {
+    selectionRevision.current += 1
     let saved = false
     try {
       saved = writeAppearance(window.localStorage, selected)

@@ -88,6 +88,33 @@ for (const [name, engine] of [
       expect(await page.evaluate(() => window.__homebaseAppearance?.effective.palette)).toBe(mode)
       await context.close()
     }
+    // A real second tab changes storage while the first has bootstrap but no React listener.
+    const gapContext = await browser.newContext({ colorScheme: 'light' })
+    const writer = await gapContext.newPage()
+    await writer.goto(url)
+    await settings(writer)
+    await writer.getByLabel('Palette', { exact: true }).selectOption('light')
+    const initializing = await gapContext.newPage()
+    await initializing.route('**/assets/*.js', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
+    )
+    await initializing.goto(url)
+    await palette(initializing, 'light')
+    await initializing.evaluate(() => {
+      window.addEventListener('storage', () =>
+        document.documentElement.setAttribute('data-gap-event', 'received'),
+      )
+    })
+    await writer.getByLabel('Palette', { exact: true }).selectOption('dark')
+    await expect(initializing.locator('html')).toHaveAttribute('data-gap-event', 'received')
+    await palette(initializing, 'light')
+    const gapModule = await initializing.locator('script[type="module"]').getAttribute('src')
+    await initializing.unroute('**/assets/*.js')
+    await initializing.addScriptTag({ type: 'module', url: `${url}${gapModule}?initialization-gap` })
+    await initializing.getByRole('heading', { name: /Good to have/ }).waitFor()
+    await palette(initializing, 'dark')
+    console.log(`${name}: bootstrap/listener gap converges after real cross-tab storage event`)
+    await gapContext.close()
     const noScript = await browser.newContext({ javaScriptEnabled: false, colorScheme: 'dark' })
     const noScriptPage = await noScript.newPage()
     await noScriptPage.goto(url)

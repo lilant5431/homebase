@@ -1,6 +1,6 @@
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest'
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { StrictMode, useEffect } from 'react'
+import { StrictMode, useEffect, useLayoutEffect, useRef } from 'react'
 import AppearanceBoundary, { APPEARANCE_SAVE_WARNING, useAppearance } from './AppearanceBoundary'
 import AppearanceSettings from './AppearanceSettings'
 import { initializeAppearance, browserCapabilities } from './appearanceBrowser'
@@ -53,15 +53,111 @@ describe('bootstrap/runtime parity and preferences', () => {
     expect(initial.effective).toEqual(resolveAppearance(initial.selected, browserCapabilities(window)))
     expect(document.documentElement.style.colorScheme).toBe(mode)
   })
-  it('does not re-read source or overwrite corrupt/future data during mount', () => {
+  it('reconciles Dark saved after the Light bootstrap and before listener installation', () => {
+    localStorage.setItem(APPEARANCE_KEY, JSON.stringify({ ...DEFAULT_APPEARANCE, mode: 'light' }))
+    initializeAppearance(window, document.documentElement)
+    localStorage.setItem(APPEARANCE_KEY, JSON.stringify({ ...DEFAULT_APPEARANCE, mode: 'dark' }))
+    // The storage event is delivered before React subscribes, as while its module is loading.
+    storageAppearance(localStorage.getItem(APPEARANCE_KEY))
+    const writes = vi.spyOn(Storage.prototype, 'setItem')
+    settings()
+    expect(document.documentElement.dataset.palette).toBe('dark')
+    expect(screen.getByLabelText('Palette')).toHaveProperty('value', 'dark')
+    expect(writes).not.toHaveBeenCalled()
+  })
+  it('reads only appearance once after bootstrap without overwriting future data during mount', () => {
     localStorage.setItem(APPEARANCE_KEY, '{"version":9,"mode":"dark"}')
     initializeAppearance(window, document.documentElement)
     const reads = vi.spyOn(Storage.prototype, 'getItem'),
       writes = vi.spyOn(Storage.prototype, 'setItem')
     settings()
-    expect(reads).not.toHaveBeenCalled()
+    expect(reads.mock.calls).toEqual([[APPEARANCE_KEY]])
     expect(writes).not.toHaveBeenCalled()
     expect(document.documentElement.dataset.palette).toBe('light')
+  })
+  it.each(['{', '{"version":2,"mode":"light"}'])(
+    'retains bootstrap choice for invalid gap data %s',
+    (raw) => {
+      localStorage.setItem(APPEARANCE_KEY, JSON.stringify({ ...DEFAULT_APPEARANCE, mode: 'dark' }))
+      initializeAppearance(window, document.documentElement)
+      localStorage.setItem(APPEARANCE_KEY, raw)
+      const writes = vi.spyOn(Storage.prototype, 'setItem')
+      settings()
+      expect(document.documentElement.dataset.palette).toBe('dark')
+      expect(localStorage.getItem(APPEARANCE_KEY)).toBe(raw)
+      expect(writes).not.toHaveBeenCalled()
+    },
+  )
+  it('reconciles key removal during the initialization gap without writing', () => {
+    localStorage.setItem(APPEARANCE_KEY, JSON.stringify({ ...DEFAULT_APPEARANCE, mode: 'dark' }))
+    initializeAppearance(window, document.documentElement)
+    localStorage.removeItem(APPEARANCE_KEY)
+    const writes = vi.spyOn(Storage.prototype, 'setItem')
+    settings()
+    expect(document.documentElement.dataset.palette).toBe('light')
+    expect(writes).not.toHaveBeenCalled()
+  })
+  it('retains the bootstrap choice when the reconciliation read is blocked', () => {
+    localStorage.setItem(APPEARANCE_KEY, JSON.stringify({ ...DEFAULT_APPEARANCE, mode: 'dark' }))
+    initializeAppearance(window, document.documentElement)
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('blocked')
+    })
+    settings()
+    expect(document.documentElement.dataset.palette).toBe('dark')
+  })
+  it.each([false, true])('does not replace an early tab-only choice, StrictMode=%s', (strict) => {
+    initializeAppearance(window, document.documentElement)
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('blocked')
+    })
+    const reads = vi.spyOn(Storage.prototype, 'getItem')
+    function EarlyChoice() {
+      const initialChange = useRef(useAppearance()!.change)
+      useLayoutEffect(() => {
+        initialChange.current({ mode: 'dark' })
+      }, [])
+      return <AppearanceSettings />
+    }
+    const content = (
+      <AppearanceBoundary>
+        <EarlyChoice />
+      </AppearanceBoundary>
+    )
+    render(strict ? <StrictMode>{content}</StrictMode> : content)
+    expect(document.documentElement.dataset.palette).toBe('dark')
+    expect(screen.getByRole('alert').textContent).toBe(APPEARANCE_SAVE_WARNING)
+    expect(reads).not.toHaveBeenCalled()
+  })
+  it('a newer local selection wins over a stale reconciliation result', () => {
+    initializeAppearance(window, document.documentElement)
+    let choose: ReturnType<typeof useAppearance>
+    function Child() {
+      choose = useAppearance()
+      return <AppearanceSettings />
+    }
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      choose!.change({ mode: 'dark' })
+      return JSON.stringify({ ...DEFAULT_APPEARANCE, mode: 'light' })
+    })
+    render(
+      <AppearanceBoundary>
+        <Child />
+      </AppearanceBoundary>,
+    )
+    expect(document.documentElement.dataset.palette).toBe('dark')
+  })
+  it('reconciles only once across StrictMode subscription replay', () => {
+    initializeAppearance(window, document.documentElement)
+    const reads = vi.spyOn(Storage.prototype, 'getItem')
+    render(
+      <StrictMode>
+        <AppearanceBoundary>
+          <AppearanceSettings />
+        </AppearanceBoundary>
+      </StrictMode>,
+    )
+    expect(reads.mock.calls).toEqual([[APPEARANCE_KEY]])
   })
   it('applies all real controls and reset; only appearance writes', () => {
     const writes = vi.spyOn(Storage.prototype, 'setItem')
