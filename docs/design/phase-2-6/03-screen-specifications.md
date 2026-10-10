@@ -2,6 +2,12 @@
 
 Current integrated baseline: main `580b25f69a724a5e0c54e15927e05eafcda6d887` (PR #13 merged). The original inventory started at historical main `b710ea0`; it is reconciled here with the integrated Safari implementation: [App](../../../src/App.tsx), [AcademicUI](../../../src/AcademicUI.tsx), [WeeklyPlanner](../../../src/WeeklyPlanner.tsx), [EditorModal](../../../src/EditorModal.tsx), [availability editor](../../../src/PlanningWindowModal.tsx), [session editor](../../../src/LockedSessionModal.tsx), [messages](../../../src/plannerMessages.ts), [CSS](../../../src/styles.css). Historical snapshots and current acceptance evidence are distinguished in [01](01-design-vision.md). The shared [ModalBackdrop](../../../src/ModalBackdrop.tsx) and browser acceptance runners are now part of main. Recommendations below are future presentation work, not assertions that the redesign exists.
 
+## Final appearance overlay (all existing screens)
+
+The [six-appearance V6 reference](07-v6-visual-reference.md) governs skin, not content hierarchy. Every screen below uses the same component geometry/data ordering in Lattice, Landscape and Basic with either semantic palette. “Solid” in the inventory means the default/protected content treatment; only validated noncritical panel backgrounds may opt into Frosted under [02](02-design-system.md). Editors, errors, conflicts and semantic session plates stay solid. Environment decoration lives behind the workspace, not inside row text; it must not push controls, obscure focus or change any responsive breakpoint. The old atlas is historical anatomy evidence, not the final appearance.
+
+Shared interaction lighting responds to accepted native click/keyboard/touch activation without delaying navigation/actions. Operation success and failure are separate real-result states; see [04](04-motion-and-interaction.md). No production “Play light cue” control, demo presets, speed slider or technical source-comparison selector is proposed.
+
 ## Shared hierarchy and navigation
 
 One page h1 identifies location. A nearby subtitle explains the screen's purpose, not decoration. Header right contains one labeled primary action; contextual secondary actions follow. Metadata appears below its title; critical notices precede ordinary content. Every screen includes a visible next action or explains why an action is unavailable.
@@ -17,7 +23,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** active view, menu open/closed, academic save-failure alert. Views are local state, not separate URL routes. No account, appearance control, search or async page loader exists.
 - **Problem → change:** redundant greetings/eyebrows and decorative sidebar space compete with content. Use one compact header and stable navigation; replace encouragement with Appearance utility. Preserve reachability of all links in short heights. Label the active destination and use `aria-current`.
 - **Responsive:** wide rail, compact header/menu as below; menu scrolls vertically, close reachable, Escape and focus return. No hover-only navigation.
-- **Themes/dependencies:** nav glass plus opaque active marker; both themes identical order. AppShell, NavigationItem, PageHeader, Button, Notice. PR #13 drawer reachability and short-height scrolling are integrated baseline behavior; preserve their existing regression coverage.
+- **Appearance/dependencies:** nav glass plus opaque active marker; all six appearances identical order. AppShell, NavigationItem, PageHeader, Button, Notice. PR #13 drawer reachability and short-height scrolling are integrated baseline behavior; preserve their existing regression coverage.
 
 ### Overview — App + Stat / AssignmentRow / QuickAction
 
@@ -26,7 +32,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** no classes/work welcome, genuinely empty sample option with guarded confirmation, no open assignments, no future horizon, overdue/due-today, missing estimates, academic save failure. A commitments-only planner is not sample-eligible.
 - **Problem → change:** oversized greeting and four equal metrics dilute the actionable list. Compact title/date, horizontal metric strip, dominant Assignments ahead, smaller On the horizon, compact Quick add. Label estimate as “Known estimated work” so missing estimates are not misread as zero. Keep current counts/sorts; do not claim this is priority-ranked or a feasibility forecast.
 - **Responsive:** wide 2:1 content split; tablet two panels when content fits; phones/short landscape assignments first, horizon second, Quick add last. Metric strip wraps into two columns; no horizontal page scroller.
-- **Themes/dependencies:** solid panels; action blue/ice blue, status text/icon; no hero illustration. Stat, RecordRow, EmptyState, StatusBadge, PageHeader. Atlas overview uses this hierarchy.
+- **Appearance/dependencies:** solid panels; action blue/ice blue, status text/icon; no hero illustration inside academic content; decoration remains behind the workspace. Stat, RecordRow, EmptyState, StatusBadge, PageHeader. Atlas overview uses this hierarchy.
 
 ### Weekly Planner — WeeklyPlanner + planner hook
 
@@ -35,7 +41,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** ok, no availability, no events, no schedulable estimate, unplaced work, conflict with no generated schedule, invalid input error, blocked schedule store, save/candidate failure, retained past locks. Reference is stable until the existing refresh/source-adoption rules update it; week navigation does not refresh it.
 - **Problem → change:** controls and warnings span a long page before the week becomes legible. Header: week navigation + Refresh plan and reference. Then persistent blocking/conflict notice, then Unscheduled work, then agenda. Put Study availability in a separate region after the wide-screen agenda or a labeled expandable region on compact screens (summary shows how many windows exist; expansion is UI-only). Keep Add commitment accessible. Do not label availability as guaranteed remaining capacity.
 - **Responsive:** seven day columns only at ≥1200px; 2-column day cards at medium widths with sufficient height; chronological single-column agenda on phones and short landscape. Each day has Due, Assessments, Commitments, Study subgroups; explicit times, no fabricated hour scaling. All seven days remain reachable through document scroll; optional day anchors must not trap focus.
-- **Themes/dependencies:** solid events; source labels and differentiated marker shapes below. WeekToolbar, AvailabilityList, StudyCard, RecordRow, Notice, ConflictPanel, EditorShell. Same data ordering/oracles in both themes.
+- **Appearance/dependencies:** solid events; source labels and differentiated marker shapes below. WeekToolbar, AvailabilityList, StudyCard, RecordRow, Notice, ConflictPanel, EditorShell. Same data ordering/oracles across all six appearances.
 
 ### Classes — App class-grid
 
@@ -44,7 +50,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** empty, populated, edit, delete confirmation. Current deletion cascades to class assignments and assessments; no separate class-detail route exists.
 - **Problem → change:** icon-only deletion can hide consequence. Use labeled overflow actions or visible Edit/Delete; confirmation names the class and affected records. Keep current cascade semantics. Cards can grow for long names.
 - **Responsive:** 3 cards wide, 2 tablet, 1 phone/short height; actions remain 44px.
-- **Themes/dependencies:** solid ClassCard; neutral text with decorative subject dot rather than white text over an arbitrary saved color; Button, EmptyState, Confirmation, EditorShell.
+- **Appearance/dependencies:** solid ClassCard; neutral text with decorative subject dot rather than white text over an arbitrary saved color; Button, EmptyState, Confirmation, EditorShell.
 
 ### Assignments — App + ManagedAssignment
 
@@ -53,7 +59,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** empty, overdue/today/future, completed, missing estimate, missing class fallback, save failure, deletion confirmation.
 - **Problem → change:** compressed metadata/actions can be hard to scan. Use a consistent row with explicit completion control, title and wrapped metadata; show Edit and Delete independently. Completed remains reachable, optionally disclosed with count. Preserve ordering and completion behavior.
 - **Responsive:** wide rows, phone stacked rows with controls below metadata. “Detail” in this design means the existing edit form; no new detail route or read-only selection store. Atlas covers list plus the editor specimen.
-- **Themes/dependencies:** solid RecordRow, subject dot/name, Due/Completed badges, CompletionControl, EditorShell, Notice. Completed text remains readable; no low-opacity entire row.
+- **Appearance/dependencies:** solid RecordRow, subject dot/name, Due/Completed badges, CompletionControl, EditorShell, Notice. Completed text remains readable; no low-opacity entire row.
 
 ### Assessments — App + ManagedRow
 
@@ -62,7 +68,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** empty/populated, past/future records, optional time, class removed fallback, invalid form, save failure.
 - **Problem → change:** assessment type and date should not compete with edit/delete icons. Use type label + date metadata; retain date ordering and access to past items. No completion or preparation-scheduling control is added.
 - **Responsive:** same row/card pattern as assignments; no new filters required.
-- **Themes/dependencies:** solid rows, neutral type icon/text; RecordRow, EmptyState, DateTimeGroup, EditorShell.
+- **Appearance/dependencies:** solid rows, neutral type icon/text; RecordRow, EmptyState, DateTimeGroup, EditorShell.
 
 ### Commitments — App + ManagedRow
 
@@ -71,7 +77,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** empty, overlapping records (allowed as source constraints), invalid same-day interval, save failure, confirmation.
 - **Problem → change:** distinguish fixed time from suggested study. Use calendar icon + “Commitment”; display both times and date. Do not offer Complete, lock or drag-to-reschedule semantics.
 - **Responsive:** same rows; editor date/start group and separate end time with explicit labels; never compress three native controls into a phone row.
-- **Themes/dependencies:** neutral solid band and calendar marker; RecordRow, DateTimeGroup, Field, EditorShell.
+- **Appearance/dependencies:** neutral solid band and calendar marker; RecordRow, DateTimeGroup, Field, EditorShell.
 
 ### Study availability — WeeklyPlanner + PlanningWindowModal
 
@@ -80,7 +86,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** no windows in visible week, multiple windows, blocked storage, invalid same-day bounds, ID failure, failed save retained for retry, confirmation before delete.
 - **Problem → change:** seven Add time controls take vertical space before sessions. Use day-based compact list or disclosed region; button says Add study time. Do not imply a saved window is free of commitments; existing engine subtracts those later.
 - **Responsive:** wide region below the agenda, compact disclosure in flow. Date and time-range fields follow DT-01 measured-fit rules without changing validation.
-- **Themes/dependencies:** solid FieldGroup/AvailabilityRow/EditorShell/Notice. Error stays in open form; no false saved toast.
+- **Appearance/dependencies:** solid FieldGroup/AvailabilityRow/EditorShell/Notice. Error stays in open form; no false saved toast.
 
 ### Recommended and manual sessions — WeeklyPlanner + LockedSessionModal
 
@@ -89,7 +95,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** recommended, locked, valid/invalid draft, no-op edit, candidate conflicts, save failure, source conflict, expired lock retained. Generated work is not persisted; lock is not completion credit.
 - **Problem → change:** source can be lost among type/color cues. Recommended = spark/outline marker + word; Manual = lock/solid marker + word. Keep assignment details click target separate from Customize/Edit/Unlock; no nested buttons. Unlock confirmation explains possible regeneration at the same time and no completion credit.
 - **Responsive:** controls always visible, wrap to second row, never hover-only; editor uses accepted mobile document flow.
-- **Themes/dependencies:** StudyCard, SourceBadge, Button, EditorShell, Notice; lock accent uses action, not danger. No drag-and-drop/progress field introduced.
+- **Appearance/dependencies:** StudyCard, SourceBadge, Button, EditorShell, Notice; lock accent uses action, not danger. No drag-and-drop/progress field introduced.
 
 ### Conflicts and unplaced work — WeeklyPlanner + plannerMessages
 
@@ -98,7 +104,7 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** nine conflict reasons; four unplaced reasons; multiple conflicts deduplicated into applicable actions; save failure during repair. These are not interchangeable severity states.
 - **Problem → change:** long alert text can obscure the repair. Use a solid panel with title, one consequence sentence, per-reason rows and actions. Retain `conflictAllowsAssignmentEdit` policy: related assignment editing for completed/missing estimate/zero estimate/after deadline/excess workload; unlock referenced locks. Deleted assignment is not given a nonexistent Edit button. Outside availability explains commitments/window capacity; user can separately open availability or commitment management, without inventing force placement.
 - **Responsive:** above agenda in every layout; controls wrap, no auto-dismiss or pulsing. On conflict show academic/fixed items but no generated study schedule. Missing/zero estimates link to assignment editing; insufficient time states retain exact remaining minutes.
-- **Themes/dependencies:** danger ConflictPanel versus warning UnplacedPanel, icons and words, Button/Notice. Preserve the nine reason codes and four unplaced reasons listed in [05](05-technical-handoff.md).
+- **Appearance/dependencies:** danger ConflictPanel versus warning UnplacedPanel, icons and words, Button/Notice. Preserve the nine reason codes and four unplaced reasons listed in [05](05-technical-handoff.md).
 
 ### Create/edit forms and confirmations
 
@@ -106,13 +112,13 @@ Keep the six destinations: Overview, Weekly Planner (presentation rename of Week
 - **States:** new/edit, required/native validation, missing class precondition, inline error, ID generation failure, save rejection/retry, cancel/close, delete/unlock confirmation. Assignment/assessment creation without classes currently opens the class editor; explain that prerequisite without promising automatic continuation that does not exist.
 - **Problem → change:** DT-01 remains unresolved; labels/metadata compete. Main already contains the accepted Safari document-scrolling editor. Consolidate Field and EditorShell anatomy while preserving that integrated lifecycle; do not introduce a new scrolling mechanism. The group proposal is specified in [05](05-technical-handoff.md). Keep value formats and validators unchanged. Academic save failure currently closes the editor with unsaved in-memory changes plus a global warning; do not falsely present schedule-save atomicity as its behavior or silently redesign that contract in 2.6.
 - **Responsive:** desktop solid dialog, compact document editor with title and in-flow footer; 16px inputs; no sticky footer or blur ancestor; no autofocus text keyboard. Lock editor preserves its tested keyboard interactions. Desktop dialog focus trap and mobile background isolation must be preserved against the actual integrated ModalBackdrop lifecycle and tests.
-- **Themes/dependencies:** solid EditorShell, Field, DateTimeGroup, Button, InlineError; native color-scheme follows appearance. Cancel does not persist or refresh the plan.
+- **Appearance/dependencies:** solid EditorShell, Field, DateTimeGroup, Button, InlineError; native color-scheme follows appearance. Cancel does not persist or refresh the plan.
 
 ### Cross-cutting absence/failure and proposed Appearance
 
 There is no remote loading process, skeleton screen or network synchronization status in the current app. Do not add simulated loading. Academic load failures currently fall back to empty data; stronger validation/recovery is a separate task. Academic save failure is a global persistent alert. Schedule loads explicitly distinguish empty/ok/invalid/unsupportedVersion/unavailable and block scheduling edits when unsafe. Invalid planner input shows “Study plan unavailable” while academic management remains possible. Backup serialization exists in `backup.ts`, but **no export/import UI exists**.
 
-Appearance is proposed, not inventoried functionality: a short utility page with System (default), Light / Modern Daylight, Dark / Night Flight; Reduce visual effects; Reduce motion (can add reduction, never override an OS reduction). Changes apply immediately with a persistence notice if needed; no Save button or academic writes. Wide: narrow settings column with theme preview; compact: same controls in flow. RadioGroup, Switch, Notice and theme tokens are its only dependencies.
+Appearance is proposed, not inventoried functionality: a short utility page with independent Environment (Lattice default / Landscape / Basic), Palette (System default / Light / Dark), Content material (Solid default / Frosted), Reduce visual effects and Reduce motion (can add reduction, never override an OS reduction). Changes apply immediately with a persistence notice if needed; no Save button or academic writes. Wide: narrow settings column with six-appearance preview; compact: same controls in flow. RadioGroup, Switch, Notice and appearance tokens are its only dependencies.
 
 ## Responsive layout contract
 

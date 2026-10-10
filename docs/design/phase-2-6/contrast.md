@@ -98,3 +98,22 @@ WCAG sRGB relative luminance: channels ≤0.04045 divide by 12.92, otherwise ((c
 | night    | text / glass over #FFFFFF  | 12.29:1        | 4.5:1  | Pass   |
 | night    | muted / glass over #FFFFFF | 7.04:1         | 4.5:1  | Pass   |
 | night    | focus / glass over #FFFFFF | 9.46:1         | 3:1    | Pass   |
+
+## Supplemental final Frosted envelope — current documentation calculation
+
+The original 92 semantic roles above retain stable `daylight` / `night` documentation keys; final palette names are Light / Dark. All three environments share these roles. Eight additional checks use 72% surface alpha and fully opaque body/stronger metadata colors against black/white extremes. This bounds source-over panel blends; it is not a guarantee for arbitrary gradients, native painting, every glyph or a whole assembled interface.
+
+| Palette | Foreground / background         | Computed ratio | Target | Result |
+| ------- | ------------------------------- | -------------- | ------ | ------ |
+| light   | text / Frosted over #000000     | 7.95:1         | 4.5:1  | Pass   |
+| light   | metadata / Frosted over #000000 | 4.85:1         | 4.5:1  | Pass   |
+| light   | text / Frosted over #FFFFFF     | 15.83:1        | 4.5:1  | Pass   |
+| light   | metadata / Frosted over #FFFFFF | 9.65:1         | 4.5:1  | Pass   |
+| dark    | text / Frosted over #000000     | 15.71:1        | 4.5:1  | Pass   |
+| dark    | metadata / Frosted over #000000 | 13.19:1        | 4.5:1  | Pass   |
+| dark    | text / Frosted over #FFFFFF     | 5.76:1         | 4.5:1  | Pass   |
+| dark    | metadata / Frosted over #FFFFFF | 4.84:1         | 4.5:1  | Pass   |
+
+## Separately recorded V6 browser evidence
+
+The [V6 audition report](https://github.com/lilant5431/homebase/blob/0593c853596f47a5fbc4370b92f4e455bdef1a66/experiments/phase-2-6a-v-visual-audition/research/material-v6-results.md) previously recorded 704 computed roles across Chromium/Linux WebKit at that exact source commit. Reported representative minimum sampled ratio 6.07:1; Frosted full-envelope minimum 4.84:1. This consolidation does not rerun those experiment/browser measurements or infer physical Safari performance. Today's documentation audit recomputes the 92 original pairs, four original showcase reflection bounds and eight Frosted bounds, and checks the selected assets' provenance.

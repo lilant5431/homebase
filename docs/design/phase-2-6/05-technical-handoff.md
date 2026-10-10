@@ -11,37 +11,61 @@ This is an implementation proposal. No listed component, preference store or boo
 | WeeklyPlanner presentation              | Day grouping, availability, unplaced work, conflicts, session editors | Extract small presentational panels if necessary, passing current results/handlers. Never recompute priority or placement in a card.                                                           |
 | EditorShell                             | Shared close/focus/body/scroll lifecycle from accepted PR #13         | Reuse the lifecycle already integrated into main. Retain body portal + document-flow mobile mode, safe-area padding, native focus scrolling, close restoration. No new VisualViewport manager. |
 | Field / DateTimeGroup                   | Existing field values, required/optional semantics, native controls   | Grouping changes DOM/CSS only; submit the same names and values to current validators. No date/time library.                                                                                   |
-| AppearanceBoundary / AppearanceSettings | New appearance-only preference                                        | Root data attributes and CSS variables; no academic state/store imports. Radio group and independent reduction preferences.                                                                    |
+| AppearanceBoundary / AppearanceSettings | New appearance-only preference                                        | Root data attributes and CSS variables; no academic state/store imports. Independent environment/palette/material choices and reduction preferences; selected versus effective state.          |
 
 Current CSS is one large `src/styles.css`, with repeated raw colors, typography, media rules and later planner/session sections. Proposed extraction is incremental: `styles/tokens.css` (theme roles), `styles/base.css` (typography/focus), `styles/shell.css`, `styles/components.css`, and narrowly scoped planner/editor rules only when useful. Don't rename every selector in one pass. Avoid specificity wars, global `input` appearance resets, broad `overflow: hidden`, theme-dependent DOM branches and opacity on entire cards.
 
 Keep APP_CONFIG identity consumption. Reuse existing fonts, Lucide icons and native controls. No added CSS framework, animation engine, picker package or state library is justified. Atlas HTML/CSS stays documentation-only; do not copy its illustrative fixed reference frames into product layout.
 
-## Appearance state and first paint
+## Proposed appearance state and first paint
 
-New, separate key: **`homebase.appearance.v1`**. Candidate value:
+**Specification only: this key is not implemented.** Independent key **`homebase.appearance.v1`**:
 
 ```json
-{ "version": 1, "mode": "system", "effects": "system", "motion": "system" }
+{
+  "version": 1,
+  "environment": "lattice",
+  "mode": "system",
+  "material": "solid",
+  "effects": "system",
+  "motion": "system"
+}
 ```
 
-`mode` is `system | light | dark`; `effects` and `motion` are `system | reduced`. Missing/unsupported/malformed preference falls back to defaults in memory; do not automatically rewrite or delete malformed data. An explicit user selection may replace only this appearance key. Never call localStorage.clear(). This is not an AcademicData or ScheduleData schema change.
+| Field       | Valid values                    | Default / validation                                                   |
+| ----------- | ------------------------------- | ---------------------------------------------------------------------- |
+| version     | numeric literal `1`             | Nonobject/array/unknown version → entire default preference in memory. |
+| environment | `lattice`, `landscape`, `basic` | `lattice`; absent/invalid field → its default.                         |
+| mode        | `system`, `light`, `dark`       | `system`; absent/invalid field → its default.                          |
+| material    | `solid`, `frosted`              | `solid`; absent/invalid field → its default.                           |
+| effects     | `system`, `reduced`             | `system`; absent/invalid field → its default.                          |
+| motion      | `system`, `reduced`             | `system`; absent/invalid field → its default.                          |
 
-Precedence is deterministic:
+Validate exact types/enumerations, do not coerce strings, nulls or booleans. Unknown fields are ignored, not applied to runtime. Parsing/read errors use all defaults. Preserve valid sibling fields on a version-1 partial value. Never automatically rewrite/delete corrupt or future-version data, and never clear storage. An explicit user selection can replace **only** the appearance key with a validated full preference; blocked writes keep the session choice and a dedicated preference warning. This is not a migration of academic/scheduling data.
 
-1. Valid explicit Light/Dark overrides the OS for palette only.
-2. System follows `(prefers-color-scheme: dark)` and live changes; otherwise Light.
-3. No matchMedia capability → Light for System; explicit override still works.
-4. Motion reduction is OS reduce OR explicit reduce. Effects reduction is OS reduced transparency OR explicit reduce; forced colors also forces solid materials.
-5. Unsupported reduced-transparency query is “not reported,” not proof that the user prefers glass. Provide the explicit Reduce visual effects control in every browser.
+Maintain **selected** and **effective** state separately:
 
-Before first visible content, a small synchronous bootstrap in `index.html` head reads/validates **only** the appearance key in try/catch, resolves supported media queries and sets `data-theme`, reduction attributes and root `color-scheme: light` or `dark`. Put it before theme styles and the module mount; do not wait for React effects, fetches or a font. Meta `color-scheme` advertises `light dark`; CSS includes a System media-query fallback. Don't hide the entire page while resolving appearance. If CSP is introduced later, authorize the bootstrap with a build hash or nonce; never weaken CSP to run it.
+1. Environment is always the selected environment; no OS/time-of-day override.
+2. Explicit Light/Dark overrides OS palette only; System resolves live `prefers-color-scheme`, falling back to Light without matchMedia. No current-clock reads.
+3. Reduced motion = OS reduce OR explicit reduced OR effective reduced effects/forced colors. Reduced effects = OS reduced transparency OR explicit reduced OR forced colors. User overrides may add reduction, never defeat OS requests.
+4. Effective material is Solid when effects are reduced, forced colors apply, or standard/prefixed backdrop blur is unsupported; otherwise selected material. Selected Frosted survives capability/reduction changes and returns on restoration. Editors/errors always use solid surfaces regardless of selection.
+5. Unsupported transparency query means “not reported”; the manual reduction remains usable. Basic suppresses continuous atmosphere independently of motion preference, retaining static activation/state feedback.
 
-Keep the resolver tiny and testable. One pure resolver defines valid inputs/precedence; generated bootstrap or a parity test ensures head and React behavior cannot diverge. AppearanceBoundary adopts the resolved root state without remounting App or changing its key. This Vite app has no server hydration today; if SSR is later added, a separate review must align server markup and bootstrap attributes instead of suppressing hydration warnings.
+Before first visible content, a small synchronous head bootstrap reads/validates **only** this key in try/catch, resolves media capabilities and sets root environment, resolved palette, selected/effective material, reductions and native `color-scheme`. Run before styles/module mount, not in a React effect or after fonts/fetches. CSS System fallback remains usable without script (cannot recover a persisted override without storage/script). Do not hide the whole app. If CSP arrives later, use a build hash/nonce, never weaken CSP.
 
-Register palette media-query `change` handling for System mode and reductions independently; clean up listeners. Apply OS changes immediately. Explicit user theme transitions may use the [motion rules](04-motion-and-interaction.md). Storage events for this key can update appearance in other tabs, without adding academic cross-tab synchronization. Invalid external appearance writes are ignored; removal returns to System defaults. A denied read uses defaults; a failed preference write preserves the session choice and shows “Appearance applies to this tab; this browser could not save your preference.” It must not invoke the academic save-error UI, refresh the plan, reset drafts or retry unrelated writes.
+One tiny pure preference resolver and bootstrap parity tests prevent first-paint/React disagreement. Adopt initial resolved attributes without changing App keys, unmounting academic children or refreshing plan reference. Live OS listeners handle palette in System and reductions independently; clean up listeners. Explicit appearance transitions are optional/bounded [04](04-motion-and-interaction.md); OS changes, initial paint and reductions apply immediately.
 
-The first-paint acceptance includes a saved explicit Light override while OS is Dark, the reverse, blocked storage, invalid preference and live OS changes on Windows, macOS, iOS/iPadOS via standard browser media features. If scripts are blocked, CSS can follow OS but cannot read a saved localStorage override: document that limitation rather than claiming a universal persisted-theme guarantee.
+Storage events for **this key only** may synchronize appearance between tabs, without academic synchronization: valid values follow the same resolver, invalid/unknown-version events are ignored, removal returns to all defaults. Failed reads/writes do not reset drafts or call academic save-error handlers. On failed write: “Appearance applies to this tab; this browser could not save your preference.” Appearance never writes `homebase.academic.v1` or `homebase.schedule.v1`, regenerates scheduling, changes deadlines or reloads navigation. This Vite app has no hydration today; future SSR needs a separate parity review.
+
+Test every field/type/default, partial/corrupt/unsupported/blocked storage, selected/effective Frosted restoration, OS live changes, explicit palette independence, initial persisted override opposite OS, native color-scheme, unchanged record bytes/draft/plan reference and listener cleanup.
+
+## Optional future renderer seam (tentatively 2.7)
+
+Phase 2.6 uses CSS/SVG standard decoration and an opaque/reduced/static path. A future optional WebGL/WebGPU enhancement is **not required, installed or authorized now**. Start with a small presentation boundary (e.g. VisualEffectsLayer) receiving only environment, resolved palette, reduction flags and bounded visual activation signals. No renderer registry, quality UI, graphics dependency or generalized engine is needed in 2.6B.
+
+Decoration is a disposable sibling behind stable semantic content, not the owner of App, navigation or editors. Its replacement/unmount/context loss cannot change records, persistence, form state, handlers, schedule results or focus. It imports no domain/store; decorative listeners never intercept input. Common lighting emits visual feedback after native activation while the original handler executes once; operation results travel through existing product contracts, never the renderer.
+
+Future GPU rendering must feature-detect, bound pixel ratio/resources, stop offscreen/hidden/reduced, dispose listeners/resources and recover context loss/interruption into CSS/static without remounting content. No shader, particle system, quality setting or new renderer interface implementation is part of 2.6A. Revisit only with separately authorized measured benefit, accessibility parity, real-device budget and graceful fallback evidence.
 
 ## Browser capabilities and fallbacks
 
@@ -86,12 +110,12 @@ Forced-colors: system Canvas/CanvasText/ButtonText/Highlight and outlines; no re
 
 ## Test handoff
 
-Keep all current core/storage/hook/React tests and CI gates. The integrated main suite has 604 unit/integration tests. Historical pre-PR #13 main had 599; PR #13 added the application workflow and modal lifecycle regressions. The standalone production-browser runners provide 25 planner cases plus three mobile cases; they are not run by npm test or hosted CI. Preserve that verification boundary and report actual current-head results. Add token/state/render tests that protect behavior rather than CSS snapshots. Capture academic and schedule bytes before/after theme changes, preference storage faults, editor cancel and navigation. Verify identical schedule/reference outputs across both themes for fixed inputs.
+Keep all current core/storage/hook/React tests and CI gates. The integrated main suite has 604 unit/integration tests. Historical pre-PR #13 main had 599; PR #13 added the application workflow and modal lifecycle regressions. The standalone production-browser runners provide 25 planner cases plus three mobile cases; they are not run by npm test or hosted CI. Preserve that verification boundary and report actual current-head results. Add token/state/render tests that protect behavior rather than CSS snapshots. Capture academic and schedule bytes before/after theme changes, preference storage faults, editor cancel and navigation. Verify identical schedule/reference outputs across all six appearances and both materials for fixed inputs.
 
 Browser matrix includes the five reference sizes, 320px reflow, 200%/400% zoom, keyboard-only, reduced preferences, forced colors and native input schemes. Automated Chromium and desktop WebKit are complementary; neither proves iOS keyboard/native paint. Carry forward the real-browser capture/lock/edit/conflict/reload/failure scenarios from accepted PR #13 without weakening assertions. Add first-paint and live-theme tests, valid/invalid preference tests, DateTimeGroup geometry and actual physical picker checks. No new hydration, analytics or network dependencies belong to these tests.
 
-## Showcase integration boundary
+## Historical showcase and V6 integration boundaries
 
-[Materials & Motion](assets/mockups.html#materials-motion) uses a documentation-only stylesheet and native buttons without JavaScript handlers. It imports no application modules, writes no storage and loads no remote assets. Explicit state classes render hover/focus/press/disabled examples; future components must use real state/semantics instead. Storyboards are static and do not run the lock/save engine. Avoid importing this specimen stylesheet into product code: adapt its documented recipes to the semantic components in the authorized milestone.
+[Materials & Motion](assets/mockups.html#materials-motion) uses a documentation-only stylesheet and native buttons without JavaScript handlers. It imports no application modules, writes no storage and loads no remote assets. Explicit state classes render hover/focus/press/disabled examples; future components must use real state/semantics instead. Storyboards are static and do not run the lock/save engine. Do not import the historical specimen stylesheet or standalone PR #15 project into product code. Apply the final V6 appearance/material contracts to existing semantic components in the authorized milestone; [selected screenshots and provenance](07-v6-visual-reference.md) are visual references only.
 
 **DT-01 is scheduled for implementation and physical verification in 2.6E — Editors and grouped Date/Time.** 2.6C remains shell/navigation. Preferred horizontal native grouping and paired vertical fallback are unchanged; the failed physical `352a744` visual retest cannot be closed by these mockups.

@@ -1,6 +1,7 @@
 """Documentation-only link/token audit; no application imports or dependencies.
 Run python3 docs/design/phase-2-6/verify.py [--write-contrast].
 """
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -9,6 +10,33 @@ from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parent
 TOKENS = json.loads((ROOT / 'tokens.json').read_text())
+# Specification data only: no preference resolver or application storage is implemented.
+assert set(TOKENS['themes']) == {'daylight', 'night'}
+assert TOKENS['paletteAliases'] == {'light': 'daylight', 'dark': 'night'}
+preference = TOKENS['appearancePreference']
+assert preference['key'] == 'homebase.appearance.v1'
+assert preference['allowed'] == {
+    'environment': ['lattice', 'landscape', 'basic'],
+    'mode': ['system', 'light', 'dark'],
+    'material': ['solid', 'frosted'],
+    'effects': ['system', 'reduced'],
+    'motion': ['system', 'reduced'],
+}
+assert preference['defaults'] == {
+    'version': 1, 'environment': 'lattice', 'mode': 'system',
+    'material': 'solid', 'effects': 'system', 'motion': 'system',
+}
+assert set(TOKENS['appearanceNames']) == set(preference['allowed']['environment'])
+for appearances in TOKENS['appearanceNames'].values():
+    assert set(appearances) == {'light', 'dark'}
+assert set(TOKENS['contentMaterials']) == {'solid', 'frosted'}
+assert TOKENS['contentMaterials']['solid'] == {'alpha': 1, 'desktopBlurPx': 0, 'phoneBlurPx': 0}
+assert TOKENS['contentMaterials']['frosted']['alpha'] == .72
+assert TOKENS['latticeCapsule'] == {
+    'widthPx': 112, 'heightPx': 8, 'slotHeightPx': 26,
+    'radiusPx': 999, 'haloPx': 8, 'decorativeOnly': True,
+}
+
 
 def rgb(value):
     return [int(value[i:i + 2], 16) / 255 for i in (1, 3, 5)]
@@ -43,6 +71,19 @@ for name, theme in TOKENS['themes'].items():
             result = ratio(rgb(theme[fg]), composite)
             assert result >= minimum, (name, fg, 'glass', backdrop, result)
             rows.append(f'| {name} | {fg} / glass over {backdrop} | {result:.2f}:1 | {minimum}:1 | Pass |')
+assert len(rows) == 92, 'Preserve the original semantic contrast matrix'
+frosted_rows = []
+for mode, alias in TOKENS['paletteAliases'].items():
+    theme = TOKENS['themes'][alias]
+    material = TOKENS['contentMaterials']['frosted']
+    for backdrop in ['#000000', '#FFFFFF']:
+        composite = [material['alpha'] * c + (1 - material['alpha']) * b
+                     for c, b in zip(rgb(theme['surface']), rgb(backdrop))]
+        for role, foreground in [('text', theme['text']), ('metadata', material[mode]['muted'])]:
+            result = ratio(rgb(foreground), composite)
+            assert result >= 4.5, (mode, role, 'Frosted', backdrop, result)
+            frosted_rows.append(f'| {mode} | {role} / Frosted over {backdrop} | {result:.2f}:1 | 4.5:1 | Pass |')
+assert len(frosted_rows) == 8
 report = '''# Calculated contrast evidence
 
 Generated from [tokens.json](tokens.json) by [verify.py](verify.py). Reproduce with `python3 docs/design/phase-2-6/verify.py`; regenerate deliberately with `--write-contrast` after a palette edit.
@@ -51,7 +92,20 @@ WCAG sRGB relative luminance: channels ≤0.04045 divide by 12.92, otherwise ((c
 
 | Theme | Foreground / background | Computed ratio | Target | Result |
 | --- | --- | --- | --- | --- |
-''' + '\n'.join(rows) + '\n'
+''' + '\n'.join(rows) + '''
+
+## Supplemental final Frosted envelope — current documentation calculation
+
+The original 92 semantic roles above retain stable `daylight` / `night` documentation keys; final palette names are Light / Dark. All three environments share these roles. Eight additional checks use 72% surface alpha and fully opaque body/stronger metadata colors against black/white extremes. This bounds source-over panel blends; it is not a guarantee for arbitrary gradients, native painting, every glyph or a whole assembled interface.
+
+| Palette | Foreground / background | Computed ratio | Target | Result |
+| --- | --- | --- | --- | --- |
+''' + '\n'.join(frosted_rows) + '''
+
+## Separately recorded V6 browser evidence
+
+The [V6 audition report](https://github.com/lilant5431/homebase/blob/0593c853596f47a5fbc4370b92f4e455bdef1a66/experiments/phase-2-6a-v-visual-audition/research/material-v6-results.md) previously recorded 704 computed roles across Chromium/Linux WebKit at that exact source commit. Reported representative minimum sampled ratio 6.07:1; Frosted full-envelope minimum 4.84:1. This consolidation does not rerun those experiment/browser measurements or infer physical Safari performance. Today's documentation audit recomputes the 92 original pairs, four original showcase reflection bounds and eight Frosted bounds, and checks the selected assets' provenance.
+'''
 if '--write-contrast' in sys.argv:
     (ROOT / 'contrast.md').write_text(report)
 else:
@@ -73,7 +127,7 @@ for path in ROOT.rglob('*.html'):
     for target in re.findall(r'(?:href|src)="([^"]+)"', path.read_text()):
         if '://' in target or target.startswith('#'):
             continue
-        assert (path.parent / unquote(target)).exists(), (path, target)
+        assert (path.parent / unquote(target.split('#')[0])).exists(), (path, target)
 # Showcase reflection bounds are documented recipes, not new semantic colors.
 # Text-bearing labels sit on scene backgrounds; validate their maximum glow wash.
 reflection_checks = 0
@@ -84,4 +138,20 @@ for name, opacity in [('daylight', 0.30), ('night', 0.40)]:
         result = ratio(rgb(theme['muted']), composite)
         assert result >= 4.5, (name, 'muted / showcase reflected light', background, result)
         reflection_checks += 1
-print(f'{len(rows)} token contrast checks and {reflection_checks} showcase reflection checks passed; local document links resolve.')
+
+assert reflection_checks == 4
+manifest = json.loads((ROOT / 'assets/v6/source-manifest.json').read_text())
+assert manifest['sourceCommit'] == '0593c853596f47a5fbc4370b92f4e455bdef1a66'
+assert manifest['sourcePR'] == 15 and len(manifest['assets']) == 11
+assert len({item['file'] for item in manifest['assets']}) == 11
+for item in manifest['assets']:
+    assert item['file'].endswith('.png') and '/' not in item['file']
+    assert item['sourcePath'] == 'experiments/phase-2-6a-v-visual-audition/screenshots/' + item['file']
+    assert hashlib.sha256((ROOT / 'assets/v6' / item['file']).read_bytes()).hexdigest() == item['sha256']
+assert hashlib.sha256((ROOT / 'assets/v6/third-party-notices.txt').read_bytes()).hexdigest() == manifest['noticesSha256']
+# Relative CSS assets, if introduced later, must not silently go missing.
+for path in ROOT.rglob('*.css'):
+    for target in re.findall(r'url\([\"\']?([^\)\"\']+)', path.read_text()):
+        if not target.startswith(('data:', 'http:', 'https:', '#')):
+            assert (path.parent / unquote(target.split('#')[0])).exists(), (path, target)
+print(f'{len(rows)} semantic, {reflection_checks} showcase reflection and {len(frosted_rows)} Frosted contrast checks passed; preference enums/defaults, local links and 11 V6 asset/notice hashes resolve.')
