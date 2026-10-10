@@ -55,7 +55,7 @@ it('captures academic work, schedules around commitments, customizes, reloads, r
   save('Add class')
   assignment('Urgent essay', 150, reference.date)
   assignment('Later reading', 30, '2026-10-13')
-  fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
   expect(screen.getByText('150 minutes could not fit in your available study time.')).toBeTruthy()
   fireEvent.click(screen.getByRole('button', { name: 'Add availability for Oct 12' }))
   field('Start time', '16:00')
@@ -104,7 +104,7 @@ it('captures academic work, schedules around commitments, customizes, reloads, r
     scheduleBytes = localStorage.getItem('homebase.schedule.v1')
   cleanup()
   render(<App initialReference={reference} />)
-  fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
   expect(studyCards()).toEqual(savedCards)
   expect(localStorage.getItem('homebase.schedule.v1')).toBe(scheduleBytes)
   // Advance the caller clock: modal/week interactions must not silently refresh the explicit plan.

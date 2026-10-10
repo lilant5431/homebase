@@ -1,3 +1,4 @@
+declare const process: { env: { HOMEBASE_PREVIEW_URL?: string } }
 /** Phone form/navigation regressions. Run against the production preview on port 4174. */
 import { chromium, type Page } from 'playwright'
 import { expect } from 'playwright/test'
@@ -134,7 +135,7 @@ try {
     page.on('pageerror', (error) => errors.push(error.message))
     await page.clock.setFixedTime(new Date('2026-10-12T15:00:00-04:00'))
     try {
-      await page.goto('http://127.0.0.1:4174')
+      await page.goto(process.env.HOMEBASE_PREVIEW_URL ?? 'http://127.0.0.1:4174')
       // Rotate with the drawer open, then reach every item, not just the first screenful.
       await page.getByRole('button', { name: 'Open menu' }).click()
       await page.setViewportSize({ width: 667, height: 375 })
@@ -155,7 +156,14 @@ try {
         .getByRole('button', { name: 'Classes', exact: true })
         .click({ timeout: 3000 })
       await page.setViewportSize(viewport)
-      for (const name of ['Overview', 'Weekly view', 'Assignments', 'Assessments', 'Commitments', 'Classes'])
+      for (const name of [
+        'Overview',
+        'Weekly Planner',
+        'Assignments',
+        'Assessments',
+        'Commitments',
+        'Classes',
+      ])
         await navigate(page, name)
       await page.getByRole('button', { name: 'Add class', exact: true }).first().click()
       await modalGeometry(page)
@@ -284,7 +292,7 @@ try {
       await expect(
         page.getByRole('button', { name: 'Edit Edited landscape assignment', exact: true }),
       ).toBeVisible()
-      await navigate(page, 'Weekly view')
+      await navigate(page, 'Weekly Planner')
       await page.getByRole('button', { name: 'Add availability for Oct 12' }).scrollIntoViewIfNeeded()
       const originalScroll = await page.evaluate(() => scrollY)
       await page.getByRole('button', { name: 'Add availability for Oct 12' }).click()

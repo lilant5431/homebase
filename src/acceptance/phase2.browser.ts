@@ -1,10 +1,11 @@
+declare const process: { env: { HOMEBASE_PREVIEW_URL?: string } }
 /** Reproducible production-build acceptance, outside npm test. See docs/acceptance/phase-2.md. */
 import { chromium, type Page, type Browser } from 'playwright'
 import { expect } from 'playwright/test'
 import type { AcademicData } from '../domain.ts'
 import type { ScheduleData } from '../scheduleData.ts'
 
-const url = 'http://127.0.0.1:4174'
+const url = process.env.HOMEBASE_PREVIEW_URL ?? 'http://127.0.0.1:4174'
 const output = 'test-results/phase-2'
 function ensure(condition: unknown, message?: string): asserts condition {
   expect(condition, message).toBeTruthy()
@@ -144,7 +145,7 @@ async function mainWorkflow(
     await createClass(page)
     await createAssignment(page, 'Urgent essay', 150, date)
     await createAssignment(page, 'Later reading', 30, '2026-10-13')
-    await navigate(page, 'Weekly view')
+    await navigate(page, 'Weekly Planner')
     await expect(page.getByRole('heading', { name: 'Unscheduled work' })).toBeVisible()
     await expect(page.getByText('150 minutes could not fit in your available study time.')).toBeVisible()
     await page.getByRole('button', { name: 'Add availability for Oct 12', exact: true }).click()
@@ -221,7 +222,7 @@ async function mainWorkflow(
       equal(saved.schedule.lockedBlocks[0].blockId, lock.blockId)
       equal(saved.bytes.academic, before.bytes.academic)
       await page.reload()
-      await navigate(page, 'Weekly view')
+      await navigate(page, 'Weekly Planner')
       same(await cards(page), snapshot, 'Same source/reference must re-derive the same sessions')
       same((await readSource(page)).bytes, saved.bytes)
       equal(await page.getByTestId('plan-reference').textContent(), reference)
@@ -351,7 +352,7 @@ async function boundaryFaults(
       localStorage.setItem('homebase.schedule.v1', JSON.stringify(schedule))
     }, boundarySources())
     await page.reload()
-    await navigate(page, 'Weekly view')
+    await navigate(page, 'Weekly Planner')
     await page.getByRole('button', { name: /Customize study:/ }).click()
     // Real write succeeds, but current Date advances during it. No planner/save function is mocked.
     await page.evaluate(() => {
@@ -441,7 +442,7 @@ async function boundaryFaults(
     equal(edited.schedule.lockedBlocks[0].blockId, source.schedule.lockedBlocks[0].blockId)
     equal(edited.bytes.academic, source.bytes.academic)
     await page.reload()
-    await navigate(page, 'Weekly view')
+    await navigate(page, 'Weekly Planner')
     equal((await auditSource(page)).bytes.schedule, edited.bytes.schedule)
     await expect(page.getByRole('button', { name: /^Locked study:/ })).toBeVisible()
     await checkLayout(page)
@@ -487,7 +488,7 @@ async function blockedSource(
         }
     }, kind)
     await page.reload()
-    await navigate(page, 'Weekly view')
+    await navigate(page, 'Weekly Planner')
     const warning =
       kind === 'invalid'
         ? "couldn't read your saved scheduling data"

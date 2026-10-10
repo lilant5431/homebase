@@ -162,6 +162,7 @@
     --hb-action: ButtonText;
     --hb-on-action: ButtonFace;
     --hb-action-hover: ButtonText;
+    --hb-action-pressed: ButtonText;
     --hb-border: CanvasText;
     --hb-control-border: ButtonText;
     --hb-content-edge: CanvasText;

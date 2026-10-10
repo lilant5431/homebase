@@ -1,7 +1,7 @@
 @import url('./styles/tokens.css');
 
 :root {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--hb-font-ui);
   color: var(--hb-text);
   background: var(--hb-canvas);
   font-synthesis: none;
@@ -61,16 +61,12 @@ textarea:focus-visible {
   box-shadow: 0 5px 10px var(--hb-shadow);
 }
 .brand-mark span {
-  font:
-    800 26px/1 'Manrope',
-    sans-serif;
+  font: 800 26px/1 var(--hb-font-ui);
   transform: translateY(-2px);
 }
 .brand strong {
   display: block;
-  font:
-    800 19px/1.15 'Manrope',
-    sans-serif;
+  font: 800 19px/1.15 var(--hb-font-ui);
   letter-spacing: -0.8px;
   color: var(--hb-text);
 }
@@ -139,9 +135,7 @@ textarea:focus-visible {
   margin-bottom: 13px;
 }
 .sidebar-card strong {
-  font:
-    800 12px/1.4 'Manrope',
-    sans-serif;
+  font: 800 12px/1.4 var(--hb-font-ui);
 }
 .sidebar-card p {
   font-size: 11px;
@@ -224,9 +218,7 @@ textarea:focus-visible {
   gap: 20px;
 }
 .page-heading h1 {
-  font:
-    800 clamp(27px, 3vw, 36px)/1.2 'Manrope',
-    sans-serif;
+  font: 800 clamp(27px, 3vw, 36px)/1.2 var(--hb-font-ui);
   letter-spacing: -1.65px;
   margin: 9px 0 8px;
   color: var(--hb-text);
@@ -262,9 +254,7 @@ textarea:focus-visible {
   z-index: 1;
 }
 .welcome-banner h2 {
-  font:
-    800 22px/1.2 'Manrope',
-    sans-serif;
+  font: 800 22px/1.2 var(--hb-font-ui);
   letter-spacing: -0.8px;
   color: var(--hb-text);
   margin: 8px 0;
@@ -383,9 +373,7 @@ textarea:focus-visible {
   display: block;
 }
 .stat-card strong {
-  font:
-    800 24px/1.25 'Manrope',
-    sans-serif;
+  font: 800 24px/1.25 var(--hb-font-ui);
   display: block;
   color: var(--hb-text);
   margin: 4px 0;
@@ -418,9 +406,7 @@ textarea:focus-visible {
 .panel-heading h2,
 .quick-section h2,
 .list-section-heading h2 {
-  font:
-    800 16px/1.3 'Manrope',
-    sans-serif;
+  font: 800 16px/1.3 var(--hb-font-ui);
   letter-spacing: -0.45px;
   margin: 6px 0 0;
 }
@@ -537,9 +523,7 @@ textarea:focus-visible {
   color: var(--hb-muted);
 }
 .date-tile b {
-  font:
-    800 16px/1 'Manrope',
-    sans-serif;
+  font: 800 16px/1 var(--hb-font-ui);
 }
 .date-tile small {
   font-size: 8px;
@@ -662,9 +646,7 @@ textarea:focus-visible {
   margin: 0 auto 14px;
 }
 .empty-state strong {
-  font:
-    800 13px 'Manrope',
-    sans-serif;
+  font: 800 13px var(--hb-font-ui);
   color: var(--hb-muted);
 }
 .empty-state p {
@@ -682,9 +664,7 @@ textarea:focus-visible {
   display: block;
 }
 .week-toolbar strong {
-  font:
-    800 15px 'Manrope',
-    sans-serif;
+  font: 800 15px var(--hb-font-ui);
 }
 .week-toolbar span {
   font-size: 11px;
@@ -763,9 +743,7 @@ textarea:focus-visible {
   text-transform: uppercase;
 }
 .day-header strong {
-  font:
-    800 18px 'Manrope',
-    sans-serif;
+  font: 800 18px var(--hb-font-ui);
   color: var(--hb-text);
 }
 .is-today .day-header strong {
@@ -933,9 +911,7 @@ textarea:focus-visible {
   flex: 1;
 }
 .class-card h2 {
-  font:
-    800 14px 'Manrope',
-    sans-serif;
+  font: 800 14px var(--hb-font-ui);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1024,9 +1000,7 @@ body.mobile-editor-open .modal {
   border-bottom: 1px solid var(--hb-border);
 }
 .modal-header h2 {
-  font:
-    800 21px 'Manrope',
-    sans-serif;
+  font: 800 21px var(--hb-font-ui);
   margin: 5px 0 0;
   text-transform: capitalize;
 }

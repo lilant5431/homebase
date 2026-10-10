@@ -1,3 +1,4 @@
+import LightingButton from './LightingButton'
 import type { ReactNode } from 'react'
 import { Check, Plus, Pencil, Trash2 } from 'lucide-react'
 import { classFor, dueLabel, type AcademicData, type Assignment } from './domain'
@@ -47,10 +48,10 @@ export function PageHeader({
         </h1>
         <p>{subtitle}</p>
       </div>
-      <button className="primary-button" onClick={onAction}>
+      <LightingButton className="primary-button" onClick={onAction}>
         <Plus size={17} />
         {action}
-      </button>
+      </LightingButton>
     </div>
   )
 }

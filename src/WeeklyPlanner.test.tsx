@@ -37,7 +37,7 @@ function launch(academic = academicFixture(), schedule?: ScheduleData) {
   saveData(academic)
   if (schedule) saveScheduleData(schedule)
   render(<App initialReference={initialReference} />)
-  fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
 }
 function add(start = '16:00', end = '19:00') {
   fireEvent.click(screen.getByRole('button', { name: 'Add availability for Oct 6' }))
@@ -90,7 +90,7 @@ describe('Weekly Planner integration', () => {
     expect(localStorage.getItem('homebase.academic.v1')).toBe(academic)
     cleanup()
     render(<App initialReference={initialReference} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
     expect(studyCards()).toHaveLength(1)
   })
   it('creates availability with the Safari secure ID fallback', () => {
@@ -256,7 +256,7 @@ describe('failure isolation and immutable derived output', () => {
       throw new DOMException('Denied')
     })
     render(<App initialReference={initialReference} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
     expect(screen.getByRole('alert').textContent).toContain('Scheduling storage is unavailable')
     expect(screen.getByRole('button', { name: 'Add availability for Oct 6' }).hasAttribute('disabled')).toBe(
       true,
@@ -292,7 +292,7 @@ describe('failure isolation and immutable derived output', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true)
     render(<App initialReference={initialReference} />)
     fireEvent.click(screen.getByRole('button', { name: 'Explore with sample data' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
     expect(screen.getByText(/Add the times you're available to study/)).toBeTruthy()
     expect(studyCards()).toHaveLength(0)
     expect(localStorage.getItem(SCHEDULE_STORAGE_KEY)).toBeNull()
@@ -371,7 +371,7 @@ describe('derived session, unscheduled and lock presentation', () => {
 describe('explicit reference lifecycle', () => {
   it('captures now on initialization when no bootstrap reference was supplied', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
     expect(referenceText()).toContain('16:00')
   })
   it('initialization reference survives StrictMode rendering and prop rerenders with no timers', () => {
@@ -383,7 +383,7 @@ describe('explicit reference lifecycle', () => {
         <App initialReference={initialReference} />
       </StrictMode>,
     )
-    fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
     const before = referenceText()
     vi.setSystemTime(new Date(2026, 9, 6, 17, 0))
     app.rerender(
@@ -413,7 +413,7 @@ describe('explicit reference lifecycle', () => {
     vi.setSystemTime(new Date(2026, 9, 6, 17, 0))
     fireEvent.click(screen.getByRole('button', { name: 'Assignments' }))
     fireEvent.click(screen.getByRole('button', { name: 'Complete Cell homework' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
     expect(referenceText()).toContain('17:00')
     expect(studyCards()).toHaveLength(0)
     expect(localStorage.getItem(SCHEDULE_STORAGE_KEY)).toBe(bytes)
@@ -507,6 +507,6 @@ it('failed academic persistence retains the reference while preserving existing 
   fireEvent.click(screen.getByRole('button', { name: 'Assignments' }))
   fireEvent.click(screen.getByRole('button', { name: 'Complete Cell homework' }))
   expect(screen.getByRole('alert').textContent).toContain('could not save changes')
-  fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
   expect(referenceText()).toBe(before)
 })
