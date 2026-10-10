@@ -289,11 +289,18 @@
     margin-inline-start: 52px;
   }
 }
-.shell-secondary:active {
+/* Pair text and backplate explicitly; inherited primary hover otherwise keeps secondary text. */
+.shell-secondary:hover:not(:disabled) {
+  background: var(--hb-action-hover);
+  color: var(--hb-on-action);
+}
+.shell-secondary:active:not(:disabled) {
+  background: var(--hb-action-pressed);
   color: var(--hb-on-action);
 }
 @media (forced-colors: active) {
-  .shell-secondary:active {
+  .shell-secondary:hover:not(:disabled),
+  .shell-secondary:active:not(:disabled) {
     color: ButtonText;
     background: ButtonFace;
   }

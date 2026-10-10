@@ -84,10 +84,35 @@ These preserve the V6 geometry/material distinction and use the audition’s edi
 
 ## Results and limits
 
-Baseline: **711 tests/23 files passed**. Final: **731 tests/24 files passed**, including 20 new shell/activation regressions. Clean dependency installation (115 packages), typecheck, type-aware lint, build, formatting, design audit and whitespace checks passed. The exact-head hosted `CI / verify` run is linked in the PR package. Production-browser verification passed: 64 shell/palette/viewport cases across Chromium and desktop WebKit, 84 existing appearance/viewport cases across both engines, all five Phase 2 workflows at each of five viewports (25 cases), and all three existing mobile-editor viewport scenarios (390×844, 844×390, 667×375). These standalone browser suites are local evidence; hosted CI runs the repository’s required project gates.
+Baseline: **711 tests/23 files passed**. Initial delivery: **731 tests/24 files passed**, including 20 new shell/activation regressions. Clean dependency installation (115 packages), typecheck, type-aware lint, build, formatting, design audit and whitespace checks passed. The exact-head hosted `CI / verify` run is linked in the PR package. Production-browser verification passed: 64 shell/palette/viewport cases across Chromium and desktop WebKit, 84 existing appearance/viewport cases across both engines, all five Phase 2 workflows at each of five viewports (25 cases), and all three existing mobile-editor viewport scenarios (390×844, 844×390, 667×375). These standalone browser suites are local evidence; hosted CI runs the repository’s required project gates.
 
 Type-aware lint remains zero-warning with no suppression/rule weakening. Design semantic/material roles remain unchanged; the original 92 + four reflection + eight Frosted audit remains mandatory.
 
 No fresh physical Safari/VoiceOver/battery/400% browser-menu zoom acceptance is claimed. Linux WebKit is not iOS Safari. The cloud’s extracted WebKit libraries use the documented 2.6B library path/preflight workaround; actual browser startup and assertions must still succeed. Arbitrary legacy class colors are not certified by the token audit. **DT-01 remains unresolved for 2.6E**; browser geometry does not close it.
 
 Later separately authorized work: 2.6D records, 2.6E editors/native group, 2.6F backgrounds/planner lighting, 2.6G integrated physical acceptance. No later milestone was implemented.
+
+## PR #17 review remediation — rendered button contrast
+
+Reviewed head: `e5ca38e7512b2dfbf6fc305e3c86146df2438dfe`. The proposed normal-palette pressed-state failure did **not** reproduce in either production browser: `.top-add:active` already outranked the base secondary background. Pointer-held and Space-held computed pairs were white on `rgb(30, 58, 138)` (Sunlit, 10.36:1) and `rgb(11, 18, 32)` on `rgb(108, 197, 232)` (Moonlit, 9.62:1). The earlier foreground-only assertion did not establish those ratios.
+
+The expanded review found two real defects:
+
+- **Secondary hover:** inherited primary action-hover background with secondary action foreground. Real computed Sunlit pair `rgb(29, 78, 216)` / `rgb(30, 64, 175)` measured 1.30:1; Moonlit `rgb(139, 221, 252)` / `rgb(182, 234, 255)` measured 1.17:1. The new browser regression failed at 1.30:1 before the CSS correction.
+- **Shared primary pressed state in forced colors:** `--hb-action-pressed` retained its normal palette value while action/hover/on-action roles used system colors. Chromium rendered white on white (1:1) during both pointer and keyboard holds. The new regression reproduced this before the missing system-role mapping was supplied.
+
+Minimal corrections: secondary hover explicitly pairs `--hb-action-hover` with `--hb-on-action`; secondary pressed explicitly pairs `--hb-action-pressed` with `--hb-on-action`, independently of inherited styles. Both exclude disabled controls. Forced-color secondary hover/pressed use `ButtonText` on `ButtonFace`; the existing forced-color token block now maps action-pressed to `ButtonText`, consistent with action/hover roles. Static pressed edge/focus feedback remains; no normal palette values, handlers, geometry, fonts or persistence changed.
+
+| Actual rendered secondary state         |  Sunlit | Moonlit |
+| --------------------------------------- | ------: | ------: |
+| Default (unchanged)                     |  6.70:1 | 11.16:1 |
+| Hover after correction                  |  8.72:1 | 14.45:1 |
+| Pointer-held pressed                    | 10.36:1 |  9.62:1 |
+| Space-held pressed                      | 10.36:1 |  9.62:1 |
+| Forced-color hover / pressed (Chromium) |    21:1 |    21:1 |
+
+`src/acceptance/buttons.browser.ts` exercises computed foreground **and** background against the 4.5:1 text threshold, for secondary actions, shared page-header primary actions and current navigation, plus other navigation hover/pressed states. It verifies native pointer, Space and Enter activation exactly once, real editor opening/cancellation, unchanged source/preference bytes and planner reference, static pressed feedback, reduced motion, reduced effects and forced colors. Chromium forced-colors is tested; desktop WebKit has no supported forced-color emulation here. The existing shell matrix now measures the actual held pair instead of checking only text color.
+
+`buttonContrast.ts` is acceptance-only WCAG sRGB arithmetic, with five unit regressions for known ratios, reproduced failures and invalid/transparent inputs. It rejects uncomposited alpha rather than fabricating evidence. Navigation's transient alpha is allowed to settle before measuring its opaque hover backplate; content/scrim contrast audits remain separate. Run the new production check with `node --experimental-strip-types src/acceptance/buttons.browser.ts` against port 4178, using the same browser prerequisites above.
+
+Review-remediation local results: **736 tests / 25 files passed** (five new contrast-arithmetic tests); typecheck, type-aware lint, production build, formatting, design audit and whitespace checks passed. The new button suite passed 14 engine/palette/reduction contexts, including Chromium forced colors. Existing appearance (84 cases), Phase 2 workflow (25 cases) and mobile editor (three scenarios) checks passed. The shell matrix passed all 64 Chromium/WebKit cases on a serialized rerun. An initial parallel run stopped at the existing WebKit font-readiness assertion; its font assertions were not changed or weakened, and font/loading production code remains unchanged. This transient execution failure is reported rather than represented as an uninterrupted green run. The exact new commit/hosted run is recorded in the updated PR package. No new physical Safari evidence; DT-01 remains unresolved for 2.6E.

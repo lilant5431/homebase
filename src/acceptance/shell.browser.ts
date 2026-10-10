@@ -1,6 +1,7 @@
 /** Built-app 2.6C checks; preview on 4178. No physical Safari certification. */
 import { chromium, webkit, type Page } from 'playwright'
 import { expect } from 'playwright/test'
+import { opaqueTextContrast } from './buttonContrast.ts'
 declare global {
   interface Window {
     __fontShifts?: number
@@ -88,9 +89,13 @@ for (const [name, engine] of [
             const action = page.locator('.shell-secondary')
             await action.hover()
             await page.mouse.down()
-            expect(await action.evaluate((node) => getComputedStyle(node).color)).toBe(
-              mode === 'dark' ? 'rgb(11, 18, 32)' : 'rgb(255, 255, 255)',
-            )
+            const pressed = await action.evaluate((node) => ({
+              foreground: getComputedStyle(node).color,
+              background: getComputedStyle(node).backgroundColor,
+              active: node.matches(':active'),
+            }))
+            expect(pressed.active).toBe(true)
+            expect(opaqueTextContrast(pressed.foreground, pressed.background)).toBeGreaterThanOrEqual(4.5)
             await page.mouse.move(0, 0)
             await page.mouse.up()
           }
