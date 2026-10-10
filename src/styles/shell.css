@@ -1,0 +1,300 @@
+/* Exterior reflects the environment; text sits on the audited scrim.
+   Navigation glass is independent of the content material. No scenery in 2.6C. */
+:root {
+  --hb-nav-exterior: rgba(240, 248, 255, 0.7);
+  --hb-nav-scrim: rgba(255, 255, 255, 0.92);
+  --hb-brand-surface: var(--hb-nav-scrim);
+  --hb-nav-blur: 12px;
+  --hb-nav-reflection: linear-gradient(140deg, rgba(255, 255, 255, 0.32), transparent 45%);
+}
+:root[data-palette='dark'] {
+  --hb-nav-exterior: rgba(7, 16, 30, 0.94);
+  --hb-nav-scrim: rgba(18, 29, 46, 0.94);
+  --hb-brand-surface: #080f1b;
+  --hb-nav-reflection: linear-gradient(140deg, rgba(139, 221, 252, 0.07), transparent 45%);
+}
+.skip-link {
+  position: fixed;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  z-index: 45;
+  padding: 12px;
+  background: var(--hb-surface);
+  color: var(--hb-text);
+  transform: translateY(-150%);
+}
+.skip-link:focus {
+  transform: none;
+}
+.sidebar {
+  width: 216px;
+  position: sticky;
+  top: 0;
+  left: auto;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  z-index: 20;
+  padding: max(16px, env(safe-area-inset-top)) 12px max(16px, env(safe-area-inset-bottom));
+  gap: 16px;
+  background: var(--hb-nav-exterior);
+  background-image: var(--hb-nav-reflection);
+  border-right: 1px solid var(--hb-control-border);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.15),
+    0 1px 2px var(--hb-shadow);
+  -webkit-backdrop-filter: blur(var(--hb-nav-blur));
+  backdrop-filter: blur(var(--hb-nav-blur));
+}
+.sidebar > * {
+  flex-shrink: 0;
+}
+.brand {
+  margin: 0;
+  padding: 12px;
+  min-width: 0;
+  border-radius: 12px;
+  background: var(--hb-brand-surface);
+  justify-content: space-between;
+}
+.sidebar nav {
+  gap: 4px;
+  padding: 4px;
+  background: var(--hb-nav-scrim);
+  border-radius: 12px;
+}
+.nav-item {
+  min-height: 44px;
+  gap: 10px;
+  padding: 10px 8px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--hb-text);
+  border-radius: 8px;
+  transition: background-color 160ms var(--hb-easing-standard);
+}
+.nav-item svg {
+  flex: none;
+}
+.nav-item.active {
+  background: var(--hb-selection);
+  color: var(--hb-text);
+  box-shadow: inset 3px 0 var(--hb-action);
+  font-weight: 700;
+}
+.appearance-settings {
+  margin: 0;
+  padding: 4px;
+  background: var(--hb-nav-scrim);
+  border-radius: 12px;
+}
+.topbar {
+  height: auto;
+  min-height: 76px;
+  padding: 16px 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.shell-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.breadcrumb {
+  color: var(--hb-text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.topbar-right {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.top-add,
+.primary-button {
+  min-height: 44px;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  white-space: normal;
+  padding: 10px 12px;
+}
+.shell-secondary {
+  background: var(--hb-surface);
+  color: var(--hb-action);
+  border: 1px solid var(--hb-control-border);
+}
+.page-content {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 32px 24px 64px;
+}
+.page-heading {
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+.page-heading > div {
+  min-width: 0;
+}
+.drawer-close {
+  display: none;
+}
+.lighting-button {
+  position: relative;
+  isolation: isolate;
+}
+.activation-light {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px var(--hb-glow),
+    0 0 8px var(--hb-glow);
+}
+.lighting-button:active:not(:disabled) {
+  box-shadow: inset 0 0 0 2px var(--hb-focus);
+}
+.lighting-button:disabled {
+  background: var(--hb-quiet);
+  color: var(--hb-muted);
+  border: 1px solid var(--hb-control-border);
+}
+.mobile-menu {
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+}
+
+@media (max-width: 1199px), (max-height: 500px) {
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(320px, calc(100% - 32px));
+    visibility: hidden;
+    background: var(--hb-nav-exterior);
+    background-image: var(--hb-nav-reflection);
+    box-shadow: 8px 0 24px var(--hb-shadow);
+  }
+  .sidebar.open {
+    left: 0;
+    visibility: visible;
+  }
+  .drawer-close,
+  .mobile-menu {
+    display: grid;
+    place-items: center;
+  }
+  .drawer-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .mobile-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 19;
+    background: var(--hb-backdrop);
+    border: 0;
+  }
+  .topbar {
+    padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 12px
+      max(16px, env(safe-area-inset-left));
+    min-height: 68px;
+  }
+  .today-pill {
+    display: none;
+  }
+  .top-add {
+    font-size: 1rem;
+    gap: 6px;
+  }
+  .page-content {
+    padding: 24px 16px 48px;
+  }
+}
+@media (max-width: 600px), (max-height: 500px) {
+  .page-heading {
+    flex-direction: column;
+  }
+}
+/* Use a real opaque surface, not a weaker transparent imitation of the fallback. */
+:root[data-effects='reduced'] .sidebar,
+:root[data-forced-colors='true'] .sidebar {
+  --hb-nav-exterior: var(--hb-elevated);
+  --hb-nav-scrim: var(--hb-elevated);
+  --hb-brand-surface: var(--hb-elevated);
+  --hb-nav-blur: 0px;
+  --hb-nav-reflection: none;
+  box-shadow: none;
+}
+:root[data-motion='reduced'] .activation-light,
+:root[data-effects='reduced'] .activation-light,
+:root[data-forced-colors='true'] .activation-light {
+  display: none;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sidebar {
+    --hb-nav-exterior: var(--hb-elevated);
+    --hb-nav-scrim: var(--hb-elevated);
+    --hb-brand-surface: var(--hb-elevated);
+    --hb-nav-blur: 0px;
+    --hb-nav-reflection: none;
+    box-shadow: none;
+  }
+  .activation-light {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .activation-light {
+    display: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .sidebar {
+    --hb-nav-exterior: var(--hb-elevated);
+    --hb-nav-scrim: var(--hb-elevated);
+    --hb-brand-surface: var(--hb-elevated);
+    --hb-nav-blur: 0px;
+    --hb-nav-reflection: none;
+    box-shadow: none;
+  }
+}
+@media (forced-colors: active) {
+  .nav-item.active {
+    border-inline-start: 3px solid Highlight;
+  }
+  .lighting-button:active:not(:disabled) {
+    outline: 2px solid Highlight;
+  }
+}
+/* Large-text branding can grow vertically; never push the drawer close control off-screen. */
+.brand {
+  flex-wrap: wrap;
+}
+.brand strong {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.drawer-close {
+  margin-inline-start: auto;
+}
+
+@media (max-width: 360px) {
+  .topbar-right {
+    margin-inline-start: 52px;
+  }
+}
+.shell-secondary:active {
+  color: var(--hb-on-action);
+}
+@media (forced-colors: active) {
+  .shell-secondary:active {
+    color: ButtonText;
+    background: ButtonFace;
+  }
+}

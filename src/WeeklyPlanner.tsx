@@ -77,7 +77,7 @@ export default function WeeklyPlanner({
     <>
       <PageHeader
         eyebrow="YOUR TIME AT A GLANCE"
-        title="Weekly view"
+        title="Weekly Planner"
         subtitle="Your deadlines, fixed plans, and recommended study sessions."
         action="Add commitment"
         onAction={onCreateCommitment}

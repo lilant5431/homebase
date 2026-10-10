@@ -23,7 +23,7 @@ it('offers customization and locks generated work as persisted intent', () => {
   saveData(lockAcademic())
   saveScheduleData(lockSchedule())
   render(<App initialReference={lockReference} />)
-  fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
   fireEvent.click(screen.getByRole('button', { name: /Customize study:/ }))
   expect(screen.getByRole('heading', { name: 'Customize study session' })).toBeTruthy()
   fireEvent.click(screen.getByRole('button', { name: 'Lock session' }))
@@ -39,7 +39,7 @@ function launch(academic: AcademicData = lockAcademic(), schedule: ScheduleData 
       <App initialReference={lockReference} />
     </StrictMode>,
   )
-  fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
   return app
 }
 function source() {
@@ -79,7 +79,7 @@ it('customizes a generated interval before locking and persists no generated rem
   expect(localStorage.getItem('homebase.academic.v1')).toBe(academicBytes)
   cleanup()
   render(<App initialReference={lockReference} />)
-  fireEvent.click(screen.getByRole('button', { name: 'Weekly view' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Weekly Planner' }))
   expect(screen.getByRole('button', { name: /^Locked study:/ })).toBeTruthy()
 })
 it('edits a healthy lock without changing its blockId and derives the shorter duration', () => {

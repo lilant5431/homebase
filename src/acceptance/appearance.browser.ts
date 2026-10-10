@@ -1,3 +1,4 @@
+declare const process: { env: { HOMEBASE_PREVIEW_URL?: string } }
 /** Run the production preview on 4176; see docs/implementation/phase-2-6b.md. */
 import { chromium, webkit, type Page } from 'playwright'
 import { expect } from 'playwright/test'
@@ -7,7 +8,7 @@ declare global {
     __appearanceWrites?: string[]
   }
 }
-const url = 'http://127.0.0.1:4176'
+const url = process.env.HOMEBASE_PREVIEW_URL ?? 'http://127.0.0.1:4176'
 const preference = {
   version: 1,
   environment: 'lattice',
@@ -83,7 +84,7 @@ for (const [name, engine] of [
       const moduleUrl = await page.locator('script[type="module"]').getAttribute('src')
       await page.unroute('**/assets/*.js')
       await page.addScriptTag({ type: 'module', url: `${url}${moduleUrl}?appearance-parity` })
-      await page.getByRole('heading', { name: /Good to have/ }).waitFor()
+      await page.getByRole('heading', { name: /^Overview/ }).waitFor()
       await palette(page, mode)
       expect(await page.evaluate(() => window.__homebaseAppearance?.effective.palette)).toBe(mode)
       await context.close()
@@ -111,7 +112,7 @@ for (const [name, engine] of [
     const gapModule = await initializing.locator('script[type="module"]').getAttribute('src')
     await initializing.unroute('**/assets/*.js')
     await initializing.addScriptTag({ type: 'module', url: `${url}${gapModule}?initialization-gap` })
-    await initializing.getByRole('heading', { name: /Good to have/ }).waitFor()
+    await initializing.getByRole('heading', { name: /^Overview/ }).waitFor()
     await palette(initializing, 'dark')
     console.log(`${name}: bootstrap/listener gap converges after real cross-tab storage event`)
     await gapContext.close()
@@ -143,7 +144,9 @@ for (const [name, engine] of [
           if (name === 'chromium' && viewport.width === 1440 && environment === 'lattice') {
             await page.evaluate(() => window.scrollTo(0, 0))
             await page.screenshot({
-              path: `docs/implementation/assets/phase-2-6b-${mode}-desktop.png`,
+              path: process.env.HOMEBASE_PREVIEW_URL
+                ? `test-results/appearance/${mode}-desktop.png`
+                : `docs/implementation/assets/phase-2-6b-${mode}-desktop.png`,
               fullPage: true,
             })
           }
@@ -255,7 +258,7 @@ for (const [name, engine] of [
       localStorage.getItem('homebase.academic.v1'),
       localStorage.getItem('homebase.schedule.v1'),
     ])
-    await page.getByRole('button', { name: 'Weekly view', exact: true }).click()
+    await page.getByRole('button', { name: 'Weekly Planner', exact: true }).click()
     const planBefore = await page.locator('.planner-reference').innerText()
     const sessionsBefore = await page.locator('.study-event').allTextContents()
     expect(sessionsBefore).toHaveLength(1)

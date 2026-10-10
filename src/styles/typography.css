@@ -1,0 +1,96 @@
+/* Maintainer-approved 2.6C amendment: editorial identity + functional UI.
+   Unmodified official variable fonts; notices/provenance in assets/fonts/README.md. */
+@font-face {
+  font-family: 'Newsreader';
+  src: url('../assets/fonts/Newsreader.woff2') format('woff2');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('../assets/fonts/Geist.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  --hb-font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --hb-font-ui: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--hb-font-ui);
+  font-size: 100%;
+  line-height: 1.5;
+}
+.brand strong {
+  font-family: var(--hb-font-display);
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 2rem;
+  font-optical-sizing: auto;
+  letter-spacing: -0.025em;
+}
+.page-heading h1 {
+  font-family: var(--hb-font-display);
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 2.25rem;
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+  overflow-wrap: anywhere;
+}
+.page-heading p,
+.breadcrumb {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.task-main strong,
+.row-copy strong,
+.class-card h2 {
+  font-family: var(--hb-font-ui);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  overflow-wrap: anywhere;
+}
+.task-main span,
+.row-copy small,
+.row-meta,
+.appearance-field,
+.modal-body label,
+.color-field legend {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.day-heading,
+.event-time,
+.planner-reference,
+.row-meta,
+.due-badge {
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 600px), (max-height: 500px) {
+  .page-heading h1 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+}
+/* Font substitution and long academic labels must reflow rather than disappear. */
+.task-main strong,
+.task-main span,
+.row-copy strong,
+.row-copy small,
+.class-card h2 {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  overflow: visible;
+  text-overflow: clip;
+}
+/* Stable functional heading metrics avoid fractional document-height tails when rotating editors. */
+.modal-header h2 {
+  line-height: 1.75rem;
+}
+.modal-body input:not([type='radio']),
+.modal-body select,
+.modal-body textarea {
+  line-height: 1.5;
+}

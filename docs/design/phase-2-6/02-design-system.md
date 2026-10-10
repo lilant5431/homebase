@@ -36,7 +36,9 @@ Subject slots (color plus written class name): Light `#315B9A, #5C4A8F, #23695E,
 
 ## Typography, spacing and dimensions
 
-Retain existing bundled DM Sans for body/control text and Manrope for headings/brand; system-ui/sans-serif fallback must remain usable. No new font download or network dependency. Static atlas uses system fallback when bundled fonts are unavailable; it is a layout study, not typography acceptance.
+**Maintainer-authorized 2.6C typography amendment:** Newsreader provides the wordmark and primary page headings; Geist Sans provides navigation, buttons, native fields, record titles, times, metadata, warnings and body text. Self-host unmodified official variable WOFF2 assets with SIL OFL 1.1 notices. Newsreader uses weight 600/automatic optical sizing for identity and h1; Geist uses the existing functional weight hierarchy. Display/UI family roles have explicit serif/system fallbacks; controls remain at least 16px. This supersedes only the original Manrope/DM Sans pairing, preserving all V6 semantic palettes, materials, layout and interaction contracts. See [2.6C implementation/provenance](../../implementation/phase-2-6c.md).
+
+Historical atlas/V6 screenshots retain their original typography and remain layout/artistic references, not evidence of the new font system. The separately pinned Newsreader + Geist audition is visual context only; it has not certified production performance or mobile accessibility.
 
 | Role            | Size / line height               | Weight / behavior                                  |
 | --------------- | -------------------------------- | -------------------------------------------------- |
