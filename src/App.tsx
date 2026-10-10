@@ -48,6 +48,7 @@ import {
   ManagedAssignment,
   ManagedRow,
 } from './AcademicUI'
+import AppearanceSettings from './AppearanceSettings'
 import EditorModal, { entityLabel, type Modal } from './EditorModal'
 
 type View = 'overview' | 'week' | 'assignments' | 'assessments' | 'commitments' | 'classes'
@@ -162,6 +163,7 @@ export default function App({ initialReference }: { initialReference?: PriorityR
             </button>
           ))}
         </nav>
+        <AppearanceSettings />
         <div className="sidebar-bottom">
           <div className="sidebar-card">
             <div className="sidebar-card-icon">

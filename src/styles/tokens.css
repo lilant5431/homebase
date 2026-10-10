@@ -1,0 +1,179 @@
+/* Approved Phase 2.6A semantic palettes. Parity is checked against tokens.json. */
+:root {
+  --hb-canvas: #f3f6fa;
+  --hb-surface: #ffffff;
+  --hb-elevated: #ffffff;
+  --hb-quiet: #eaf0f7;
+  --hb-text: #172334;
+  --hb-muted: #536477;
+  --hb-action: #1d4ed8;
+  --hb-on-action: #ffffff;
+  --hb-action-hover: #1e40af;
+  --hb-action-pressed: #1e3a8a;
+  --hb-border: #d5dee8;
+  --hb-control-border: #64748b;
+  --hb-selection: #e5edff;
+  --hb-focus: #1d4ed8;
+  --hb-success: #166534;
+  --hb-success-surface: #eaf6ef;
+  --hb-warning: #854d0e;
+  --hb-warning-surface: #fff4d6;
+  --hb-danger: #b4233a;
+  --hb-danger-surface: #fff0f2;
+  --hb-neutral: #536477;
+  --hb-neutral-surface: #eaf0f7;
+  --hb-cyan: #216777;
+  --hb-sage: #23695e;
+  --hb-glow: #bbdfff;
+  --hb-subject-1: #315b9a;
+  --hb-subject-2: #5c4a8f;
+  --hb-subject-3: #23695e;
+  --hb-subject-4: #86531a;
+  --hb-subject-5: #924968;
+  --hb-subject-6: #4d6479;
+  --hb-backdrop: rgba(11, 18, 32, 0.48);
+  --hb-frosted-muted: #35465a;
+  --hb-frosted-edge: #42556d;
+  --hb-frosted-surface: rgba(255, 255, 255, 0.72);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-palette]) {
+    --hb-canvas: #0b1220;
+    --hb-surface: #121d2e;
+    --hb-elevated: #1a293d;
+    --hb-quiet: #1c2b40;
+    --hb-text: #e8eef6;
+    --hb-muted: #a8b7cb;
+    --hb-action: #8bddfc;
+    --hb-on-action: #0b1220;
+    --hb-action-hover: #b6eaff;
+    --hb-action-pressed: #6cc5e8;
+    --hb-border: #314359;
+    --hb-control-border: #71859e;
+    --hb-selection: #233d58;
+    --hb-focus: #8bddfc;
+    --hb-success: #7ae0ae;
+    --hb-success-surface: #102c24;
+    --hb-warning: #f5c96a;
+    --hb-warning-surface: #312611;
+    --hb-danger: #ff9aa7;
+    --hb-danger-surface: #351c28;
+    --hb-neutral: #a8b7cb;
+    --hb-neutral-surface: #1c2b40;
+    --hb-cyan: #8bddfc;
+    --hb-sage: #8ed4c2;
+    --hb-glow: #236e91;
+    --hb-subject-1: #9abef3;
+    --hb-subject-2: #c3b2f4;
+    --hb-subject-3: #8ed4c2;
+    --hb-subject-4: #e8bf82;
+    --hb-subject-5: #e7a9c6;
+    --hb-subject-6: #acc2d8;
+    --hb-backdrop: rgba(0, 0, 0, 0.64);
+    --hb-frosted-muted: #d0dcea;
+    --hb-frosted-edge: #b6c9df;
+    --hb-frosted-surface: rgba(18, 29, 46, 0.72);
+    color-scheme: dark;
+  }
+}
+:root[data-palette='dark'] {
+  --hb-canvas: #0b1220;
+  --hb-surface: #121d2e;
+  --hb-elevated: #1a293d;
+  --hb-quiet: #1c2b40;
+  --hb-text: #e8eef6;
+  --hb-muted: #a8b7cb;
+  --hb-action: #8bddfc;
+  --hb-on-action: #0b1220;
+  --hb-action-hover: #b6eaff;
+  --hb-action-pressed: #6cc5e8;
+  --hb-border: #314359;
+  --hb-control-border: #71859e;
+  --hb-selection: #233d58;
+  --hb-focus: #8bddfc;
+  --hb-success: #7ae0ae;
+  --hb-success-surface: #102c24;
+  --hb-warning: #f5c96a;
+  --hb-warning-surface: #312611;
+  --hb-danger: #ff9aa7;
+  --hb-danger-surface: #351c28;
+  --hb-neutral: #a8b7cb;
+  --hb-neutral-surface: #1c2b40;
+  --hb-cyan: #8bddfc;
+  --hb-sage: #8ed4c2;
+  --hb-glow: #236e91;
+  --hb-subject-1: #9abef3;
+  --hb-subject-2: #c3b2f4;
+  --hb-subject-3: #8ed4c2;
+  --hb-subject-4: #e8bf82;
+  --hb-subject-5: #e7a9c6;
+  --hb-subject-6: #acc2d8;
+  --hb-backdrop: rgba(0, 0, 0, 0.64);
+  --hb-frosted-muted: #d0dcea;
+  --hb-frosted-edge: #b6c9df;
+  --hb-frosted-surface: rgba(18, 29, 46, 0.72);
+  color-scheme: dark;
+}
+
+:root {
+  --hb-content-surface: var(--hb-surface);
+  --hb-content-muted: var(--hb-muted);
+  --hb-content-edge: var(--hb-border);
+  --hb-content-blur: 0px;
+  --hb-shadow: rgba(0, 0, 0, 0.12);
+  --hb-radius-control: 8px;
+  --hb-radius-card: 12px;
+  --hb-motion-state: 120ms;
+  --hb-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  background: var(--hb-canvas);
+  color: var(--hb-text);
+}
+/* Only capability-checked, unreduced runtime state permits Frosted rendering. */
+:root[data-material='frosted'] {
+  --hb-content-surface: var(--hb-frosted-surface);
+  --hb-content-muted: var(--hb-frosted-muted);
+  --hb-content-edge: var(--hb-frosted-edge);
+  --hb-content-blur: 4px;
+}
+@media (max-width: 760px), (max-width: 950px) and (max-height: 500px) {
+  :root[data-material='frosted'] {
+    --hb-content-blur: 3px;
+  }
+}
+:root[data-motion='reduced'] {
+  --hb-motion-state: 0ms;
+}
+@media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  :root {
+    --hb-motion-state: 0ms;
+  }
+}
+@media (forced-colors: active) {
+  :root {
+    --hb-canvas: Canvas;
+    --hb-surface: Canvas;
+    --hb-elevated: Canvas;
+    --hb-quiet: Canvas;
+    --hb-content-surface: Canvas;
+    --hb-text: CanvasText;
+    --hb-muted: CanvasText;
+    --hb-content-muted: CanvasText;
+    --hb-action: ButtonText;
+    --hb-on-action: ButtonFace;
+    --hb-action-hover: ButtonText;
+    --hb-border: CanvasText;
+    --hb-control-border: ButtonText;
+    --hb-content-edge: CanvasText;
+    --hb-focus: Highlight;
+    --hb-selection: Canvas;
+    --hb-success: CanvasText;
+    --hb-success-surface: Canvas;
+    --hb-warning: CanvasText;
+    --hb-warning-surface: Canvas;
+    --hb-danger: CanvasText;
+    --hb-danger-surface: Canvas;
+    --hb-content-blur: 0px;
+    --hb-shadow: transparent;
+  }
+}
