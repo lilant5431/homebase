@@ -1,0 +1,115 @@
+name: Mobile staging
+
+on:
+  push:
+    branches: [staging/mobile]
+    paths:
+      - staging/source.json
+      - scripts/staging/**
+      - .github/workflows/mobile-staging.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homebase-mobile-staging
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/staging/mobile'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      source_sha: ${{ steps.source.outputs.sha }}
+    steps:
+      - name: Check out staging release controls
+        uses: actions/checkout@v7
+        with:
+          path: control
+          persist-credentials: false
+      - name: Validate pinned source
+        id: source
+        working-directory: control
+        run: |
+          node --input-type=module <<'JS'
+          import { readFileSync, appendFileSync } from 'node:fs'
+          const s = JSON.parse(readFileSync('staging/source.json', 'utf8'))
+          if (s.version !== 1 || s.repository !== process.env.GITHUB_REPOSITORY || !/^[a-f0-9]{40}$/.test(s.sourceSha)) throw new Error('Invalid pinned staging source')
+          appendFileSync(process.env.GITHUB_OUTPUT, `sha=${s.sourceSha}\n`)
+          JS
+      - name: Check out exact application source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.source.outputs.sha }}
+          path: app
+          persist-credentials: false
+      - name: Verify checkout identity
+        working-directory: app
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.19.0'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Install dependencies
+        working-directory: app
+        run: npm ci
+      - name: Check types
+        working-directory: app
+        run: npm run typecheck
+      - name: Lint source and tests
+        working-directory: app
+        run: npm run lint
+      - name: Run tests
+        working-directory: app
+        run: npm test
+      - name: Build production application for the staging path
+        working-directory: app
+        run: npm run build -- --base=/homebase/
+      - name: Check formatting
+        working-directory: app
+        run: npm run format:check
+      - name: Record build provenance and local asset hashes
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+        run: node control/scripts/staging/package-preview.mjs app/dist control/staging/source.json
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: app/dist
+          retention-days: 1
+  deploy:
+    if: github.ref == 'refs/heads/staging/mobile'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      deployments: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish staging artifact
+        id: deployment
+        uses: actions/deploy-pages@v5
+      - name: Record deployment identifier and result
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
+          PREVIEW_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/deployments?sha=$GITHUB_SHA&environment=github-pages" > deployments.json
+          node --input-type=module <<'JS'
+          import { readFileSync, appendFileSync } from 'node:fs'
+          const deployments = JSON.parse(readFileSync('deployments.json', 'utf8'))
+          const d = deployments.find(d => d.sha === process.env.GITHUB_SHA)
+          if (!d) throw new Error('Deployment record missing')
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Mobile staging deployed\nSource: ${process.env.SOURCE_SHA}\n\nStaging release: ${process.env.GITHUB_SHA}\n\nDeployment ID: ${d.id}\n\nStatus: successful deploy-pages completion\n\nTimestamp: ${new Date().toISOString()}\n\nBuild: passed\n\nURL: ${process.env.PREVIEW_URL}\n\nRecord: ${d.url}\n`)
+          JS
