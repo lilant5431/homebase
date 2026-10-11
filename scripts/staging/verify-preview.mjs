@@ -2,16 +2,19 @@ import { chromium, webkit } from 'playwright'
 import { expect } from 'playwright/test'
 import { createHash } from 'node:crypto'
 
-const [url, sourceSha] = process.argv.slice(2)
+const [url, sourceSha, engineName = 'both'] = process.argv.slice(2)
+if (!['both', 'chromium', 'webkit'].includes(engineName))
+  throw new Error('Engine must be both, chromium or webkit')
 if (url !== 'https://lilant5431.github.io/homebase/' || !/^[a-f0-9]{40}$/.test(sourceSha ?? ''))
   throw new Error('Use the known staging URL and verified full source SHA; never test production data.')
 const proxyServer = process.env.HTTPS_PROXY ?? process.env.HTTP_PROXY
 const proxy = proxyServer ? { server: proxyServer } : undefined
 const destinations = ['Overview', 'Weekly Planner', 'Assignments', 'Assessments', 'Commitments', 'Classes']
-for (const [name, engine] of [
+const engines = [
   ['chromium', chromium],
   ['webkit', webkit],
-]) {
+]
+for (const [name, engine] of engines.filter(([name]) => engineName === 'both' || name === engineName)) {
   const browser = await engine.launch({ proxy })
   try {
     for (const viewport of [

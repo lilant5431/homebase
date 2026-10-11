@@ -117,3 +117,26 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
         run: node control/scripts/staging/await-pages.mjs site
+  verify:
+    if: github.ref == 'refs/heads/staging/mobile'
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out staging verification controls
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24.19.0'
+          cache: npm
+      - name: Install browser verification dependencies
+        run: npm ci
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: Verify the actual HTTPS preview in both mobile sizes
+        env:
+          SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
+        run: node scripts/staging/verify-preview.mjs https://lilant5431.github.io/homebase/ "$SOURCE_SHA"
