@@ -2,11 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script data-appearance-bootstrap>(function(){var e={environment:[`lattice`,`landscape`,`basic`],mode:[`system`,`light`,`dark`],material:[`solid`,`frosted`],effects:[`system`,`reduced`],motion:[`system`,`reduced`]},t=Object.freeze({version:1,environment:`lattice`,mode:`system`,material:`solid`,effects:`system`,motion:`system`});function n(n){if(n===null)return null;let r;try{r=JSON.parse(n)}catch{return null}if(typeof r!=`object`||!r||Array.isArray(r))return null;let i=r;if(i.version!==1)return null;let a={...t};for(let t of Object.keys(e)){let n=i[t];typeof n==`string`&&e[t].includes(n)&&Object.assign(a,{[t]:n})}return a}function r(e){try{return n(e.getItem(`homebase.appearance.v1`))??{...t}}catch{return{...t}}}function i(e,t){let n=e.effects===`reduced`||t.reducedTransparency||t.forcedColors,r=e.motion===`reduced`||t.reducedMotion||n;return{environment:e.environment,palette:e.mode===`system`?t.dark?`dark`:`light`:e.mode,material:n||!t.backdropFilter?`solid`:e.material,reducedEffects:n,reducedMotion:r,forcedColors:t.forcedColors,continuousAtmosphere:e.environment!==`basic`&&!r}}var a={dark:`(prefers-color-scheme: dark)`,reducedMotion:`(prefers-reduced-motion: reduce)`,reducedTransparency:`(prefers-reduced-transparency: reduce)`,forcedColors:`(forced-colors: active)`};function o(e){return Object.entries(a).map(([t,n])=>{let r;try{r=e.matchMedia?.(n)}catch{}return{key:t,media:r}})}function s(e){let t={dark:!1,reducedMotion:!1,reducedTransparency:!1,forcedColors:!1,backdropFilter:!1};for(let{key:n,media:r}of o(e))t[n]=r?.matches??!1;try{t.backdropFilter=e.CSS?.supports(`backdrop-filter`,`blur(1px)`)===!0||e.CSS?.supports(`-webkit-backdrop-filter`,`blur(1px)`)===!0}catch{}return t}function c(e,t){let{selected:n,effective:r}=t;e.dataset.environment=r.environment,e.dataset.mode=n.mode,e.dataset.palette=r.palette,e.dataset.selectedMaterial=n.material,e.dataset.material=r.material,e.dataset.effects=r.reducedEffects?`reduced`:`standard`,e.dataset.motion=r.reducedMotion?`reduced`:`standard`,e.dataset.atmosphere=r.continuousAtmosphere?`permitted`:`static`,e.dataset.forcedColors=String(r.forcedColors),e.style.colorScheme=r.palette}function l(e,n){let a;try{a=r(e.localStorage)}catch{a={...t}}let o={selected:a,effective:i(a,s(e))};return c(n,o),e.__homebaseAppearance=o,o}l(window,document.documentElement)})();</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f6f4ef" />
+    <meta name="theme-color" content="#F3F6FA" />
     <title>Academic planner</title>
-    <script type="module" crossorigin src="/homebase/assets/index-C4QyLS4Q.js"></script>
-    <link rel="stylesheet" crossorigin href="/homebase/assets/index-CuEoaO_S.css">
+    <script type="module" crossorigin src="/homebase/assets/index-BXEoQyej.js"></script>
+    <link rel="stylesheet" crossorigin href="/homebase/assets/index-CIuGvrP8.css">
   </head>
   <body>
     <div id="root"></div>

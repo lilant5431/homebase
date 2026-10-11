@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "repository": "lilant5431/homebase",
+  "sourceSha": "ae323d35ce4837414f0fa7bc3163b3ff70ce0a2c",
+  "sourcePr": 17,
+  "sourceBranch": "feat/phase-2-6c-shell-navigation",
+  "selectedAtUtc": "2026-10-11T00:26:43.616Z",
+  "stagingReleaseSha": "8c3acaa6eba34adc1a76a064710b6ddfe2b5491b",
+  "builtAtUtc": "2026-10-11T00:29:58.869Z",
+  "buildResult": "passed",
+  "previewUrl": "https://lilant5431.github.io/homebase/",
+  "workflowRun": "https://github.com/lilant5431/homebase/actions/runs/38098554692",
+  "files": [
+    {
+      "path": "assets/Geist-DPGgOCY9.woff2",
+      "bytes": 69760,
+      "sha256": "2ffebe993e969069a9789d15164b7715d42491b5835516c5e3b935d5f81b05f1"
+    },
+    {
+      "path": "assets/Newsreader-tcB4qQtO.woff2",
+      "bytes": 214880,
+      "sha256": "1faa3380ac0e87e057b180e03fd94bd708a612afb67d2590677be4508909fae9"
+    },
+    {
+      "path": "assets/index-BXEoQyej.js",
+      "bytes": 295496,
+      "sha256": "d0b91f3a288e6ce5a8ebf35382e8afcff18f6caf79849f51b4f887a59ac9a1b6"
+    },
+    {
+      "path": "assets/index-CIuGvrP8.css",
+      "bytes": 37633,
+      "sha256": "702d1de663b56ef413ae841ff1eee4085a9f94d87b80b7429247e4a0a8d8de52"
+    },
+    {
+      "path": "font-licenses/Geist-OFL.txt",
+      "bytes": 4383,
+      "sha256": "942560b236adfa83745b2c64e5fc09ebaf91cb331751b1157eb92187e5d6e930"
+    },
+    {
+      "path": "font-licenses/Newsreader-OFL.txt",
+      "bytes": 4394,
+      "sha256": "865f0949b59fab5925506f80102dff3d12e8666412daf52d212db969d40adc25"
+    },
+    {
+      "path": "index.html",
+      "bytes": 2821,
+      "sha256": "675a3437b5a2fef367465f4b64ee71e2ee85b27411fb3a7524b5d3d61bff4649"
+    }
+  ]
+}
