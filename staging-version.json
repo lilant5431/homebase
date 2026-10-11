@@ -5,11 +5,11 @@
   "sourcePr": 17,
   "sourceBranch": "feat/phase-2-6c-shell-navigation",
   "selectedAtUtc": "2026-10-11T00:26:43.616Z",
-  "stagingReleaseSha": "35cef4f812b2c1f6dde62bcbaeace0783c2671ee",
-  "builtAtUtc": "2026-10-11T00:32:09.892Z",
+  "stagingReleaseSha": "0ebba3ecaecfd50168f1096f92327ca2e73adcfd",
+  "builtAtUtc": "2026-10-11T00:35:28.794Z",
   "buildResult": "passed",
   "previewUrl": "https://lilant5431.github.io/homebase/",
-  "workflowRun": "https://github.com/lilant5431/homebase/actions/runs/38098718622",
+  "workflowRun": "https://github.com/lilant5431/homebase/actions/runs/38098890948",
   "files": [
     {
       "path": "assets/Geist-DPGgOCY9.woff2",
