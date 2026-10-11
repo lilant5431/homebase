@@ -12,13 +12,13 @@ GitHub Pages was already configured for this repository's temporary PR #11 devic
 
 The site is **public, not password-protected**. A hard-to-guess URL is not access control. Free GitHub Pages on this personal public repository does not offer private-site authentication; do not upgrade or start an Enterprise trial for this preview. iPhone access needs only Safari and the HTTPS link, not a GitHub login or a running computer.
 
-No ongoing charge is expected for Pages and standard Linux Actions runners in this public repository. Current Pages limits include a 1 GB published site, soft 100 GB/month bandwidth limit and deployment timeouts. Standard public-repository Actions usage is free; larger runners, private-repository use or other changed services need a new cost review. No paid plan, trial, larger runner, domain or billable service is enabled. GitHub may rate-limit or restrict excessive use. Artifact retention is one day; the published site remains available independently of the build artifact. Workflow logs/records follow GitHub retention policy.
+No ongoing charge is expected for Pages and standard Linux Actions runners in this public repository. Current Pages limits include a 1 GB published site, soft 100 GB/month bandwidth limit and deployment timeouts and a soft 10 builds/hour limit for branch publishing. Standard public-repository Actions usage is free; larger runners, private-repository use or other changed services need a new cost review. No paid plan, trial, larger runner, domain or billable service is enabled. GitHub may rate-limit or restrict excessive use. Artifact retention is one day; the published site remains available independently of the build artifact. Workflow logs/records follow GitHub retention policy.
 
 Official references checked during setup:
 
 - [Pages availability and limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
 - [Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions).
-- [Custom Pages workflows and deployment permissions](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+- [Pages branch publishing](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) and [explicit Pages build requests](https://docs.github.com/en/rest/pages/pages#request-a-github-pages-build).
 - [Private Pages restrictions](https://docs.github.com/en/enterprise-cloud@latest/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site).
 - [Pages settings API](https://docs.github.com/en/rest/pages/pages#update-information-about-a-github-pages-site).
 - [Pages host security IP logging](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection). No application analytics or external record synchronization is added.
@@ -29,15 +29,15 @@ Official references checked during setup:
 
 `staging/source.json` is the authoritative selection. The workflow checks out that **full SHA** in a separate directory, not the latest PR branch. Later releases append manifest commits to staging/mobile instead of replacing branch history with unrelated source commits. No force-push, cherry-pick, main merge or automatic selection of newer PR heads.
 
-`.github/workflows/mobile-staging.yml` runs only on staging/mobile pushes changing the manifest, deployment scripts or its own workflow. Both jobs also check the exact staging ref. Ordinary main/PR pushes and documentation-only staging commits do not redeploy. Deployments serialize without cancelling an in-flight release. Only the deploy job gets Pages/OIDC permissions; application builds have read-only repository access and no deployment secrets.
+`.github/workflows/mobile-staging.yml` runs only on staging/mobile pushes changing the manifest, deployment scripts or its own workflow. Both jobs also check the exact staging ref. Ordinary main/PR pushes and documentation-only staging commits do not redeploy. Deployments serialize without cancelling an in-flight release. Only the publish job gets contents:write and pages:write; application builds have read-only repository access and no deployment secrets. Publisher scripts are release controls, not selected application code.
 
-The existing preview's publisher is changed from legacy branch publishing to GitHub Actions. The github-pages environment additionally permits staging/mobile; its historical device-test-pages policy and branch remain preserved. Pages uses workflow publishing, so old built-output branch pushes no longer trigger legacy publishing. No repository branch protection is weakened. These changes concern the confirmed preview only.
+The existing legacy publisher and github-pages environment policy remain unchanged: device-test-pages at /. This connector returned HTTP 403 when asked to change Pages settings/environment policies, so no such change was made. Instead, automation appends a normal, guarded build-artifact commit to device-test-pages, preserving history. Because automatic GITHUB_TOKEN pushes do not implicitly trigger Pages builds, it explicitly requests a build through the supported Pages API, waits for the matching deployment, and checks served provenance. The existing GitHub-managed Pages job still deploys from its already permitted device-test-pages branch. Never push unrelated files or source code to that artifact branch. No branch protection is weakened.
 
 This URL's origin is `https://lilant5431.github.io`. Other project sites under that account share the same origin even at different paths. **Never host Homebase production/personal records on this origin**; a future production site must use a different origin. Localhost, LAN HTTP and earlier Netlify previews are separate origins. No live records are imported. Existing PR #11 test records on this origin may remain until explicitly cleared.
 
 ## One-time setup
 
-No external account authorization or chat token is needed: existing GitHub repository access and the automatic Actions GITHUB_TOKEN/OIDC identity suffice. The branch and its pinned release are pushed normally. The existing Pages setting uses `build_type: workflow`, HTTPS remains enforced, and the github-pages deployment environment permits staging/mobile. Built-in actions verified at setup: checkout/setup-node v7, upload-pages-artifact v5 and deploy-pages v5. Node is 24.19.0, matching repository CI.
+No external hosting account or chat token is used. Existing GitHub repository access and the automatic Actions GITHUB_TOKEN publish the release. The branch and its pinned release are pushed normally. Pages remains `build_type: legacy`, HTTPS enforced, with `device-test-pages` as its only publisher/environment branch. Stable built-in actions checked at setup: checkout/setup-node v7, upload-artifact v7 and download-artifact v8. Node is 24.19.0, matching repository CI.
 
 The exact application checkout runs:
 
@@ -52,7 +52,7 @@ npm run format:check
 
 `--base=/homebase/` is the staging-only static asset prefix required by the existing project-site URL. Output is `dist/`. No development server, custom application config, SPA redirect script or 404 shim is deployed. Homebase uses local view state, not URL routing; all six destinations reload at the same index URL. Vite's appearance bootstrap and locally bundled Newsreader/Geist remain part of the actual selected build.
 
-After verification, packaging adds only `staging-version.json` and `staging-version.html` alongside the build. JSON records selected PR/SHA, release-control SHA, timestamp, successful build, run URL, and SHA-256/size for original build files. It does not claim deployment success before publication. Deployment ID/status/timestamp appear in the deploy job summary and GitHub environment records. The JSON run link joins the artifact to that final deployment record. A build/deploy failure leaves the previously published preview intact; inspect provenance before testing.
+After verification, packaging adds only `staging-version.json` and `staging-version.html` alongside the build. JSON records selected PR/SHA, release-control SHA, timestamp, successful build, run URL, and SHA-256/size for original build files. It does not claim deployment success before publication. Deployment ID/status/timestamp and the separate artifact-branch commit appear in the publish job summary and GitHub environment records. The JSON run link joins the artifact to that final deployment record. A failed application build never updates the publisher. A publish/deploy failure may leave either the prior site or a newly published artifact online; the run fails unless the exact source and deployment are verified. Inspect provenance before testing.
 
 ## Update a reviewed PR or commit
 
@@ -87,7 +87,7 @@ This branch-only workflow is push-triggered; it does not require workflow_dispat
 
 ## Verify the served version and application
 
-Open the version page or fetch `staging-version.json` with a cache-busting query. Confirm sourceSha equals the requested source, buildResult is passed, and workflowRun points to the successful release. GitHub's environment deployment SHA denotes the staging release-control commit; the JSON sourceSha denotes the actual application. They intentionally differ.
+Open the version page or fetch `staging-version.json` with a cache-busting query. Confirm sourceSha equals the requested source, buildResult is passed, and workflowRun points to the successful release. GitHub's environment deployment SHA denotes the built artifact commit on device-test-pages; stagingReleaseSha denotes the release-control commit, and sourceSha denotes the actual application. All three are recorded and intentionally differ.
 
 Verify HTTPS 200 at `/homebase/`, no redirect to production, HTML/JS/CSS, both WOFF2 fonts, and asset hashes against JSON. Exercise Overview, Weekly Planner, Assignments, Assessments, Commitments and Classes; drawer scrolling/open/close; all appearance choices; demo capture and reload persistence. Use 390×844 and 844×390 automation when available. Confirm requests remain static hosting requests, with no external academic-data APIs. Close contexts without exporting local records.
 
@@ -112,11 +112,11 @@ Alternatively use iPhone Settings → Apps → Safari → Advanced → Website D
 ## Diagnose, pause, roll back or remove
 
 - Failed build: open the matching Mobile staging run and fix the selected source in its own PR or select a previously approved SHA. Never bypass test/lint exits. Failed source checkout usually means an invalid/unavailable commit.
-- Deployment rejected: inspect Pages publishing mode, github-pages environment branch policy, and deploy job pages:write/id-token:write. Build jobs deliberately lack those permissions. No API tokens/passwords should be pasted into chat.
+- Deployment rejected: inspect legacy Pages publishing mode, the device-test-pages environment policy, and publisher job contents:write/pages:write. Check the explicit Pages build request step; do not assume a GITHUB_TOKEN push automatically deploys. Build jobs deliberately lack those permissions. No API tokens/passwords should be pasted into chat.
 - Wrong version: compare source manifest, run release SHA and cache-busted served JSON. A green build without a successful deploy is not a release. Verify asset hashes before claiming a version match.
 - Pause updates: Actions → Mobile staging → Disable workflow, or `gh workflow disable mobile-staging.yml --repo lilant5431/homebase`. The current preview remains online. Re-enable there, then rerun/push an explicit release when authorized.
 - Roll back safely: select a prior approved source SHA and append a new manifest commit. Never reset/force-push the staging branch.
 - Unpublish: after explicit maintainer authorization, Settings → Pages → Unpublish site. This removes availability of this staging URL; disable its workflow too. Do not delete repository history or other deployments.
-- Remove the automation/branch only with explicit authorization after disabling/unpublishing. The historical device-test-pages branch is retained. If restoring the old temporary publisher is intentionally desired, its previous legacy source was device-test-pages at `/`; do not silently restore outdated preview code.
+- Remove the automation/branch only with explicit authorization after disabling/unpublishing. The historical device-test-pages commits are retained. Do not silently restore outdated preview code or force-push either staging branch.
 
 No paid subscription or manual external-account setup is required for this reused provider. Record final deployment evidence with the delivery report; do not claim physical acceptance based on automation.
