@@ -4,7 +4,6 @@ import { appendFileSync } from 'node:fs'
 const [site] = process.argv.slice(2)
 const repository = 'lilant5431/homebase'
 const url = 'https://lilant5431.github.io/homebase/'
-const artifactSha = execFileSync('git', ['-C', site, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
 function api(path, post = false) {
   return JSON.parse(
     execFileSync('gh', ['api', ...(post ? ['--method', 'POST'] : []), `repos/${repository}/${path}`], {
@@ -17,9 +16,16 @@ if (
   settings.build_type !== 'legacy' ||
   settings.source?.branch !== 'device-test-pages' ||
   settings.source?.path !== '/' ||
-  settings.html_url !== url
+  settings.html_url !== url ||
+  settings.cname !== null ||
+  settings.https_enforced !== true
 )
   throw new Error('Existing preview settings changed; stop and inspect')
+if (site === '--check-settings') {
+  console.log('Existing public HTTPS preview publisher/settings match; no hosting settings changed')
+  process.exit(0)
+}
+const artifactSha = execFileSync('git', ['-C', site, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
 if (api('git/ref/heads/device-test-pages').object.sha !== artifactSha)
   throw new Error('Publisher advanced; refuse to deploy another release')
 // GITHUB_TOKEN pushes do not implicitly build Pages. Request the existing branch build explicitly.

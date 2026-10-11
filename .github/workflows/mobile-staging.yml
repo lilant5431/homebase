@@ -108,6 +108,10 @@ jobs:
         with:
           ref: device-test-pages
           path: site
+      - name: Confirm the publisher still serves only the designated preview
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node control/scripts/staging/await-pages.mjs --check-settings
       - name: Append artifact release without rewriting history
         env:
           SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
