@@ -14,7 +14,7 @@ const allowed = (path) =>
   path === 'index.html' ||
   path === 'staging-version.json' ||
   path === 'staging-version.html' ||
-  /^assets\/[^/]+$/.test(path)
+  /^(assets|font-licenses)\/[^/]+$/.test(path)
 if (git(['branch', '--show-current']) !== 'device-test-pages' || git(['status', '--porcelain']))
   throw new Error('Expected a clean device-test-pages publisher checkout')
 const tracked = git(['ls-files', '-z']).split('\0').filter(Boolean)
@@ -28,7 +28,12 @@ if (
 )
   throw new Error('Artifact does not match this verified release')
 for (const file of metadata.files) {
-  if (!allowed(file.path) || (!['index.html'].includes(file.path) && !file.path.startsWith('assets/')))
+  if (
+    !allowed(file.path) ||
+    (!['index.html'].includes(file.path) &&
+      !file.path.startsWith('assets/') &&
+      !file.path.startsWith('font-licenses/'))
+  )
     throw new Error('Invalid built file path')
   const bytes = readFileSync(resolve(artifact, file.path))
   if (bytes.length !== file.bytes || createHash('sha256').update(bytes).digest('hex') !== file.sha256)
@@ -37,7 +42,8 @@ for (const file of metadata.files) {
 function check(folder, prefix = '') {
   for (const entry of readdirSync(folder, { withFileTypes: true })) {
     const path = prefix + entry.name
-    if (entry.isDirectory() && path === 'assets') check(resolve(folder, entry.name), 'assets/')
+    if (entry.isDirectory() && ['assets', 'font-licenses'].includes(path))
+      check(resolve(folder, entry.name), path + '/')
     else if (!entry.isFile() || !allowed(path)) throw new Error('Unexpected artifact entry')
   }
 }
